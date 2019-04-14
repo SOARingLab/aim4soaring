@@ -41,25 +41,25 @@ import aim4.map.lane.Lane;
  */
 public class IdentityDestinationSelector implements DestinationSelector {
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a new IdentityDestinationSelector from the given Layout.
-   */
-  public IdentityDestinationSelector() {
-  }
+    /**
+     * Create a new IdentityDestinationSelector from the given Layout.
+     */
+    public IdentityDestinationSelector() {
+    }
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Road selectDestination(Lane currentLane) {
-    return Debug.currentMap.getRoad(currentLane);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Road selectDestination(Lane currentLane) {
+        return Debug.currentMap.getRoad(currentLane);
+    }
 }

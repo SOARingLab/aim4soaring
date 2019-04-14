@@ -44,118 +44,122 @@ import aim4.sim.Simulator;
  * by stop signs.
  */
 public class ApproxSimpleTrafficSignalSimSetup extends BasicSimSetup
-                                         implements SimSetup {
+        implements SimSetup {
 
-  /** The duration of the green signal */
-  private double greenLightDuration = 30.0;
-  /** The duration of the yellow signal */
-  private double yellowLightDuration = 30.0;
+    /**
+     * The duration of the green signal
+     */
+    private double greenLightDuration = 30.0;
+    /**
+     * The duration of the yellow signal
+     */
+    private double yellowLightDuration = 30.0;
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create the setup for the simulator in which the intersections are
-   * controlled by stop signs.
-   *
-   * @param basicSimSetup  the basic simulator setup
-   */
-  public ApproxSimpleTrafficSignalSimSetup(BasicSimSetup basicSimSetup) {
-    super(basicSimSetup);
-  }
-
-
-  /**
-   * Create the setup for the simulator in which the intersections are
-   * controlled by stop signs.
-   *
-   * @param columns                     the number of columns
-   * @param rows                        the number of rows
-   * @param laneWidth                   the width of lanes
-   * @param speedLimit                  the speed limit
-   * @param lanesPerRoad                the number of lanes per road
-   * @param medianSize                  the median size
-   * @param distanceBetween             the distance between intersections
-   * @param trafficLevel                the traffic level
-   * @param stopDistBeforeIntersection  the stopping distance before
-   */
-  public ApproxSimpleTrafficSignalSimSetup(int columns, int rows,
-                                           double laneWidth, double speedLimit,
-                                           int lanesPerRoad,
-                                           double medianSize,
-                                           double distanceBetween,
-                                           double trafficLevel,
-                                           double stopDistBeforeIntersection) {
-    super(columns, rows, laneWidth, speedLimit, lanesPerRoad,
-          medianSize, distanceBetween, trafficLevel,
-          stopDistBeforeIntersection);
-  }
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Set the duration of the green signals
-   *
-   * @param greenLightDuration  the duration of the green signals
-   */
-  public void setGreenLightDuration(double greenLightDuration) {
-    this.greenLightDuration = greenLightDuration;
-  }
-
-  /**
-   * Set the duration of the yellow signals
-   *
-   * @param yellowLightDuration  the duration of the yellow signals
-   */
-  public void setYellowLightDuration(double yellowLightDuration) {
-    this.yellowLightDuration = yellowLightDuration;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Simulator getSimulator() {
-    double currentTime = 0.0;
-    GridMap layout = new GridMap(currentTime,
-                                       numOfColumns,
-                                       numOfRows,
-                                       laneWidth,
-                                       speedLimit,
-                                       lanesPerRoad,
-                                       medianSize,
-                                       distanceBetween);
-
-    ReservationGridManager.Config gridConfig =
-      new ReservationGridManager.Config(SimConfig.TIME_STEP,
-                                        SimConfig.GRID_TIME_STEP,
-                                        0.1,
-                                        0.15,
-                                        0.15,
-                                        true,
-                                        1.0);
-
-    Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
-
-    GridMapUtil.setApproxSimpleTrafficLightManagers(layout,
-                                                       currentTime,
-                                                       gridConfig,
-                                                       greenLightDuration,
-                                                       yellowLightDuration);
-
-    if (numOfColumns == 1 && numOfRows == 1) {
-      GridMapUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
-    } else {
-      GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
+    /**
+     * Create the setup for the simulator in which the intersections are
+     * controlled by stop signs.
+     *
+     * @param basicSimSetup the basic simulator setup
+     */
+    public ApproxSimpleTrafficSignalSimSetup(BasicSimSetup basicSimSetup) {
+        super(basicSimSetup);
     }
 
-    V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
-      stopDistBeforeIntersection;
 
-    return new AutoDriverOnlySimulator(layout);
-  }
+    /**
+     * Create the setup for the simulator in which the intersections are
+     * controlled by stop signs.
+     *
+     * @param columns                    the number of columns
+     * @param rows                       the number of rows
+     * @param laneWidth                  the width of lanes
+     * @param speedLimit                 the speed limit
+     * @param lanesPerRoad               the number of lanes per road
+     * @param medianSize                 the median size
+     * @param distanceBetween            the distance between intersections
+     * @param trafficLevel               the traffic level
+     * @param stopDistBeforeIntersection the stopping distance before
+     */
+    public ApproxSimpleTrafficSignalSimSetup(int columns, int rows,
+                                             double laneWidth, double speedLimit,
+                                             int lanesPerRoad,
+                                             double medianSize,
+                                             double distanceBetween,
+                                             double trafficLevel,
+                                             double stopDistBeforeIntersection) {
+        super(columns, rows, laneWidth, speedLimit, lanesPerRoad,
+                medianSize, distanceBetween, trafficLevel,
+                stopDistBeforeIntersection);
+    }
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * Set the duration of the green signals
+     *
+     * @param greenLightDuration the duration of the green signals
+     */
+    public void setGreenLightDuration(double greenLightDuration) {
+        this.greenLightDuration = greenLightDuration;
+    }
+
+    /**
+     * Set the duration of the yellow signals
+     *
+     * @param yellowLightDuration the duration of the yellow signals
+     */
+    public void setYellowLightDuration(double yellowLightDuration) {
+        this.yellowLightDuration = yellowLightDuration;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Simulator getSimulator() {
+        double currentTime = 0.0;
+        GridMap layout = new GridMap(currentTime,
+                numOfColumns,
+                numOfRows,
+                laneWidth,
+                speedLimit,
+                lanesPerRoad,
+                medianSize,
+                distanceBetween);
+
+        ReservationGridManager.Config gridConfig =
+                new ReservationGridManager.Config(SimConfig.TIME_STEP,
+                        SimConfig.GRID_TIME_STEP,
+                        0.1,
+                        0.15,
+                        0.15,
+                        true,
+                        1.0);
+
+        Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
+
+        GridMapUtil.setApproxSimpleTrafficLightManagers(layout,
+                currentTime,
+                gridConfig,
+                greenLightDuration,
+                yellowLightDuration);
+
+        if (numOfColumns == 1 && numOfRows == 1) {
+            GridMapUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
+        } else {
+            GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
+        }
+
+        V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
+                stopDistBeforeIntersection;
+
+        return new AutoDriverOnlySimulator(layout);
+    }
 }

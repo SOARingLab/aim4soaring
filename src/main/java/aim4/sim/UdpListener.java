@@ -59,322 +59,334 @@ import aim4.vehicle.VinRegistry;
  */
 public class UdpListener implements Runnable {
 
-  /////////////////////////////////
-  // CONSTANTS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTANTS
+    /////////////////////////////////
 
-  /** The default listener UDP port */
-  private static final int DEFAULT_LISTENER_UDP_PORT = 46000;
+    /**
+     * The default listener UDP port
+     */
+    private static final int DEFAULT_LISTENER_UDP_PORT = 46000;
 
-  // TODO: the UDP port of the vehicle should not be hard-coded.
-  /** The default UPD port on the vehicle */
-  private static final int DEFAULT_VEHICLE_UDP_PORT = 46042;
+    // TODO: the UDP port of the vehicle should not be hard-coded.
+    /**
+     * The default UPD port on the vehicle
+     */
+    private static final int DEFAULT_VEHICLE_UDP_PORT = 46042;
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The UDP port */
-  private final int udpPort;
+    /**
+     * The UDP port
+     */
+    private final int udpPort;
 
-  /** the simulator */
-  private final Simulator sim;
+    /**
+     * the simulator
+     */
+    private final Simulator sim;
 
-  /** Datagram socket for listening on a port over UDP. */
-  private DatagramSocket ds;
+    /**
+     * Datagram socket for listening on a port over UDP.
+     */
+    private DatagramSocket ds;
 
-  /**
-   * A map of all the ProxyVehicles, indexed by their respective (unique)
-   * socket addresses. the ProxyVehicles also assume this is the reply address
-   * when they need to relay information back to the real vehicle.
-   */
-  private Map<SocketAddress,ProxyVehicleSimView> sa2ProxyVehicle;
+    /**
+     * A map of all the ProxyVehicles, indexed by their respective (unique)
+     * socket addresses. the ProxyVehicles also assume this is the reply address
+     * when they need to relay information back to the real vehicle.
+     */
+    private Map<SocketAddress, ProxyVehicleSimView> sa2ProxyVehicle;
 
-  /** The thread of this UDP listener */
-  private volatile Thread blinker;
+    /**
+     * The thread of this UDP listener
+     */
+    private volatile Thread blinker;
 
-  // For more information about the use of blinker, check
-  // Ref: http://java.sun.com/javase/6/docs/technotes/guides/concurrency/
-  //            threadPrimitiveDeprecation.html
+    // For more information about the use of blinker, check
+    // Ref: http://java.sun.com/javase/6/docs/technotes/guides/concurrency/
+    //            threadPrimitiveDeprecation.html
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Default constructor uses UDP port 46000
-   *
-   * @param sim  the simulator
-   */
-  public UdpListener(Simulator sim) {
-    this(DEFAULT_LISTENER_UDP_PORT, sim);
-  }
-
-  /**
-   * Constructor for a UDP listener on the specified port.
-   *
-   * @param udpPort  the port to listen on
-   * @param sim      the simulator
-   */
-  public UdpListener(int udpPort, Simulator sim) {
-    this.udpPort = udpPort;
-    this.sim = sim;
-    ds = null;
-    sa2ProxyVehicle = new HashMap<SocketAddress,ProxyVehicleSimView>();
-    blinker = null;
-  }
-
-  /////////////////////////////////
-  // DESTRUCTOR
-  /////////////////////////////////
-
-  /**
-   * Finalize the class by closing the datagram sockets and delete the
-   * proxy vehicles.
-   */
-  @Override
-  protected void finalize() throws Throwable {
-    blinker = null;
-    closeSocket();
-    super.finalize();
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  // start and stop the thread
-
-  /**
-   * Whether or not the thread has started to listen to the UDP port.
-   *
-   * @return whether or not the thread has started to listen to the UDP port.
-   */
-  public synchronized boolean hasStarted() {
-    return blinker != null;
-  }
-
-  /**
-   * Start the listener thread.
-   */
-  public synchronized void start() {
-    assert blinker == null;
-    blinker = new Thread(this);
-    blinker.start();
-  }
-
-  /**
-   * Stop the listener thread.
-   */
-  public synchronized void stop() {
-    assert blinker != null;
-    blinker = null;
-    closeSocket();
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void run() {
-    try {
-      ds = new DatagramSocket(udpPort);
-    } catch(SocketException e) {
-      if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
-        System.err.println("Cannot open UDP socket.\n");
-        e.printStackTrace();
-      }
-      return;
+    /**
+     * Default constructor uses UDP port 46000
+     *
+     * @param sim the simulator
+     */
+    public UdpListener(Simulator sim) {
+        this(DEFAULT_LISTENER_UDP_PORT, sim);
     }
 
-    int numBytes = UdpHeader.MAX_MESSENGE_PACKAGE_LENGTH;
-    Thread thisThread = Thread.currentThread();
-
-    // listen so long as the user hasn't called stop()
-    while (blinker == thisThread) {
-      DatagramPacket dp = new DatagramPacket(new byte[numBytes], numBytes);
-
-      try {
-        ds.receive(dp);   // blocks until data received
-      } catch(IOException e) {  // both IOException and NullPointerException
-        // Either stop() is called to close the socket, or
-        // something is wrong with our socket.
-        // Maybe we should distinguish the two cases and
-        // inform the user about the second case since it is an
-        // error.
-        break;
-      }
-      processIncomingDatagram(dp);
-      Thread.yield();  // give other threads a chance to execute
+    /**
+     * Constructor for a UDP listener on the specified port.
+     *
+     * @param udpPort the port to listen on
+     * @param sim     the simulator
+     */
+    public UdpListener(int udpPort, Simulator sim) {
+        this.udpPort = udpPort;
+        this.sim = sim;
+        ds = null;
+        sa2ProxyVehicle = new HashMap<SocketAddress, ProxyVehicleSimView>();
+        blinker = null;
     }
 
-    closeSocket();
-    // TODO: also remove all ProxyVehicles from the simulator as well
-  }
+    /////////////////////////////////
+    // DESTRUCTOR
+    /////////////////////////////////
 
-  /////////////////////////////////
-  // PRIVATE METHODS
-  /////////////////////////////////
-
-  /**
-   * A synchronized function for closing the UPD socket.
-   * It prevents the situation in which both the listener thread and the
-   * GUI thread close the socket at the same time.
-   */
-  private synchronized void closeSocket() {
-    if (ds != null) {
-      if (ds.isConnected()) {
-        ds.disconnect();
-      }
-      if (!ds.isClosed()) {
-        ds.close();
-      }
-      ds = null;
-      if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
-        System.err.println("The UDP socket is closed.");
-      }
+    /**
+     * Finalize the class by closing the datagram sockets and delete the
+     * proxy vehicles.
+     */
+    @Override
+    protected void finalize() throws Throwable {
+        blinker = null;
+        closeSocket();
+        super.finalize();
     }
-  }
 
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * The main function for processing the incoming datagram.
-   *
-   * @param dp  the datagram.
-   */
-  private void processIncomingDatagram(DatagramPacket dp) {
-    synchronized(sim) {
-      SocketAddress sa = dp.getSocketAddress();
-      Real2ProxyMsg msg = convertDatagramToReal2ProxyMsg(dp);
+    // start and stop the thread
 
-      if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
-        if (Debug.SHOW_PROXY_VEHICLE_PVUPDATE_MSG ||
-            !(msg instanceof Real2ProxyPVUpdate)) {
-          System.err.printf("Proxy vehicle received a Real2Proxy msg: %s\n",
-                            msg);
-        }
-      }
+    /**
+     * Whether or not the thread has started to listen to the UDP port.
+     *
+     * @return whether or not the thread has started to listen to the UDP port.
+     */
+    public synchronized boolean hasStarted() {
+        return blinker != null;
+    }
 
-      if (msg == null) {
-        System.err.println("Error: cannot parse the datagram package.");
-        return;
-      }
+    /**
+     * Start the listener thread.
+     */
+    public synchronized void start() {
+        assert blinker == null;
+        blinker = new Thread(this);
+        blinker.start();
+    }
 
-      if (sa2ProxyVehicle.containsKey(sa)) {
-        // The datagram came from a real vehicle we're already tracking.
-        // Simply forward the datagram to the corresponding proxy vehicle
-        sa2ProxyVehicle.get(sa).processReal2ProxyMsg(msg);
-      } else {
-        // We haven't seem this SA before. This must be coming from
-        // a new real vehicle that we're not tracking
+    /**
+     * Stop the listener thread.
+     */
+    public synchronized void stop() {
+        assert blinker != null;
+        blinker = null;
+        closeSocket();
+    }
 
-        // If it is a PV_UPDATE message, instantiate the proxy vehicle and
-        // associate the socket address to this proxy vehicle.
-        // If not, ignore the message.
-        if (msg.messageType == Real2ProxyMsg.Type.PV_UPDATE) {
-          Real2ProxyPVUpdate pvUpdateMsg = (Real2ProxyPVUpdate)msg;
-          // create a proxy vehicle for this real vehicle
-          ProxyVehicleSimView vehicle = makeProxyVehicle(pvUpdateMsg);
-          // check the VIN number
-          if (VinRegistry.registerVehicleWithExistingVIN(vehicle,
-                                                         pvUpdateMsg.vin)) {
-            // update the socket address of the proxy vehicle
-            // pull out just the IP <xxx.xxx.xxx.xxx> from the address only
-            String address = sa.toString();
-            address = address.substring(1, address.indexOf(':'));
-            vehicle
-              .setSa(new InetSocketAddress(address, DEFAULT_VEHICLE_UDP_PORT));
-            // record the proxy vehicle
-            sa2ProxyVehicle.put(sa, vehicle);
-            // add the proxy vehicle to the simulator
-            sim.addProxyVehicle(vehicle);
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void run() {
+        try {
+            ds = new DatagramSocket(udpPort);
+        } catch (SocketException e) {
             if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
-              System.err.printf("A proxy vehicle is created at time %.2f "
-                + "(vin=%d).\n", sim.getSimulationTime(), vehicle.getVIN());
+                System.err.println("Cannot open UDP socket.\n");
+                e.printStackTrace();
             }
-          } else {
-            System.err.println("Warning: the VIN of the UPD message has " +
-                               "already been used by other vehicles.");
-            // don't add the proxy vehicle to the simulator.
-          }
-        } else {
-          // Ignore the message
-          if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
-            System.err.println("Warning: first message from a new real " +
-                               "vehicle must be a PVUpdate.");
-          }
+            return;
         }
-      }
-    }
-  }
 
-  /**
-   * Covert a datagram to a Real2Proxy message.
-   *
-   * @param dp  the datagram
-   * @return the Real2Proxy message
-   */
-  private Real2ProxyMsg convertDatagramToReal2ProxyMsg(DatagramPacket dp) {
-    // prepare the raw data for reading
-    byte[] data = dp.getData();  // it will contain numBytes bytes.
-    ByteArrayInputStream bais = new ByteArrayInputStream(data);
-    DataInputStream dis = new DataInputStream(bais);
-    // read the header
-    UdpHeader header = null;
-    try {
-      header = new UdpHeader(dis);
-    } catch(IOException e) {
-      System.err.println("Error: Datagram has a corrupted header.");
-      return null;
-    }
+        int numBytes = UdpHeader.MAX_MESSENGE_PACKAGE_LENGTH;
+        Thread thisThread = Thread.currentThread();
 
-    if (header.getChecksum() != UdpHeader.computeChecksum(data)) {
-      // the datagram is corrupted, can't use it
-      System.err.println("Error: Datagram has a corrupted checksum.");
-      return null;
+        // listen so long as the user hasn't called stop()
+        while (blinker == thisThread) {
+            DatagramPacket dp = new DatagramPacket(new byte[numBytes], numBytes);
+
+            try {
+                ds.receive(dp);   // blocks until data received
+            } catch (IOException e) {  // both IOException and NullPointerException
+                // Either stop() is called to close the socket, or
+                // something is wrong with our socket.
+                // Maybe we should distinguish the two cases and
+                // inform the user about the second case since it is an
+                // error.
+                break;
+            }
+            processIncomingDatagram(dp);
+            Thread.yield();  // give other threads a chance to execute
+        }
+
+        closeSocket();
+        // TODO: also remove all ProxyVehicles from the simulator as well
     }
 
-    Real2ProxyMsg msg = null;
-    switch(header.getMessageType()) {
-    case PVUpdate:
-      try {
-        msg = new Real2ProxyPVUpdate(dis, sim.getSimulationTime());
-      } catch(IOException e) {
-        System.err.println("Error: Datagram has a corrupted body for " +
-                           "a PV_UPDATE message.");
-      }
-      break;
-    case V2I_Request:
-      try {
-        msg = new Real2ProxyRequest(dis, sim.getSimulationTime());
-      } catch(IOException e) {
-        System.err.println("Error: Datagram has a corrupted body for " +
-                           "a REQUEST message.");
-      }
-      break;
-    case V2I_Cancel:
-      try {
-        msg = new Real2ProxyCancel(dis, sim.getSimulationTime());
-      } catch(IOException e) {
-        System.err.println("Error: Datagram has a corrupted body for " +
-                           "a CANCEL message.");
-      }
-      break;
-    case V2I_Done:
-      try {
-        msg = new Real2ProxyDone(dis, sim.getSimulationTime());
-      } catch(IOException e) {
-        System.err.println("Error: Datagram has a corrupted body for " +
-                           "a DONE message.");
-      }
-      break;
-    default:
-      System.err.println("Error: Unknown UDP message type");
+    /////////////////////////////////
+    // PRIVATE METHODS
+    /////////////////////////////////
+
+    /**
+     * A synchronized function for closing the UPD socket.
+     * It prevents the situation in which both the listener thread and the
+     * GUI thread close the socket at the same time.
+     */
+    private synchronized void closeSocket() {
+        if (ds != null) {
+            if (ds.isConnected()) {
+                ds.disconnect();
+            }
+            if (!ds.isClosed()) {
+                ds.close();
+            }
+            ds = null;
+            if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
+                System.err.println("The UDP socket is closed.");
+            }
+        }
     }
+
+
+    /**
+     * The main function for processing the incoming datagram.
+     *
+     * @param dp the datagram.
+     */
+    private void processIncomingDatagram(DatagramPacket dp) {
+        synchronized (sim) {
+            SocketAddress sa = dp.getSocketAddress();
+            Real2ProxyMsg msg = convertDatagramToReal2ProxyMsg(dp);
+
+            if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
+                if (Debug.SHOW_PROXY_VEHICLE_PVUPDATE_MSG ||
+                        !(msg instanceof Real2ProxyPVUpdate)) {
+                    System.err.printf("Proxy vehicle received a Real2Proxy msg: %s\n",
+                            msg);
+                }
+            }
+
+            if (msg == null) {
+                System.err.println("Error: cannot parse the datagram package.");
+                return;
+            }
+
+            if (sa2ProxyVehicle.containsKey(sa)) {
+                // The datagram came from a real vehicle we're already tracking.
+                // Simply forward the datagram to the corresponding proxy vehicle
+                sa2ProxyVehicle.get(sa).processReal2ProxyMsg(msg);
+            } else {
+                // We haven't seem this SA before. This must be coming from
+                // a new real vehicle that we're not tracking
+
+                // If it is a PV_UPDATE message, instantiate the proxy vehicle and
+                // associate the socket address to this proxy vehicle.
+                // If not, ignore the message.
+                if (msg.messageType == Real2ProxyMsg.Type.PV_UPDATE) {
+                    Real2ProxyPVUpdate pvUpdateMsg = (Real2ProxyPVUpdate) msg;
+                    // create a proxy vehicle for this real vehicle
+                    ProxyVehicleSimView vehicle = makeProxyVehicle(pvUpdateMsg);
+                    // check the VIN number
+                    if (VinRegistry.registerVehicleWithExistingVIN(vehicle,
+                            pvUpdateMsg.vin)) {
+                        // update the socket address of the proxy vehicle
+                        // pull out just the IP <xxx.xxx.xxx.xxx> from the address only
+                        String address = sa.toString();
+                        address = address.substring(1, address.indexOf(':'));
+                        vehicle
+                                .setSa(new InetSocketAddress(address, DEFAULT_VEHICLE_UDP_PORT));
+                        // record the proxy vehicle
+                        sa2ProxyVehicle.put(sa, vehicle);
+                        // add the proxy vehicle to the simulator
+                        sim.addProxyVehicle(vehicle);
+                        if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
+                            System.err.printf("A proxy vehicle is created at time %.2f "
+                                    + "(vin=%d).\n", sim.getSimulationTime(), vehicle.getVIN());
+                        }
+                    } else {
+                        System.err.println("Warning: the VIN of the UPD message has " +
+                                "already been used by other vehicles.");
+                        // don't add the proxy vehicle to the simulator.
+                    }
+                } else {
+                    // Ignore the message
+                    if (Debug.SHOW_PROXY_VEHICLE_DEBUG_MSG) {
+                        System.err.println("Warning: first message from a new real " +
+                                "vehicle must be a PVUpdate.");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Covert a datagram to a Real2Proxy message.
+     *
+     * @param dp the datagram
+     * @return the Real2Proxy message
+     */
+    private Real2ProxyMsg convertDatagramToReal2ProxyMsg(DatagramPacket dp) {
+        // prepare the raw data for reading
+        byte[] data = dp.getData();  // it will contain numBytes bytes.
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
+        DataInputStream dis = new DataInputStream(bais);
+        // read the header
+        UdpHeader header = null;
+        try {
+            header = new UdpHeader(dis);
+        } catch (IOException e) {
+            System.err.println("Error: Datagram has a corrupted header.");
+            return null;
+        }
+
+        if (header.getChecksum() != UdpHeader.computeChecksum(data)) {
+            // the datagram is corrupted, can't use it
+            System.err.println("Error: Datagram has a corrupted checksum.");
+            return null;
+        }
+
+        Real2ProxyMsg msg = null;
+        switch (header.getMessageType()) {
+            case PVUpdate:
+                try {
+                    msg = new Real2ProxyPVUpdate(dis, sim.getSimulationTime());
+                } catch (IOException e) {
+                    System.err.println("Error: Datagram has a corrupted body for " +
+                            "a PV_UPDATE message.");
+                }
+                break;
+            case V2I_Request:
+                try {
+                    msg = new Real2ProxyRequest(dis, sim.getSimulationTime());
+                } catch (IOException e) {
+                    System.err.println("Error: Datagram has a corrupted body for " +
+                            "a REQUEST message.");
+                }
+                break;
+            case V2I_Cancel:
+                try {
+                    msg = new Real2ProxyCancel(dis, sim.getSimulationTime());
+                } catch (IOException e) {
+                    System.err.println("Error: Datagram has a corrupted body for " +
+                            "a CANCEL message.");
+                }
+                break;
+            case V2I_Done:
+                try {
+                    msg = new Real2ProxyDone(dis, sim.getSimulationTime());
+                } catch (IOException e) {
+                    System.err.println("Error: Datagram has a corrupted body for " +
+                            "a DONE message.");
+                }
+                break;
+            default:
+                System.err.println("Error: Unknown UDP message type");
+        }
 
 //    try {
 //      int n = dis.available();
@@ -387,28 +399,28 @@ public class UdpListener implements Runnable {
 //                         "data in the datagram");
 //    }
 
-    return msg;
-  }
+        return msg;
+    }
 
 
-  /**
-   * Create a proxy vehicle
-   *
-   * @param msg  the PV update message
-   * @return the proxy vehicle
-   */
-  private ProxyVehicleSimView makeProxyVehicle(Real2ProxyPVUpdate msg) {
-    ProxyVehicleSimView vehicle = new ProxyVehicle(msg.position,
-                                                   msg.heading,
-                                                   msg.steeringAngle,
-                                                   msg.velocity,
-                                                   msg.targetVelocity,
-                                                   msg.acceleration,
-                                                   msg.receivedTime);
-    vehicle.setDriver(new ProxyDriver(vehicle, sim.getMap()));
+    /**
+     * Create a proxy vehicle
+     *
+     * @param msg the PV update message
+     * @return the proxy vehicle
+     */
+    private ProxyVehicleSimView makeProxyVehicle(Real2ProxyPVUpdate msg) {
+        ProxyVehicleSimView vehicle = new ProxyVehicle(msg.position,
+                msg.heading,
+                msg.steeringAngle,
+                msg.velocity,
+                msg.targetVelocity,
+                msg.acceleration,
+                msg.receivedTime);
+        vehicle.setDriver(new ProxyDriver(vehicle, sim.getMap()));
 
-    assert vehicle.getDriver() != null;
-    return vehicle;
-  }
+        assert vehicle.getDriver() != null;
+        return vehicle;
+    }
 
 }

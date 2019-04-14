@@ -44,108 +44,110 @@ import aim4.sim.Simulator;
  * by stop signs.
  */
 public class ApproxStopSignSimSetup extends BasicSimSetup
-                                         implements SimSetup {
+        implements SimSetup {
 
-  /** The name of the file containing the traffic volume data */
-  private String trafficVolumeFileName = null;
+    /**
+     * The name of the file containing the traffic volume data
+     */
+    private String trafficVolumeFileName = null;
 
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a setup for the simulator in which the intersections are controlled
-   * by stop signs.
-   *
-   * @param basicSimSetup   the basic simulator setup
-   */
-  public ApproxStopSignSimSetup(BasicSimSetup basicSimSetup) {
-    super(basicSimSetup);
-  }
-
-  /**
-   * Create a setup for the simulator in which the intersections are controlled
-   * by stop signs.
-   *
-   * @param columns                     the number of columns
-   * @param rows                        the number of rows
-   * @param laneWidth                   the width of lanes
-   * @param speedLimit                  the speed limit
-   * @param lanesPerRoad                the number of lanes per road
-   * @param medianSize                  the median size
-   * @param distanceBetween             the distance between intersections
-   * @param trafficLevel                the traffic level
-   * @param stopDistBeforeIntersection  the stopping distance before
-   */
-  public ApproxStopSignSimSetup(int columns, int rows,
-                                double laneWidth, double speedLimit,
-                                int lanesPerRoad,
-                                double medianSize, double distanceBetween,
-                                double trafficLevel,
-                                double stopDistBeforeIntersection) {
-    super(columns, rows, laneWidth, speedLimit, lanesPerRoad,
-          medianSize, distanceBetween, trafficLevel,
-          stopDistBeforeIntersection);
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Set the name of the file containing the traffic volume data.
-   *
-   * @param trafficVolumeFileName  the name of the file containing the traffic
-   *                               volume data
-   */
-  public void setTrafficVolume(String trafficVolumeFileName) {
-    this.trafficVolumeFileName = trafficVolumeFileName;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Simulator getSimulator() {
-    double currentTime = 0.0;
-    GridMap layout = new GridMap(currentTime,
-                                       numOfColumns,
-                                       numOfRows,
-                                       laneWidth,
-                                       speedLimit,
-                                       lanesPerRoad,
-                                       medianSize,
-                                       distanceBetween);
-
-    ReservationGridManager.Config gridConfig =
-      new ReservationGridManager.Config(SimConfig.TIME_STEP,
-                                        SimConfig.GRID_TIME_STEP,
-                                        0.0,
-                                        0.0,
-                                        0.0,
-                                        true,
-                                        1.0);
-
-    SimConfig.MUST_STOP_BEFORE_INTERSECTION = true;
-    Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
-
-    GridMapUtil.setApproxStopSignManagers(layout, currentTime,
-                                             gridConfig);
-
-    if (trafficVolumeFileName == null) {
-      if (numOfColumns == 1 && numOfRows == 1) {
-        GridMapUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
-      } else {
-        GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
-      }
-    } else {
-      GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
+    /**
+     * Create a setup for the simulator in which the intersections are controlled
+     * by stop signs.
+     *
+     * @param basicSimSetup the basic simulator setup
+     */
+    public ApproxStopSignSimSetup(BasicSimSetup basicSimSetup) {
+        super(basicSimSetup);
     }
 
-    V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
-      stopDistBeforeIntersection;
+    /**
+     * Create a setup for the simulator in which the intersections are controlled
+     * by stop signs.
+     *
+     * @param columns                    the number of columns
+     * @param rows                       the number of rows
+     * @param laneWidth                  the width of lanes
+     * @param speedLimit                 the speed limit
+     * @param lanesPerRoad               the number of lanes per road
+     * @param medianSize                 the median size
+     * @param distanceBetween            the distance between intersections
+     * @param trafficLevel               the traffic level
+     * @param stopDistBeforeIntersection the stopping distance before
+     */
+    public ApproxStopSignSimSetup(int columns, int rows,
+                                  double laneWidth, double speedLimit,
+                                  int lanesPerRoad,
+                                  double medianSize, double distanceBetween,
+                                  double trafficLevel,
+                                  double stopDistBeforeIntersection) {
+        super(columns, rows, laneWidth, speedLimit, lanesPerRoad,
+                medianSize, distanceBetween, trafficLevel,
+                stopDistBeforeIntersection);
+    }
 
-    return new AutoDriverOnlySimulator(layout);
-  }
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * Set the name of the file containing the traffic volume data.
+     *
+     * @param trafficVolumeFileName the name of the file containing the traffic
+     *                              volume data
+     */
+    public void setTrafficVolume(String trafficVolumeFileName) {
+        this.trafficVolumeFileName = trafficVolumeFileName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Simulator getSimulator() {
+        double currentTime = 0.0;
+        GridMap layout = new GridMap(currentTime,
+                numOfColumns,
+                numOfRows,
+                laneWidth,
+                speedLimit,
+                lanesPerRoad,
+                medianSize,
+                distanceBetween);
+
+        ReservationGridManager.Config gridConfig =
+                new ReservationGridManager.Config(SimConfig.TIME_STEP,
+                        SimConfig.GRID_TIME_STEP,
+                        0.0,
+                        0.0,
+                        0.0,
+                        true,
+                        1.0);
+
+        SimConfig.MUST_STOP_BEFORE_INTERSECTION = true;
+        Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
+
+        GridMapUtil.setApproxStopSignManagers(layout, currentTime,
+                gridConfig);
+
+        if (trafficVolumeFileName == null) {
+            if (numOfColumns == 1 && numOfRows == 1) {
+                GridMapUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
+            } else {
+                GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
+            }
+        } else {
+            GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
+        }
+
+        V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
+                stopDistBeforeIntersection;
+
+        return new AutoDriverOnlySimulator(layout);
+    }
 }

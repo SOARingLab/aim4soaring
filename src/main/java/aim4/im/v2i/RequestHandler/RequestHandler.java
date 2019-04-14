@@ -39,32 +39,32 @@ import aim4.sim.StatCollector;
  */
 public interface RequestHandler {
 
-  /**
-   * Set the base policy call-back.
-   *
-   * @param basePolicy  the base policy's call-back
-   */
-  void setBasePolicyCallback(BasePolicyCallback basePolicy);
+    /**
+     * Set the base policy call-back.
+     *
+     * @param basePolicy the base policy's call-back
+     */
+    void setBasePolicyCallback(BasePolicyCallback basePolicy);
 
-  /**
-   * Let the request handler to act for a given time period.
-   *
-   * @param timeStep  the time period
-   */
-  void act(double timeStep);
+    /**
+     * Let the request handler to act for a given time period.
+     *
+     * @param timeStep the time period
+     */
+    void act(double timeStep);
 
-  /**
-   * Process the request message.
-   *
-   * @param msg the request message
-   */
-  void processRequestMsg(Request msg);
+    /**
+     * Process the request message.
+     *
+     * @param msg the request message
+     */
+    void processRequestMsg(Request msg);
 
 
-  /**
-   * Get the statistic collector.
-   *
-   * @return the statistic collector
-   */
-  StatCollector<?> getStatCollector();
+    /**
+     * Get the statistic collector.
+     *
+     * @return the statistic collector
+     */
+    StatCollector<?> getStatCollector();
 }

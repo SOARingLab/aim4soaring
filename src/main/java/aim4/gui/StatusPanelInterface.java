@@ -35,13 +35,13 @@ package aim4.gui;
  */
 public interface StatusPanelInterface {
 
-  /**
-   * Update the panel.
-   */
-  void update();
+    /**
+     * Update the panel.
+     */
+    void update();
 
-  /**
-   * Clear the panel.
-   */
-  void clear();
+    /**
+     * Clear the panel.
+     */
+    void clear();
 }

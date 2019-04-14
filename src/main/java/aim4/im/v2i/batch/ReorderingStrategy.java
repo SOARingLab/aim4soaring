@@ -41,37 +41,37 @@ import aim4.im.v2i.RequestHandler.BatchModeRequestHandler.IndexedProposal;
  */
 public interface ReorderingStrategy {
 
-  /**
-   * Set the initial time of the batch mode.
-   *
-   * @param initTime  the initial time of the batch mode.
-   */
-  void setInitialTime(double initTime);
+    /**
+     * Set the initial time of the batch mode.
+     *
+     * @param initTime the initial time of the batch mode.
+     */
+    void setInitialTime(double initTime);
 
-  /**
-   * Select a subset of indexed proposals from the queue and sort them in a
-   * particular order such that they will be processed in that order.
-   *
-   * @param currentTime  the current time
-   * @param queue        the current queue of all indexed proposals
-   * @param trackModel   the track model
-   * @return an ordered list of indexed proposals
-   */
-  List<IndexedProposal> getBatch(double currentTime,
-                                 NavigableSet<IndexedProposal> queue,
-                                 TrackModel trackModel);
+    /**
+     * Select a subset of indexed proposals from the queue and sort them in a
+     * particular order such that they will be processed in that order.
+     *
+     * @param currentTime the current time
+     * @param queue       the current queue of all indexed proposals
+     * @param trackModel  the track model
+     * @return an ordered list of indexed proposals
+     */
+    List<IndexedProposal> getBatch(double currentTime,
+                                   NavigableSet<IndexedProposal> queue,
+                                   TrackModel trackModel);
 
-  /**
-   * Get the next processing time for the next batch.
-   *
-   * @return the next processing time.
-   */
-  double getNextProcessingTime();
+    /**
+     * Get the next processing time for the next batch.
+     *
+     * @return the next processing time.
+     */
+    double getNextProcessingTime();
 
-  /**
-   * Get the next proposal deadline for the next batch.
-   *
-   * @return the next proposal deadline.
-   */
-  double getNextProposalDeadline();
+    /**
+     * Get the next proposal deadline for the next batch.
+     *
+     * @return the next proposal deadline.
+     */
+    double getNextProposalDeadline();
 }

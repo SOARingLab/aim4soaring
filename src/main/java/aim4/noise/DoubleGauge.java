@@ -38,106 +38,108 @@ import aim4.util.Util;
  */
 public class DoubleGauge {
 
-  /**
-   * The actual value being measured by the gauge.
-   */
-  private double value = 0;
-  /**
-   * The maximum value the gauge can read.
-   */
-  private double maxValue = Double.MAX_VALUE;
-  /**
-   * The minimum value the gauge can read
-   */
-  private double minValue = Double.MIN_VALUE;
-  /**
-   * The function that determines how the gauge reads.
-   */
-  private NoiseFunction noiseFunction = BasicNoiseFunction.noNoise;
+    /**
+     * The actual value being measured by the gauge.
+     */
+    private double value = 0;
+    /**
+     * The maximum value the gauge can read.
+     */
+    private double maxValue = Double.MAX_VALUE;
+    /**
+     * The minimum value the gauge can read
+     */
+    private double minValue = Double.MIN_VALUE;
+    /**
+     * The function that determines how the gauge reads.
+     */
+    private NoiseFunction noiseFunction = BasicNoiseFunction.noNoise;
 
-  // Constructors
-  /**
-   * Class constructor for unlimited, uninitialized, noiseless gauge.
-   */
-  public DoubleGauge() {}
+    // Constructors
 
-  /**
-   * Class constructor for unlimited, uninitialized gauge with noise.
-   *
-   * @param noiseFunction the noise function this gauge will apply to values
-   */
-  public DoubleGauge(NoiseFunction noiseFunction) {
-    this.noiseFunction = noiseFunction;
-  }
+    /**
+     * Class constructor for unlimited, uninitialized, noiseless gauge.
+     */
+    public DoubleGauge() {
+    }
 
-  /**
-   * Class constructor for unlimited, noiseless gauge with initial value.
-   *
-   * @param value the initial value of the gauge
-   */
-  public DoubleGauge(double value) {
-    this.value = value;
-  }
+    /**
+     * Class constructor for unlimited, uninitialized gauge with noise.
+     *
+     * @param noiseFunction the noise function this gauge will apply to values
+     */
+    public DoubleGauge(NoiseFunction noiseFunction) {
+        this.noiseFunction = noiseFunction;
+    }
 
-  /**
-   * Class constructor for unlimited, initialized gauge with noise.
-   *
-   * @param value the initial value of the gauge
-   * @param noiseFunction the noise function this gauge will apply to values
-   */
-  public DoubleGauge(double value, NoiseFunction noiseFunction) {
-    this.value = value;
-    this.noiseFunction = noiseFunction;
-  }
+    /**
+     * Class constructor for unlimited, noiseless gauge with initial value.
+     *
+     * @param value the initial value of the gauge
+     */
+    public DoubleGauge(double value) {
+        this.value = value;
+    }
 
-  /**
-   * Class constructor for limited, initialized, noiseless gauge.
-   *
-   * @param value    the initial value of the gauge
-   * @param minValue the minimum value the gauge can store/read
-   * @param maxValue the maximum value the gauge can store/read
-   */
-  public DoubleGauge(double value, double minValue, double maxValue) {
-    this.value = value;
-    this.minValue = minValue;
-    this.maxValue = maxValue;
-  }
+    /**
+     * Class constructor for unlimited, initialized gauge with noise.
+     *
+     * @param value         the initial value of the gauge
+     * @param noiseFunction the noise function this gauge will apply to values
+     */
+    public DoubleGauge(double value, NoiseFunction noiseFunction) {
+        this.value = value;
+        this.noiseFunction = noiseFunction;
+    }
 
-  /**
-   * Class Constructor for limited, initialized, noisy gauge.
-   *
-   * @param value         the initial value of the gauge
-   * @param minValue      the minimum value the gauge can store/read
-   * @param maxValue      the maximum value the gauge can store/read
-   * @param noiseFunction the noise function this gauge will apply to values
-   */
-  public DoubleGauge(double value, double minValue, double maxValue,
-                     NoiseFunction noiseFunction) {
-    this.value = value;
-    this.minValue = minValue;
-    this.maxValue = maxValue;
-    this.noiseFunction = noiseFunction;
-  }
+    /**
+     * Class constructor for limited, initialized, noiseless gauge.
+     *
+     * @param value    the initial value of the gauge
+     * @param minValue the minimum value the gauge can store/read
+     * @param maxValue the maximum value the gauge can store/read
+     */
+    public DoubleGauge(double value, double minValue, double maxValue) {
+        this.value = value;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
 
-  // Get and Set
+    /**
+     * Class Constructor for limited, initialized, noisy gauge.
+     *
+     * @param value         the initial value of the gauge
+     * @param minValue      the minimum value the gauge can store/read
+     * @param maxValue      the maximum value the gauge can store/read
+     * @param noiseFunction the noise function this gauge will apply to values
+     */
+    public DoubleGauge(double value, double minValue, double maxValue,
+                       NoiseFunction noiseFunction) {
+        this.value = value;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.noiseFunction = noiseFunction;
+    }
 
-  /**
-   * Read the value of the gauge.
-   *
-   * @return the value of the gauge.
-   */
-  public double read() {
-    return value;
-  }
+    // Get and Set
 
-  /**
-   * Records a value to the gauge, with noise according to the
-   * gauge's {@link NoiseFunction}.
-   *
-   * @param recValue the value to be written to the gauge
-   */
-  public void record(double recValue) {
-    double v = noiseFunction.apply(recValue);
-    value = Util.constrain(v, minValue, maxValue);
-  }
+    /**
+     * Read the value of the gauge.
+     *
+     * @return the value of the gauge.
+     */
+    public double read() {
+        return value;
+    }
+
+    /**
+     * Records a value to the gauge, with noise according to the
+     * gauge's {@link NoiseFunction}.
+     *
+     * @param recValue the value to be written to the gauge
+     */
+    public void record(double recValue) {
+        double v = noiseFunction.apply(recValue);
+        value = Util.constrain(v, minValue, maxValue);
+    }
 }

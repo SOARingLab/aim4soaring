@@ -35,65 +35,82 @@ package aim4.config;
  */
 public final class Condor {
 
-  /////////////////////////////////
-  // CONDOR
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONDOR
+    /////////////////////////////////
 
-  /** The ID of the current Condor process. */
-  public static final int CONDOR_ID =
-      (System.getenv().get("condor_process_id") == null) ? (-1)
-      : Integer.parseInt(System.getenv().get("condor_process_id"));
+    /**
+     * The ID of the current Condor process.
+     */
+    public static final int CONDOR_ID =
+            (System.getenv().get("condor_process_id") == null) ? (-1)
+                    : Integer.parseInt(System.getenv().get("condor_process_id"));
 
-  /** The total number of Condor processes.  */
-  public static final int CONDOR_NUM =
-      (System.getenv().get("condor_process_num") == null) ? (-1)
-      : Integer.parseInt(System.getenv().get("condor_process_num"));
+    /**
+     * The total number of Condor processes.
+     */
+    public static final int CONDOR_NUM =
+            (System.getenv().get("condor_process_num") == null) ? (-1)
+                    : Integer.parseInt(System.getenv().get("condor_process_num"));
 
-  // Derived properties
+    // Derived properties
 
-  /** Whether the current job is submitted to Condor. */
-  public static final boolean IS_CONDOR_EXIST = (CONDOR_ID >= 0);
+    /**
+     * Whether the current job is submitted to Condor.
+     */
+    public static final boolean IS_CONDOR_EXIST = (CONDOR_ID >= 0);
 
-  /** The common file suffix for condor jobs. */
-  public static final String CONDOR_FILE_SUFFIX =
-    IS_CONDOR_EXIST ? ("_condor" + CONDOR_ID) : "";
+    /**
+     * The common file suffix for condor jobs.
+     */
+    public static final String CONDOR_FILE_SUFFIX =
+            IS_CONDOR_EXIST ? ("_condor" + CONDOR_ID) : "";
 
-  /** The internal counter for the condorDo construct. */
-  private static int condorI = -1;
+    /**
+     * The internal counter for the condorDo construct.
+     */
+    private static int condorI = -1;
 
-  /**
-   * The condorDo construct returns true if and only if its internal counter is
-   * equal to the Condor ID of the current process.  It is intended to be used
-   * in loops such that each Condor process would only execute the iterations
-   * of the loops if and only if the ID of Condor process is equal to the
-   * multiple of the iteration's count.  The objective to evenly partition the
-   * iterations for the condor processes. The internal counter is incremented
-   * by 1 after every call of condorDo().
-   *
-   * @return whether the condor process should execute the code block of the
-   *         if-statement.
-   */
-  public static boolean condorDo() {
-    if (IS_CONDOR_EXIST) {
-      condorI++;
-      return (condorI % CONDOR_NUM) == CONDOR_ID;
-    } else {
-      return true;
+    /**
+     * The condorDo construct returns true if and only if its internal counter is
+     * equal to the Condor ID of the current process.  It is intended to be used
+     * in loops such that each Condor process would only execute the iterations
+     * of the loops if and only if the ID of Condor process is equal to the
+     * multiple of the iteration's count.  The objective to evenly partition the
+     * iterations for the condor processes. The internal counter is incremented
+     * by 1 after every call of condorDo().
+     *
+     * @return whether the condor process should execute the code block of the
+     * if-statement.
+     */
+    public static boolean condorDo() {
+        if (IS_CONDOR_EXIST) {
+            condorI++;
+            return (condorI % CONDOR_NUM) == CONDOR_ID;
+        } else {
+            return true;
+        }
     }
-  }
 
-  /** Reset the internal counter of the condorDo construct. */
-  public static void condorDoReset() { condorI = -1; }
+    /**
+     * Reset the internal counter of the condorDo construct.
+     */
+    public static void condorDoReset() {
+        condorI = -1;
+    }
 
 
-  /////////////////////////////////
-  // PRIVATE METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE METHODS
+    /////////////////////////////////
 
-  /**
-   * This private constructor is intended to forbid the instantiation of this
-   * class.
-   */
-  private Condor() { };
+    /**
+     * This private constructor is intended to forbid the instantiation of this
+     * class.
+     */
+    private Condor() {
+    }
+
+    ;
 
 }

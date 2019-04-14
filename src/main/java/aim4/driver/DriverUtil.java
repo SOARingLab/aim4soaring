@@ -37,65 +37,68 @@ import aim4.vehicle.VehicleDriverView;
  */
 public class DriverUtil {
 
-  /////////////////////////////////
-  // CONSTANTS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTANTS
+    /////////////////////////////////
 
-  /**
-   * The default amount of lead time for lane following, in seconds.
-   * The lead time indicates how far along the Lane from the point nearest
-   * to the Vehicle's current location the Vehicle should aim.
-   * By default, lead distance = DEFAULT_LEAD_TIME * velocity + MIN_LEAD_DIST.
-   * {@value} seconds.
-   */
-  public static final double DEFAULT_LEAD_TIME = 0.4; // seconds
+    /**
+     * The default amount of lead time for lane following, in seconds.
+     * The lead time indicates how far along the Lane from the point nearest
+     * to the Vehicle's current location the Vehicle should aim.
+     * By default, lead distance = DEFAULT_LEAD_TIME * velocity + MIN_LEAD_DIST.
+     * {@value} seconds.
+     */
+    public static final double DEFAULT_LEAD_TIME = 0.4; // seconds
 
-  /**
-   * The constant term in the formula of calculating lead distances.
-   * It is the minimum possible lead distance.
-   * By default, lead distance = leadTime * velocity + MIN_LEAD_DIST.
-   * {@value} meters.
-   */
-  public static final double MIN_LEAD_DIST = 0.2; // meters
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Get the estimated lead distance, which is roughly equal to the speed of
-   * the vehicle times the default lead time.
-   *
-   * @return the lead distance
-   */
-  public static double getLeadDistance(VehicleDriverView vehicle) {
-    return DEFAULT_LEAD_TIME * vehicle.gaugeVelocity() + MIN_LEAD_DIST;
-  }
-
-  /**
-   * Determine the maximum velocity at which the Vehicle should travel
-   * given the Lane in which it is.
-   *
-   * @param vehicle  the vehicle
-   * @return the maximum velocity at which the Vehicle should travel
-   *         given the Lane in which it is
-   */
-  public static double calculateMaxFeasibleVelocity(VehicleDriverView vehicle) {
-    // TODO: should remove this function
-    // Whichever's smaller - speed limit or max velocity of the vehicle
-    return Math.min(vehicle.getSpec().getMaxVelocity(),
-                    vehicle.getDriver().getCurrentLane().getSpeedLimit());
-  }
+    /**
+     * The constant term in the formula of calculating lead distances.
+     * It is the minimum possible lead distance.
+     * By default, lead distance = leadTime * velocity + MIN_LEAD_DIST.
+     * {@value} meters.
+     */
+    public static final double MIN_LEAD_DIST = 0.2; // meters
 
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * This class should never be instantiated.
-   */
-  private DriverUtil(){};
+    /**
+     * Get the estimated lead distance, which is roughly equal to the speed of
+     * the vehicle times the default lead time.
+     *
+     * @return the lead distance
+     */
+    public static double getLeadDistance(VehicleDriverView vehicle) {
+        return DEFAULT_LEAD_TIME * vehicle.gaugeVelocity() + MIN_LEAD_DIST;
+    }
+
+    /**
+     * Determine the maximum velocity at which the Vehicle should travel
+     * given the Lane in which it is.
+     *
+     * @param vehicle the vehicle
+     * @return the maximum velocity at which the Vehicle should travel
+     * given the Lane in which it is
+     */
+    public static double calculateMaxFeasibleVelocity(VehicleDriverView vehicle) {
+        // TODO: should remove this function
+        // Whichever's smaller - speed limit or max velocity of the vehicle
+        return Math.min(vehicle.getSpec().getMaxVelocity(),
+                vehicle.getDriver().getCurrentLane().getSpeedLimit());
+    }
+
+
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
+
+    /**
+     * This class should never be instantiated.
+     */
+    private DriverUtil() {
+    }
+
+    ;
 
 }

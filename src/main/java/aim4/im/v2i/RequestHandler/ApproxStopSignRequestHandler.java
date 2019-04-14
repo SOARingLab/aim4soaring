@@ -49,199 +49,205 @@ import aim4.sim.StatCollector;
  */
 public class ApproxStopSignRequestHandler implements RequestHandler {
 
-  /////////////////////////////////
-  // CONSTANTS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTANTS
+    /////////////////////////////////
 
-  /**
-   * The time window before the last vehicle inside the intersection
-   * leaving the intersection such that other vehicles can consider
-   * entering the intersection.
-   */
-  public static final double DEFAULT_TIME_WINDOW_BEFORE_LAST_EXIT_VEHICLE = 0.1;
+    /**
+     * The time window before the last vehicle inside the intersection
+     * leaving the intersection such that other vehicles can consider
+     * entering the intersection.
+     */
+    public static final double DEFAULT_TIME_WINDOW_BEFORE_LAST_EXIT_VEHICLE = 0.1;
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The base policy */
-  private ExtendedBasePolicyCallback basePolicy;
-  /** The time window before last exit vehicle */
-  private double timeWindowBeforeLastExitVehicle =
-    DEFAULT_TIME_WINDOW_BEFORE_LAST_EXIT_VEHICLE;
+    /**
+     * The base policy
+     */
+    private ExtendedBasePolicyCallback basePolicy;
+    /**
+     * The time window before last exit vehicle
+     */
+    private double timeWindowBeforeLastExitVehicle =
+            DEFAULT_TIME_WINDOW_BEFORE_LAST_EXIT_VEHICLE;
 
-  /** The name of the next road */
-  private String nextRoadName = null;
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Set the base policy call-back.
-   *
-   * @param basePolicy  the base policy's call-back
-   */
-  @Override
-  public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
-    if (basePolicy instanceof ExtendedBasePolicyCallback) {
-      this.basePolicy = (ExtendedBasePolicyCallback)basePolicy;
-    } else {
-      throw new RuntimeException("The BasePolicyCallback for " +
-                "AllStopRequestHandler must be ExtendedBasePolicyCallback.");
-    }
-  }
-
-  /**
-   * Let the request handler to act for a given time period.
-   *
-   * @param timeStep  the time period
-   */
-  @Override
-  public void act(double timeStep) {
-    // do nothing
-  }
-
-  /**
-   * Process the request message.
-   *
-   * @param msg the request message
-   */
-  @Override
-  public void processRequestMsg(Request msg) {
-    int vin = msg.getVin();
-
-    // If the vehicle has got a reservation already, reject it.
-    if (basePolicy.hasReservation(vin)) {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-      return;
-    }
-
-    // filter the proposals
-    ProposalFilterResult filterResult =
-      BasePolicy.standardProposalsFilter(msg.getProposals(),
-                                         basePolicy.getCurrentTime());
-    if (filterResult.isNoProposalLeft()) {
-      basePolicy.sendRejectMsg(vin,
-                               msg.getRequestId(),
-                               filterResult.getReason());
-    }
-
-    List<Request.Proposal> proposals = filterResult.getProposals();
-
-    // Remove proposals those arrival time is prohibited
-    // according to canEnterAtArrivalTime().
-    removeProposalWithInvalidArrivalTime(vin, proposals);
-    if (proposals.isEmpty()) {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-      return;
-    }
-    // If cannot enter from lane according to canEnterFromLane(), reject it.
-    if (!canEnterFromLane(proposals.get(0).getArrivalLaneID())){
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-      return;
-    }
-    // try to see if reservation is possible for the remaining proposals.
-    ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
-    if (reserveParam != null) {
-      basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
-    } else {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-    }
-  }
-
-  /**
-   * Get the statistic collector.
-   *
-   * @return the statistic collector
-   */
-  @Override
-  public StatCollector<?> getStatCollector() {
-    return null;
-  }
-
-  /////////////////////////////////
-  // PRIVATE METHODS
-  /////////////////////////////////
-
-  /**
-   * Remove proposals whose arrival time is prohibited from entering
-   * the intersection according to {@code canEnterAtArrivalTime()}.
-   *
-   * @param proposals  a set of proposals
-   */
-  private void removeProposalWithInvalidArrivalTime(int vin,
-                                             List<Request.Proposal> proposals) {
-    for (Iterator<Request.Proposal> tpIter = proposals.listIterator();
-         tpIter.hasNext();) {
-      Request.Proposal prop = tpIter.next();
-      if (!canEnterAtArrivalTime(vin, prop.getArrivalTime())) {
-        tpIter.remove();
-      }
-    }
-  }
-
-  /**
-   * Check whether the vehicle can enter the intersection at the arrival time.
-   *
-   * @param vin          the VIN number of the vehicle
-   * @param arrivalTime  the arrival time
-   * @return whether the vehicle can enter the intersection
-   */
-  private boolean canEnterAtArrivalTime(int vin, double arrivalTime) {
-    double lastReservedTime =
-      basePolicy.getReservationGrid().getLastReservedTime();
-    if (lastReservedTime - timeWindowBeforeLastExitVehicle > arrivalTime) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+    /**
+     * The name of the next road
+     */
+    private String nextRoadName = null;
 
 
-  /**
-   * Check whether the vehicle can enter the intersection from a lane at
-   * the current time.  This method is intended to be overridden by superclass.
-   *
-   * @param laneId  the id of the lane from which the vehicle enters
-   *                the intersection.
-   * @return whether the vehicle can enter the intersection
-   */
-  private boolean canEnterFromLane(int laneId) {
-    Road road = Debug.currentMap.getRoad(laneId);
-    String roadName = road.getName();
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-    if (nextRoadName != null) {
-      double lastReservedTime =
-        basePolicy.getReservationGrid().getLastReservedTime();
-      if (roadName.equals(nextRoadName) ||
-          lastReservedTime <= basePolicy.getCurrentTime()) {
-        if (nextRoadName.equals("1st Avenue N")) {
-          nextRoadName = "1st Street W";
-        } else if (nextRoadName.equals("1st Street W")) {
-          nextRoadName = "1st Avenue S";
-        } else if (nextRoadName.equals("1st Avenue S")) {
-          nextRoadName = "1st Street E";
-        } else if (nextRoadName.equals("1st Street E")) {
-          nextRoadName = "1st Avenue N";
+    /**
+     * Set the base policy call-back.
+     *
+     * @param basePolicy the base policy's call-back
+     */
+    @Override
+    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+        if (basePolicy instanceof ExtendedBasePolicyCallback) {
+            this.basePolicy = (ExtendedBasePolicyCallback) basePolicy;
         } else {
-          throw new RuntimeException("Error in ApproxStopSignFCFSPolicy." +
-                                     "canEnterFromRoad()");
+            throw new RuntimeException("The BasePolicyCallback for " +
+                    "AllStopRequestHandler must be ExtendedBasePolicyCallback.");
         }
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      nextRoadName = roadName;
-      return false;
     }
-  }
+
+    /**
+     * Let the request handler to act for a given time period.
+     *
+     * @param timeStep the time period
+     */
+    @Override
+    public void act(double timeStep) {
+        // do nothing
+    }
+
+    /**
+     * Process the request message.
+     *
+     * @param msg the request message
+     */
+    @Override
+    public void processRequestMsg(Request msg) {
+        int vin = msg.getVin();
+
+        // If the vehicle has got a reservation already, reject it.
+        if (basePolicy.hasReservation(vin)) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
+            return;
+        }
+
+        // filter the proposals
+        ProposalFilterResult filterResult =
+                BasePolicy.standardProposalsFilter(msg.getProposals(),
+                        basePolicy.getCurrentTime());
+        if (filterResult.isNoProposalLeft()) {
+            basePolicy.sendRejectMsg(vin,
+                    msg.getRequestId(),
+                    filterResult.getReason());
+        }
+
+        List<Request.Proposal> proposals = filterResult.getProposals();
+
+        // Remove proposals those arrival time is prohibited
+        // according to canEnterAtArrivalTime().
+        removeProposalWithInvalidArrivalTime(vin, proposals);
+        if (proposals.isEmpty()) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+            return;
+        }
+        // If cannot enter from lane according to canEnterFromLane(), reject it.
+        if (!canEnterFromLane(proposals.get(0).getArrivalLaneID())) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+            return;
+        }
+        // try to see if reservation is possible for the remaining proposals.
+        ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
+        if (reserveParam != null) {
+            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+        } else {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+        }
+    }
+
+    /**
+     * Get the statistic collector.
+     *
+     * @return the statistic collector
+     */
+    @Override
+    public StatCollector<?> getStatCollector() {
+        return null;
+    }
+
+    /////////////////////////////////
+    // PRIVATE METHODS
+    /////////////////////////////////
+
+    /**
+     * Remove proposals whose arrival time is prohibited from entering
+     * the intersection according to {@code canEnterAtArrivalTime()}.
+     *
+     * @param proposals a set of proposals
+     */
+    private void removeProposalWithInvalidArrivalTime(int vin,
+                                                      List<Request.Proposal> proposals) {
+        for (Iterator<Request.Proposal> tpIter = proposals.listIterator();
+             tpIter.hasNext(); ) {
+            Request.Proposal prop = tpIter.next();
+            if (!canEnterAtArrivalTime(vin, prop.getArrivalTime())) {
+                tpIter.remove();
+            }
+        }
+    }
+
+    /**
+     * Check whether the vehicle can enter the intersection at the arrival time.
+     *
+     * @param vin         the VIN number of the vehicle
+     * @param arrivalTime the arrival time
+     * @return whether the vehicle can enter the intersection
+     */
+    private boolean canEnterAtArrivalTime(int vin, double arrivalTime) {
+        double lastReservedTime =
+                basePolicy.getReservationGrid().getLastReservedTime();
+        if (lastReservedTime - timeWindowBeforeLastExitVehicle > arrivalTime) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    /**
+     * Check whether the vehicle can enter the intersection from a lane at
+     * the current time.  This method is intended to be overridden by superclass.
+     *
+     * @param laneId the id of the lane from which the vehicle enters
+     *               the intersection.
+     * @return whether the vehicle can enter the intersection
+     */
+    private boolean canEnterFromLane(int laneId) {
+        Road road = Debug.currentMap.getRoad(laneId);
+        String roadName = road.getName();
+
+        if (nextRoadName != null) {
+            double lastReservedTime =
+                    basePolicy.getReservationGrid().getLastReservedTime();
+            if (roadName.equals(nextRoadName) ||
+                    lastReservedTime <= basePolicy.getCurrentTime()) {
+                if (nextRoadName.equals("1st Avenue N")) {
+                    nextRoadName = "1st Street W";
+                } else if (nextRoadName.equals("1st Street W")) {
+                    nextRoadName = "1st Avenue S";
+                } else if (nextRoadName.equals("1st Avenue S")) {
+                    nextRoadName = "1st Street E";
+                } else if (nextRoadName.equals("1st Street E")) {
+                    nextRoadName = "1st Avenue N";
+                } else {
+                    throw new RuntimeException("Error in ApproxStopSignFCFSPolicy." +
+                            "canEnterFromRoad()");
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            nextRoadName = roadName;
+            return false;
+        }
+    }
 
 
 }

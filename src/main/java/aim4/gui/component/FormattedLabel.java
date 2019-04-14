@@ -40,110 +40,109 @@ import javax.swing.JLabel;
  */
 public class FormattedLabel extends JLabel {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  // ///////////////////////////////
-  // PUBLIC FIELDS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PUBLIC FIELDS
+    // ///////////////////////////////
 
-  /**
-   * The font in which to display this information. It is monospaced so that
-   * numeric values will display in an easily readable format if their values
-   * change rapidly.
-   */
-  public static final Font FONT = new Font("Monospaced", Font.PLAIN, 10);
+    /**
+     * The font in which to display this information. It is monospaced so that
+     * numeric values will display in an easily readable format if their values
+     * change rapidly.
+     */
+    public static final Font FONT = new Font("Monospaced", Font.PLAIN, 10);
 
-  // ///////////////////////////////
-  // PRIVATE FIELDS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PRIVATE FIELDS
+    // ///////////////////////////////
 
-  /** The string to put before the value. */
-  private final String prefix;
-  /** The format string to format the value, including any units. */
-  private final String format;
-  /**
-   * The string of blanks to hold the space for the true value, to preserve
-   * formatting in case formatting is dynamic.
-   */
-  private final String blank;
+    /**
+     * The string to put before the value.
+     */
+    private final String prefix;
+    /**
+     * The format string to format the value, including any units.
+     */
+    private final String format;
+    /**
+     * The string of blanks to hold the space for the true value, to preserve
+     * formatting in case formatting is dynamic.
+     */
+    private final String blank;
 
-  // ///////////////////////////////
-  // CLASS CONSTRUCTORS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // CLASS CONSTRUCTORS
+    // ///////////////////////////////
 
-  /**
-   * Construct a new FormattedLabel with the given prefix string, format
-   * string, and width.
-   *
-   * @param prefix
-   *          the string introducing the value
-   * @param format
-   *          the way to format the value (a la <code>printf</code>),
-   *          including any units
-   * @param width
-   *          the desired maximum width of the label, in characters
-   */
-  public FormattedLabel(String prefix, String format, int width) {
-    super(prefix);
-    setFont(FONT);
-    this.prefix = prefix;
-    this.format = format;
-    blank = String.format("%" + width + "s", "");
-    clear();
-  }
+    /**
+     * Construct a new FormattedLabel with the given prefix string, format
+     * string, and width.
+     *
+     * @param prefix the string introducing the value
+     * @param format the way to format the value (a la <code>printf</code>),
+     *               including any units
+     * @param width  the desired maximum width of the label, in characters
+     */
+    public FormattedLabel(String prefix, String format, int width) {
+        super(prefix);
+        setFont(FONT);
+        this.prefix = prefix;
+        this.format = format;
+        blank = String.format("%" + width + "s", "");
+        clear();
+    }
 
-  // ///////////////////////////////
-  // PUBLIC METHODS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PUBLIC METHODS
+    // ///////////////////////////////
 
-  /** Set the FormattedLabel to show no value. */
-  public void clear() {
-    setText(prefix + blank);
-  }
+    /**
+     * Set the FormattedLabel to show no value.
+     */
+    public void clear() {
+        setText(prefix + blank);
+    }
 
-  /**
-   * Update the FormattedLabel to display the given value. This version is
-   * designed for double values.
-   *
-   * @param param
-   *          the value to display.
-   */
-  public void update(int param) {
-    setText(prefix + String.format(format, param));
-  }
+    /**
+     * Update the FormattedLabel to display the given value. This version is
+     * designed for double values.
+     *
+     * @param param the value to display.
+     */
+    public void update(int param) {
+        setText(prefix + String.format(format, param));
+    }
 
-  /**
-   * Update the FormattedLabel to display the given value. This version is
-   * designed for double values.
-   *
-   * @param param
-   *          the value to display.
-   */
-  public void update(long param) {
-    setText(prefix + String.format(format, param));
-  }
+    /**
+     * Update the FormattedLabel to display the given value. This version is
+     * designed for double values.
+     *
+     * @param param the value to display.
+     */
+    public void update(long param) {
+        setText(prefix + String.format(format, param));
+    }
 
-  /**
-   * Update the FormattedLabel to display the given value. This version is
-   * designed for double values.
-   *
-   * @param param
-   *          the value to display.
-   */
-  public void update(double param) {
-    setText(prefix + String.format(format, param));
-  }
+    /**
+     * Update the FormattedLabel to display the given value. This version is
+     * designed for double values.
+     *
+     * @param param the value to display.
+     */
+    public void update(double param) {
+        setText(prefix + String.format(format, param));
+    }
 
-  /**
-   * Update the FormattedLabel to display the given value. This version is
-   * designed for objects that define their own <code>toString()</code> method
-   * (e.g. <code>Enum</code>s).
-   *
-   * @param param
-   *          the value to display.
-   */
-  public void update(Object param) {
-    setText(prefix + String.format(format, param));
-  }
+    /**
+     * Update the FormattedLabel to display the given value. This version is
+     * designed for objects that define their own <code>toString()</code> method
+     * (e.g. <code>Enum</code>s).
+     *
+     * @param param the value to display.
+     */
+    public void update(Object param) {
+        setText(prefix + String.format(format, param));
+    }
 }
 

@@ -44,32 +44,36 @@ import aim4.sim.Simulator;
  * by N-phases traffic signals.
  */
 public class ApproxNPhasesTrafficSignalSimSetup extends BasicSimSetup
-                                                implements SimSetup {
+        implements SimSetup {
 
-  /** The name of the file containing the traffic signal phases */
-  private String trafficSignalPhaseFileName;
-  /** The name of the file containing the traffic volume information */
-  private String trafficVolumeFileName;
+    /**
+     * The name of the file containing the traffic signal phases
+     */
+    private String trafficSignalPhaseFileName;
+    /**
+     * The name of the file containing the traffic volume information
+     */
+    private String trafficVolumeFileName;
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create the setup for the simulator in which the intersections are
-   * controlled by N-phases traffic signals.
-   *
-   * @param basicSimSetup               the basic simulator setup
-   * @param trafficSignalPhaseFileName  the name of the file containing the
-   *                                    traffic signal phase
-   */
-  public ApproxNPhasesTrafficSignalSimSetup(BasicSimSetup basicSimSetup,
-                                            String trafficSignalPhaseFileName) {
-    super(basicSimSetup);
+    /**
+     * Create the setup for the simulator in which the intersections are
+     * controlled by N-phases traffic signals.
+     *
+     * @param basicSimSetup              the basic simulator setup
+     * @param trafficSignalPhaseFileName the name of the file containing the
+     *                                   traffic signal phase
+     */
+    public ApproxNPhasesTrafficSignalSimSetup(BasicSimSetup basicSimSetup,
+                                              String trafficSignalPhaseFileName) {
+        super(basicSimSetup);
 
-    this.trafficSignalPhaseFileName = trafficSignalPhaseFileName;
-    this.trafficVolumeFileName = null;
-  }
+        this.trafficSignalPhaseFileName = trafficSignalPhaseFileName;
+        this.trafficVolumeFileName = null;
+    }
 
 //  public ApproxNPhasesTrafficSignalSimSetup(int columns, int rows,
 //                                     double laneWidth, double speedLimit,
@@ -83,59 +87,59 @@ public class ApproxNPhasesTrafficSignalSimSetup extends BasicSimSetup
 //  }
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Set the traffic volume according to the specification in a file.
-   *
-   * @param trafficVolumeFileName  the name of the file containing the
-   *                               traffic volume information
-   */
-  public void setTrafficVolume(String trafficVolumeFileName) {
-    this.trafficVolumeFileName = trafficVolumeFileName;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Simulator getSimulator() {
-    double currentTime = 0.0;
-    GridMap layout = new GridMap(currentTime,
-                                       numOfColumns,
-                                       numOfRows,
-                                       laneWidth,
-                                       speedLimit,
-                                       lanesPerRoad,
-                                       medianSize,
-                                       distanceBetween);
-
-    ReservationGridManager.Config gridConfig =
-      new ReservationGridManager.Config(SimConfig.TIME_STEP,
-                                        SimConfig.GRID_TIME_STEP,
-                                        0.1,
-                                        0.15,
-                                        0.15,
-                                        true,
-                                        1.0);
-
-    Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
-
-    GridMapUtil.setApproxNPhasesTrafficLightManagers(
-        layout, currentTime, gridConfig, trafficSignalPhaseFileName);
-
-    if (numOfColumns == 1 && numOfRows == 1) {
-      GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
-      // GridLayoutUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
-    } else {
-      GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
+    /**
+     * Set the traffic volume according to the specification in a file.
+     *
+     * @param trafficVolumeFileName the name of the file containing the
+     *                              traffic volume information
+     */
+    public void setTrafficVolume(String trafficVolumeFileName) {
+        this.trafficVolumeFileName = trafficVolumeFileName;
     }
 
-    V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
-      stopDistBeforeIntersection;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Simulator getSimulator() {
+        double currentTime = 0.0;
+        GridMap layout = new GridMap(currentTime,
+                numOfColumns,
+                numOfRows,
+                laneWidth,
+                speedLimit,
+                lanesPerRoad,
+                medianSize,
+                distanceBetween);
 
-    return new AutoDriverOnlySimulator(layout);
-  }
+        ReservationGridManager.Config gridConfig =
+                new ReservationGridManager.Config(SimConfig.TIME_STEP,
+                        SimConfig.GRID_TIME_STEP,
+                        0.1,
+                        0.15,
+                        0.15,
+                        true,
+                        1.0);
+
+        Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
+
+        GridMapUtil.setApproxNPhasesTrafficLightManagers(
+                layout, currentTime, gridConfig, trafficSignalPhaseFileName);
+
+        if (numOfColumns == 1 && numOfRows == 1) {
+            GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
+            // GridLayoutUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
+        } else {
+            GridMapUtil.setUniformRandomSpawnPoints(layout, trafficLevel);
+        }
+
+        V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
+                stopDistBeforeIntersection;
+
+        return new AutoDriverOnlySimulator(layout);
+    }
 }

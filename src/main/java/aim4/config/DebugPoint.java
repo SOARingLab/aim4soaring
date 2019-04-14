@@ -40,188 +40,188 @@ import java.awt.geom.Point2D;
  */
 public class DebugPoint {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /**
-   * The default color that will be used to display DebugPoints graphically.
-   */
-  private static final Color DEFAULT_COLOR = Color.BLACK;
+    /**
+     * The default color that will be used to display DebugPoints graphically.
+     */
+    private static final Color DEFAULT_COLOR = Color.BLACK;
 
-  /**
-   * The actual point.
-   */
-  private Point2D point;
-  /**
-   * The point from which to start the line.  If null, no line is indicated.
-   */
-  private Point2D startPoint;
-  /**
-   * A message to print at the debug point.  If null, no message is
-   * indicated.
-   */
-  private String msg;
+    /**
+     * The actual point.
+     */
+    private Point2D point;
+    /**
+     * The point from which to start the line.  If null, no line is indicated.
+     */
+    private Point2D startPoint;
+    /**
+     * A message to print at the debug point.  If null, no message is
+     * indicated.
+     */
+    private String msg;
 
-  /**
-   * The color of the line to the point and text.
-   */
-  private Color color;
+    /**
+     * The color of the line to the point and text.
+     */
+    private Color color;
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Class constructor for only a point with no line.
-   *
-   * @param point the location of the debug point
-   */
-  public DebugPoint(Point2D point) {
-    this(point, null, null, DEFAULT_COLOR);
-  }
+    /**
+     * Class constructor for only a point with no line.
+     *
+     * @param point the location of the debug point
+     */
+    public DebugPoint(Point2D point) {
+        this(point, null, null, DEFAULT_COLOR);
+    }
 
-  /**
-   * Class constructor for text only.
-   *
-   * @param msg the text for this text-only DebugPoint
-   */
-  public DebugPoint(String msg) {
-    this(null, null, msg, DEFAULT_COLOR);
-  }
+    /**
+     * Class constructor for text only.
+     *
+     * @param msg the text for this text-only DebugPoint
+     */
+    public DebugPoint(String msg) {
+        this(null, null, msg, DEFAULT_COLOR);
+    }
 
-  /**
-   * Class constructor for a point with a line.
-   *
-   * @param point      the location of the debug point
-   * @param startPoint the point from which to draw a line to the debug
-   *                   point
-   */
-  public DebugPoint(Point2D point, Point2D startPoint) {
-    this(point, startPoint, null, DEFAULT_COLOR);
-  }
+    /**
+     * Class constructor for a point with a line.
+     *
+     * @param point      the location of the debug point
+     * @param startPoint the point from which to draw a line to the debug
+     *                   point
+     */
+    public DebugPoint(Point2D point, Point2D startPoint) {
+        this(point, startPoint, null, DEFAULT_COLOR);
+    }
 
-  /**
-   * Class constructor for a point with text.
-   *
-   * @param point the location of the debug point
-   * @param msg   the text to display alongside the debug point
-   */
-  public DebugPoint(Point2D point, String msg) {
-    this(point, null, msg, DEFAULT_COLOR);
-  }
+    /**
+     * Class constructor for a point with text.
+     *
+     * @param point the location of the debug point
+     * @param msg   the text to display alongside the debug point
+     */
+    public DebugPoint(Point2D point, String msg) {
+        this(point, null, msg, DEFAULT_COLOR);
+    }
 
-  /**
-   * Class constructor for a colored point with text.
-   *
-   * @param point the location of the debug point
-   * @param msg   the text to display alongside the debug point
-   * @param color the color with which to display the point and text
-   */
-  public DebugPoint(Point2D point, String msg, Color color) {
-    this(point, null, msg, color);
-  }
+    /**
+     * Class constructor for a colored point with text.
+     *
+     * @param point the location of the debug point
+     * @param msg   the text to display alongside the debug point
+     * @param color the color with which to display the point and text
+     */
+    public DebugPoint(Point2D point, String msg, Color color) {
+        this(point, null, msg, color);
+    }
 
-  /**
-   * Class constructor for a line with text.
-   *
-   * @param point      the location of the debug point
-   * @param startPoint the point from which to draw a line to the debug
-   *                   point
-   * @param msg        the text to display alongside the debug point
-   */
-  public DebugPoint(Point2D point, Point2D startPoint,
-                    String msg) {
-    this(point, startPoint, msg, DEFAULT_COLOR);
-  }
+    /**
+     * Class constructor for a line with text.
+     *
+     * @param point      the location of the debug point
+     * @param startPoint the point from which to draw a line to the debug
+     *                   point
+     * @param msg        the text to display alongside the debug point
+     */
+    public DebugPoint(Point2D point, Point2D startPoint,
+                      String msg) {
+        this(point, startPoint, msg, DEFAULT_COLOR);
+    }
 
-  /**
-   * Class constructor for a colored line.
-   *
-   * @param point      the location of the debug point
-   * @param startPoint the point from which to draw a line to the debug
-   *                   point
-   * @param color      the color with which to display the point and line
-   */
-  public DebugPoint(Point2D point, Point2D startPoint,
-                    Color color) {
-    this(point, startPoint, null, color);
-  }
+    /**
+     * Class constructor for a colored line.
+     *
+     * @param point      the location of the debug point
+     * @param startPoint the point from which to draw a line to the debug
+     *                   point
+     * @param color      the color with which to display the point and line
+     */
+    public DebugPoint(Point2D point, Point2D startPoint,
+                      Color color) {
+        this(point, startPoint, null, color);
+    }
 
-  /**
-   * Class constructor for a colored line with text.
-   *
-   * @param point      the location of the debug point
-   * @param startPoint the point from which to draw a line to the debug
-   *                   point
-   * @param msg        the text to display alongside the debug point
-   * @param color      the color with which to display the point, line, and
-   *                   text
-   */
-  public DebugPoint(Point2D point, Point2D startPoint,
-                    String msg, Color color) {
-    this.point = point;
-    this.startPoint = startPoint;
-    this.msg = msg;
-    this.color = color;
-  }
+    /**
+     * Class constructor for a colored line with text.
+     *
+     * @param point      the location of the debug point
+     * @param startPoint the point from which to draw a line to the debug
+     *                   point
+     * @param msg        the text to display alongside the debug point
+     * @param color      the color with which to display the point, line, and
+     *                   text
+     */
+    public DebugPoint(Point2D point, Point2D startPoint,
+                      String msg, Color color) {
+        this.point = point;
+        this.startPoint = startPoint;
+        this.msg = msg;
+        this.color = color;
+    }
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Whether or not this DebugPoint has associated text.
-   *
-   * @return whether or not this DebugPoint has associated text
-   */
-  public boolean hasText() {
-    return (msg != null);
-  }
+    /**
+     * Whether or not this DebugPoint has associated text.
+     *
+     * @return whether or not this DebugPoint has associated text
+     */
+    public boolean hasText() {
+        return (msg != null);
+    }
 
-  /**
-   * Whether or not this DebugPoint has a start point.
-   *
-   * @return whether or not this DebugPoint has a start point
-   */
-  public boolean hasStartPoint() {
-    return (startPoint != null);
-  }
+    /**
+     * Whether or not this DebugPoint has a start point.
+     *
+     * @return whether or not this DebugPoint has a start point
+     */
+    public boolean hasStartPoint() {
+        return (startPoint != null);
+    }
 
-  /**
-   * Get the point associated with this DebugPoint.
-   *
-   * @return the point associated with this DebugPoint
-   */
-  public Point2D getPoint() {
-    return point;
-  }
+    /**
+     * Get the point associated with this DebugPoint.
+     *
+     * @return the point associated with this DebugPoint
+     */
+    public Point2D getPoint() {
+        return point;
+    }
 
-  /**
-   * Get the start point associated with this DebugPoint.
-   *
-   * @return the start point associated with this DebugPoint
-   */
-  public Point2D getStartPoint() {
-    return startPoint;
-  }
+    /**
+     * Get the start point associated with this DebugPoint.
+     *
+     * @return the start point associated with this DebugPoint
+     */
+    public Point2D getStartPoint() {
+        return startPoint;
+    }
 
-  /**
-   * Get the color of this DebugPoint.
-   *
-   * @return the color of this DebugPoint
-   */
-  public Color getColor() {
-    return color;
-  }
+    /**
+     * Get the color of this DebugPoint.
+     *
+     * @return the color of this DebugPoint
+     */
+    public Color getColor() {
+        return color;
+    }
 
-  /**
-   * Get the text associated with this DebugPoint.
-   *
-   * @return the text associated with this DebugPoint
-   */
-  public String getText() {
-    return msg;
-  }
+    /**
+     * Get the text associated with this DebugPoint.
+     *
+     * @return the text associated with this DebugPoint
+     */
+    public String getText() {
+        return msg;
+    }
 
 }

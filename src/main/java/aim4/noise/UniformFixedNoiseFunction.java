@@ -38,27 +38,27 @@ import aim4.util.Util;
  */
 public class UniformFixedNoiseFunction implements NoiseFunction {
 
-  /**
-   * The amount to vary in either direction.  For example, if this is 10, then
-   * each value will vary uniformly between <i>(v - 10)</i> and
-   * <i>(v + 10)</i>, where v is the true value.
-   */
-  private double range;
+    /**
+     * The amount to vary in either direction.  For example, if this is 10, then
+     * each value will vary uniformly between <i>(v - 10)</i> and
+     * <i>(v + 10)</i>, where v is the true value.
+     */
+    private double range;
 
-  /**
-   * Class constructor.
-   *
-   * @param range the range, in each direction, of potential noise.
-   */
-  public UniformFixedNoiseFunction(double range) {
-    this.range = range;
-  }
+    /**
+     * Class constructor.
+     *
+     * @param range the range, in each direction, of potential noise.
+     */
+    public UniformFixedNoiseFunction(double range) {
+        this.range = range;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public double apply(double trueValue) {
-    return trueValue + (Util.random.nextDouble() * range * 2) - range;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double apply(double trueValue) {
+        return trueValue + (Util.random.nextDouble() * range * 2) - range;
+    }
 }

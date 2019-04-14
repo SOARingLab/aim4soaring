@@ -38,35 +38,37 @@ import aim4.map.lane.Lane;
  */
 public class UniqueDestinationSelector implements DestinationSelector {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The destination */
-  private Road endRoad;
+    /**
+     * The destination
+     */
+    private Road endRoad;
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a unique destination selector.
-   *
-   * @param endRoad  the destination
-   */
-  public UniqueDestinationSelector(Road endRoad) {
-    this.endRoad = endRoad;
-  }
+    /**
+     * Create a unique destination selector.
+     *
+     * @param endRoad the destination
+     */
+    public UniqueDestinationSelector(Road endRoad) {
+        this.endRoad = endRoad;
+    }
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Road selectDestination(Lane currentLane) {
-    return endRoad;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Road selectDestination(Lane currentLane) {
+        return endRoad;
+    }
 }

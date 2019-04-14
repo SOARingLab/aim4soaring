@@ -32,6 +32,7 @@ package aim4.im.v2i.RequestHandler;
 
 import aim4.config.Debug;
 import aim4.config.TrafficSignal;
+
 import java.util.List;
 
 import aim4.im.v2i.policy.BasePolicy;
@@ -47,217 +48,223 @@ import aim4.sim.StatCollector;
  * The approximate traffic signal request handler.
  */
 public class ApproxSimpleTrafficSignalRequestHandler implements
-    TrafficSignalRequestHandler {
+        TrafficSignalRequestHandler {
 
-  /////////////////////////////////
-  // CONSTANTS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTANTS
+    /////////////////////////////////
 
-  /**
-   * The length of the green light duration
-   */
-  private static final double DEFAULT_GREEN_LIGHT_DURATION = 15.0;
-  /**
-   * The length of the yellow light duration
-   */
-  private static final double DEFAULT_YELLOW_LIGHT_DURATION = 5.0;
-
-
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
-
-  /** The duration of the green light signal */
-  private double greenLightDuration = DEFAULT_GREEN_LIGHT_DURATION;
-  /** The duration of the yellow light signal */
-  private double yellowLightDuration = DEFAULT_YELLOW_LIGHT_DURATION;
-  /** The base policy */
-  private BasePolicyCallback basePolicy;
-
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
-
-  public ApproxSimpleTrafficSignalRequestHandler(double greenLightDuration,
-                                                 double yellowLightDuration) {
-    this.greenLightDuration = greenLightDuration;
-    this.yellowLightDuration = yellowLightDuration;
-  }
+    /**
+     * The length of the green light duration
+     */
+    private static final double DEFAULT_GREEN_LIGHT_DURATION = 15.0;
+    /**
+     * The length of the yellow light duration
+     */
+    private static final double DEFAULT_YELLOW_LIGHT_DURATION = 5.0;
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /**
-   * Get the duration of the green light signal.
-   *
-   * @param greenLightDuration  the duration of the green light signal
-   */
-  public void setGreenLightDuration(double greenLightDuration) {
-    this.greenLightDuration = greenLightDuration;
-  }
+    /**
+     * The duration of the green light signal
+     */
+    private double greenLightDuration = DEFAULT_GREEN_LIGHT_DURATION;
+    /**
+     * The duration of the yellow light signal
+     */
+    private double yellowLightDuration = DEFAULT_YELLOW_LIGHT_DURATION;
+    /**
+     * The base policy
+     */
+    private BasePolicyCallback basePolicy;
 
-  /**
-   * Get the duration of the yellow light signal.
-   *
-   * @param yellowLightDuration  the duration of the yellow light signal
-   */
-  public void setYellowLightDuration(double yellowLightDuration) {
-    this.yellowLightDuration = yellowLightDuration;
-  }
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
-    this.basePolicy = basePolicy;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void act(double timeStep) {
-    // do nothing
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void processRequestMsg(Request msg) {
-    int vin = msg.getVin();
-
-    // If the vehicle has got a reservation already, reject it.
-    if (basePolicy.hasReservation(vin)) {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-      return;
+    public ApproxSimpleTrafficSignalRequestHandler(double greenLightDuration,
+                                                   double yellowLightDuration) {
+        this.greenLightDuration = greenLightDuration;
+        this.yellowLightDuration = yellowLightDuration;
     }
 
-    // filter the proposals
-    ProposalFilterResult filterResult =
-      BasePolicy.standardProposalsFilter(msg.getProposals(),
-                                         basePolicy.getCurrentTime());
-    if (filterResult.isNoProposalLeft()) {
-      basePolicy.sendRejectMsg(vin,
-                               msg.getRequestId(),
-                               filterResult.getReason());
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * Get the duration of the green light signal.
+     *
+     * @param greenLightDuration the duration of the green light signal
+     */
+    public void setGreenLightDuration(double greenLightDuration) {
+        this.greenLightDuration = greenLightDuration;
     }
 
-    List<Request.Proposal> proposals = filterResult.getProposals();
-
-    // If cannot enter from lane according to canEnterFromLane(), reject it.
-    if (!canEnterFromLane(proposals.get(0).getArrivalLaneID())){
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-      return;
-    }
-    // try to see if reservation is possible for the remaining proposals.
-    ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
-    if (reserveParam != null) {
-      basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
-    } else {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public StatCollector<?> getStatCollector() {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public TrafficSignal getSignal(int laneId) {
-    Road road = Debug.currentMap.getRoad(laneId);
-
-    double period = greenLightDuration + yellowLightDuration;
-    int id = (int) Math.floor(basePolicy.getCurrentTime() / period);
-
-    int phaseId = id % 4;
-
-    boolean canPass = false;
-    if (phaseId == 0) {
-      canPass = road.getName().equals("1st Street W");
-    } else if (phaseId == 1) {
-      canPass = road.getName().equals("1st Avenue S");
-    } else if (phaseId == 2) {
-      canPass = road.getName().equals("1st Street E");
-    } else if (phaseId == 3) {
-      canPass = road.getName().equals("1st Avenue N");
-    } else {
-      throw new RuntimeException("Error in isGreenTrafficLightNow()");
+    /**
+     * Get the duration of the yellow light signal.
+     *
+     * @param yellowLightDuration the duration of the yellow light signal
+     */
+    public void setYellowLightDuration(double yellowLightDuration) {
+        this.yellowLightDuration = yellowLightDuration;
     }
 
-    if (canPass) {
-      double t = basePolicy.getCurrentTime() - id * period;
-      if (t <= greenLightDuration) {
-        return TrafficSignal.GREEN;
-      } else {
-        return TrafficSignal.YELLOW;
-      }
-    } else {
-      // it is either yellow or red signal
-      return TrafficSignal.RED;
-    }
-  }
-
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
-
-  /**
-   * Check whether the vehicle can enter the intersection from a lane at
-   * the current time.
-   *
-   * @param laneId  the id of the lane from which the vehicle enters
-   *                the intersection.
-   * @return whether the vehicle can enter the intersection
-   */
-  private boolean canEnterFromLane(int laneId) {
-    Road road = Debug.currentMap.getRoad(laneId);
-
-    double period = greenLightDuration + yellowLightDuration;
-    int id = (int) Math.floor(basePolicy.getCurrentTime() / period);
-
-    int phaseId = id % 4;
-
-    boolean canPass = false;
-
-    if (phaseId == 0) {
-      canPass = road.getName().equals("1st Street W");
-    } else if (phaseId == 1) {
-      canPass = road.getName().equals("1st Avenue S");
-    } else if (phaseId == 2) {
-      canPass = road.getName().equals("1st Street E");
-    } else if (phaseId == 3) {
-      canPass = road.getName().equals("1st Avenue N");
-    } else {
-      throw new RuntimeException("Error in isGreenTrafficLightNow()");
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+        this.basePolicy = basePolicy;
     }
 
-    if (canPass) {
-      double t = basePolicy.getCurrentTime() - id * period;
-      if (t <= greenLightDuration) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      // it is either yellow or red signal
-      return false;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void act(double timeStep) {
+        // do nothing
     }
 
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void processRequestMsg(Request msg) {
+        int vin = msg.getVin();
+
+        // If the vehicle has got a reservation already, reject it.
+        if (basePolicy.hasReservation(vin)) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
+            return;
+        }
+
+        // filter the proposals
+        ProposalFilterResult filterResult =
+                BasePolicy.standardProposalsFilter(msg.getProposals(),
+                        basePolicy.getCurrentTime());
+        if (filterResult.isNoProposalLeft()) {
+            basePolicy.sendRejectMsg(vin,
+                    msg.getRequestId(),
+                    filterResult.getReason());
+        }
+
+        List<Request.Proposal> proposals = filterResult.getProposals();
+
+        // If cannot enter from lane according to canEnterFromLane(), reject it.
+        if (!canEnterFromLane(proposals.get(0).getArrivalLaneID())) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+            return;
+        }
+        // try to see if reservation is possible for the remaining proposals.
+        ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
+        if (reserveParam != null) {
+            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+        } else {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StatCollector<?> getStatCollector() {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TrafficSignal getSignal(int laneId) {
+        Road road = Debug.currentMap.getRoad(laneId);
+
+        double period = greenLightDuration + yellowLightDuration;
+        int id = (int) Math.floor(basePolicy.getCurrentTime() / period);
+
+        int phaseId = id % 4;
+
+        boolean canPass = false;
+        if (phaseId == 0) {
+            canPass = road.getName().equals("1st Street W");
+        } else if (phaseId == 1) {
+            canPass = road.getName().equals("1st Avenue S");
+        } else if (phaseId == 2) {
+            canPass = road.getName().equals("1st Street E");
+        } else if (phaseId == 3) {
+            canPass = road.getName().equals("1st Avenue N");
+        } else {
+            throw new RuntimeException("Error in isGreenTrafficLightNow()");
+        }
+
+        if (canPass) {
+            double t = basePolicy.getCurrentTime() - id * period;
+            if (t <= greenLightDuration) {
+                return TrafficSignal.GREEN;
+            } else {
+                return TrafficSignal.YELLOW;
+            }
+        } else {
+            // it is either yellow or red signal
+            return TrafficSignal.RED;
+        }
+    }
+
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
+
+    /**
+     * Check whether the vehicle can enter the intersection from a lane at
+     * the current time.
+     *
+     * @param laneId the id of the lane from which the vehicle enters
+     *               the intersection.
+     * @return whether the vehicle can enter the intersection
+     */
+    private boolean canEnterFromLane(int laneId) {
+        Road road = Debug.currentMap.getRoad(laneId);
+
+        double period = greenLightDuration + yellowLightDuration;
+        int id = (int) Math.floor(basePolicy.getCurrentTime() / period);
+
+        int phaseId = id % 4;
+
+        boolean canPass = false;
+
+        if (phaseId == 0) {
+            canPass = road.getName().equals("1st Street W");
+        } else if (phaseId == 1) {
+            canPass = road.getName().equals("1st Avenue S");
+        } else if (phaseId == 2) {
+            canPass = road.getName().equals("1st Street E");
+        } else if (phaseId == 3) {
+            canPass = road.getName().equals("1st Avenue N");
+        } else {
+            throw new RuntimeException("Error in isGreenTrafficLightNow()");
+        }
+
+        if (canPass) {
+            double t = basePolicy.getCurrentTime() - id * period;
+            if (t <= greenLightDuration) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // it is either yellow or red signal
+            return false;
+        }
+
+    }
 
 
 }

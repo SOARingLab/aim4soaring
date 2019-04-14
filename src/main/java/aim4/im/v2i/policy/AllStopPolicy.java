@@ -42,76 +42,76 @@ import aim4.sim.StatCollector;
  */
 public class AllStopPolicy implements Policy {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /**
-   * The V2IManager of which this Policy is a part.
-   */
-  private V2IManagerCallback im;
-
-
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
-
-  /**
-   * Create an all stop policy
-   *
-   * @param im  the intersection manager
-   */
-  public AllStopPolicy(V2IManagerCallback im){
-    this.im = im;
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setV2IManagerCallback(V2IManagerCallback im) {
-    this.im = im;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void act(double timeStep) {
-    // do nothing
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void processV2IMessage(V2IMessage msg) {
-    if (msg instanceof Request) {
-      im.sendI2VMessage(
-        new Reject(im.getId(),
-                   msg.getVin(),
-                   ((Request)msg).getRequestId(),
-                   im.getCurrentTime(),// mean it can send again immediately
-                   Reject.Reason.NO_CLEAR_PATH));
-    } // else do nothing
-  }
+    /**
+     * The V2IManager of which this Policy is a part.
+     */
+    private V2IManagerCallback im;
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public StatCollector<AllStopPolicy> getStatCollector() {
-    return null;
-  }
+    /**
+     * Create an all stop policy
+     *
+     * @param im the intersection manager
+     */
+    public AllStopPolicy(V2IManagerCallback im) {
+        this.im = im;
+    }
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setV2IManagerCallback(V2IManagerCallback im) {
+        this.im = im;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void act(double timeStep) {
+        // do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void processV2IMessage(V2IMessage msg) {
+        if (msg instanceof Request) {
+            im.sendI2VMessage(
+                    new Reject(im.getId(),
+                            msg.getVin(),
+                            ((Request) msg).getRequestId(),
+                            im.getCurrentTime(),// mean it can send again immediately
+                            Reject.Reason.NO_CLEAR_PATH));
+        } // else do nothing
+    }
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StatCollector<AllStopPolicy> getStatCollector() {
+        return null;
+    }
 
 
 }

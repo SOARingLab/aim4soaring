@@ -42,199 +42,202 @@ import aim4.map.SpawnPoint;
  */
 public class VinRegistry {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /**
-   * This generates a unique identifier for each vehicle, starting with 1000.
-   */
-  private static int vinGenerator = 1000;
+    /**
+     * This generates a unique identifier for each vehicle, starting with 1000.
+     */
+    private static int vinGenerator = 1000;
 
-  /**
-   * A map from VINs to Vehicles.
-   */
-  private static Map<Integer,WeakReference<VehicleSimView>> vinToVehicle =
-    new HashMap<Integer,WeakReference<VehicleSimView>>();
+    /**
+     * A map from VINs to Vehicles.
+     */
+    private static Map<Integer, WeakReference<VehicleSimView>> vinToVehicle =
+            new HashMap<Integer, WeakReference<VehicleSimView>>();
 
-  /**
-   * A map from VINs to VehicleSpec.
-   */
-  private static Map<Integer,VehicleSpec> vinToVehicleSpec =
-    new HashMap<Integer,VehicleSpec>();
+    /**
+     * A map from VINs to VehicleSpec.
+     */
+    private static Map<Integer, VehicleSpec> vinToVehicleSpec =
+            new HashMap<Integer, VehicleSpec>();
 
-  // TODO: remove the following in the future
+    // TODO: remove the following in the future
 
-  /**
-   * A map from VINs to spawn points.
-   */
-  private static Map<Integer,SpawnPoint> vinToSpawnPoint =
-    new HashMap<Integer,SpawnPoint>();
+    /**
+     * A map from VINs to spawn points.
+     */
+    private static Map<Integer, SpawnPoint> vinToSpawnPoint =
+            new HashMap<Integer, SpawnPoint>();
 
-  /**
-   * A map from VINs to destination roads.
-   */
-  private static Map<Integer,Road> vinToDestRoad =
-    new HashMap<Integer,Road>();
+    /**
+     * A map from VINs to destination roads.
+     */
+    private static Map<Integer, Road> vinToDestRoad =
+            new HashMap<Integer, Road>();
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Reset the registry.
-   */
-  public static void reset() {
-    vinGenerator = 1000;
-    vinToVehicle = new HashMap<Integer,WeakReference<VehicleSimView>>();
-    vinToVehicleSpec = new HashMap<Integer,VehicleSpec>();
-    vinToSpawnPoint = new HashMap<Integer,SpawnPoint>();
-    vinToDestRoad = new HashMap<Integer,Road>();
-  }
+    /**
+     * Reset the registry.
+     */
+    public static void reset() {
+        vinGenerator = 1000;
+        vinToVehicle = new HashMap<Integer, WeakReference<VehicleSimView>>();
+        vinToVehicleSpec = new HashMap<Integer, VehicleSpec>();
+        vinToSpawnPoint = new HashMap<Integer, SpawnPoint>();
+        vinToDestRoad = new HashMap<Integer, Road>();
+    }
 
-  /**
-   * Put the vehicle to the registry.
-   *
-   * @param vehicle  the vehicle
-   * @return  a new VIN for the vehicle
-   */
-  public static int registerVehicle(VehicleSimView vehicle) {
-    assert vinToVehicle.get(vinGenerator) == null;
-    int vin = vinGenerator;
-    vinToVehicle.put(vin, new WeakReference<VehicleSimView>(vehicle));
-    vinToVehicleSpec.put(vin, vehicle.getSpec());
-    vinToSpawnPoint.put(vin, vehicle.getDriver().getSpawnPoint());
-    vinToDestRoad.put(vin, vehicle.getDriver().getDestination());
-
-    vehicle.setVIN(vin);
-
-    vinGenerator++;
-    return vin;
-  }
-
-  /**
-   * Register the vehicle with an existing VIN.
-   *
-   * @param vehicle  the vehicle
-   * @param vin      the given VIN
-   * @return true if the VIN has not been issued to other vehicle; false if
-   *         the VIN has been used by other vehicle.
-   */
-  public static boolean registerVehicleWithExistingVIN(VehicleSimView vehicle,
-                                                       int vin) {
-    assert vin >= 0;
-    if (vinToVehicle.containsKey(vin)) {
-      return false;  // the VIN has been used by some other vehicle
-    } else {
-      assert vehicle.getVIN() < 0;
-
-      vinToVehicle.put(vin, new WeakReference<VehicleSimView>(vehicle));
-      vinToVehicleSpec.put(vin, vehicle.getSpec());
-      // TODO: think how to resolve the problem.
-      if (vehicle.getDriver() != null) {
+    /**
+     * Put the vehicle to the registry.
+     *
+     * @param vehicle the vehicle
+     * @return a new VIN for the vehicle
+     */
+    public static int registerVehicle(VehicleSimView vehicle) {
+        assert vinToVehicle.get(vinGenerator) == null;
+        int vin = vinGenerator;
+        vinToVehicle.put(vin, new WeakReference<VehicleSimView>(vehicle));
+        vinToVehicleSpec.put(vin, vehicle.getSpec());
         vinToSpawnPoint.put(vin, vehicle.getDriver().getSpawnPoint());
         vinToDestRoad.put(vin, vehicle.getDriver().getDestination());
-      } else {
-        vinToSpawnPoint.put(vin, null);
-        vinToDestRoad.put(vin, null);
-      }
 
-      vehicle.setVIN(vin);
-      if (vin >= vinGenerator) {
-        vinGenerator = vin + 1;
-      }  // else vin < vinGenerator and it would not affect the next vehicle
-      return true;
+        vehicle.setVIN(vin);
+
+        vinGenerator++;
+        return vin;
     }
-  }
 
-  /**
-   * Remove the vehicle from the registry.
-   * This function should only be used by BasicVehicle.java
-   *
-   * @param vin  the VIN of the vehicle
-   */
-  public static void unregisterVehicle(int vin) {
-    if (vinToVehicle.containsKey(vin)) {
-      vinToVehicle.remove(vin);
-      // do not remove the following
+    /**
+     * Register the vehicle with an existing VIN.
+     *
+     * @param vehicle the vehicle
+     * @param vin     the given VIN
+     * @return true if the VIN has not been issued to other vehicle; false if
+     * the VIN has been used by other vehicle.
+     */
+    public static boolean registerVehicleWithExistingVIN(VehicleSimView vehicle,
+                                                         int vin) {
+        assert vin >= 0;
+        if (vinToVehicle.containsKey(vin)) {
+            return false;  // the VIN has been used by some other vehicle
+        } else {
+            assert vehicle.getVIN() < 0;
+
+            vinToVehicle.put(vin, new WeakReference<VehicleSimView>(vehicle));
+            vinToVehicleSpec.put(vin, vehicle.getSpec());
+            // TODO: think how to resolve the problem.
+            if (vehicle.getDriver() != null) {
+                vinToSpawnPoint.put(vin, vehicle.getDriver().getSpawnPoint());
+                vinToDestRoad.put(vin, vehicle.getDriver().getDestination());
+            } else {
+                vinToSpawnPoint.put(vin, null);
+                vinToDestRoad.put(vin, null);
+            }
+
+            vehicle.setVIN(vin);
+            if (vin >= vinGenerator) {
+                vinGenerator = vin + 1;
+            }  // else vin < vinGenerator and it would not affect the next vehicle
+            return true;
+        }
+    }
+
+    /**
+     * Remove the vehicle from the registry.
+     * This function should only be used by BasicVehicle.java
+     *
+     * @param vin the VIN of the vehicle
+     */
+    public static void unregisterVehicle(int vin) {
+        if (vinToVehicle.containsKey(vin)) {
+            vinToVehicle.remove(vin);
+            // do not remove the following
 //      vinToVehicleSpec.remove(vin);
 //      vinToSpawnPoint.remove(vin);
 //      vinToDestRoad.remove(vin);
-    } else {
-      throw new RuntimeException("VehicleRegistry:unregisterVehicle: " +
-                                 "Cannot unregister a vehicle twice");
+        } else {
+            throw new RuntimeException("VehicleRegistry:unregisterVehicle: " +
+                    "Cannot unregister a vehicle twice");
+        }
     }
-  }
 
-  /**
-   * Whether or not the VIN has been issued.
-   *
-   * @param vin  the VIN of the vehicle
-   * @return whether of not the VIN has been issued.
-   */
-  public static boolean isVINexist(int vin) {
-    return vinToVehicleSpec.containsKey(vin);
-  }
-
-  /**
-   * Given a VIN, get the vehicle with that VIN.
-   *
-   * @param vin the VIN of the desired vehicle
-   * @return the corresponding vehicle object; null if the vehicle object
-   *         has been destroyed.
-   */
-  public static VehicleSimView getVehicleFromVIN(int vin) {
-    WeakReference<VehicleSimView> wr = vinToVehicle.get(vin);
-    if(wr == null) {
-      return null;
+    /**
+     * Whether or not the VIN has been issued.
+     *
+     * @param vin the VIN of the vehicle
+     * @return whether of not the VIN has been issued.
+     */
+    public static boolean isVINexist(int vin) {
+        return vinToVehicleSpec.containsKey(vin);
     }
-    // Unwrap the reference
-    VehicleSimView v = wr.get();
-    // If it's null, then the Vehicle no longer exists
-    if(v == null) {
-      vinToVehicle.remove(vin);
+
+    /**
+     * Given a VIN, get the vehicle with that VIN.
+     *
+     * @param vin the VIN of the desired vehicle
+     * @return the corresponding vehicle object; null if the vehicle object
+     * has been destroyed.
+     */
+    public static VehicleSimView getVehicleFromVIN(int vin) {
+        WeakReference<VehicleSimView> wr = vinToVehicle.get(vin);
+        if (wr == null) {
+            return null;
+        }
+        // Unwrap the reference
+        VehicleSimView v = wr.get();
+        // If it's null, then the Vehicle no longer exists
+        if (v == null) {
+            vinToVehicle.remove(vin);
+        }
+        return v;
     }
-    return v;
-  }
 
-  /**
-   * Given a VIN, get the vehicle specification with that VIN.
-   *
-   * @param vin  the VIN of the desired vehicle
-   * @return the corresponding vehicle specification
-   */
-  public static VehicleSpec getVehicleSpecFromVIN(int vin) {
-    return vinToVehicleSpec.get(vin);
-  }
+    /**
+     * Given a VIN, get the vehicle specification with that VIN.
+     *
+     * @param vin the VIN of the desired vehicle
+     * @return the corresponding vehicle specification
+     */
+    public static VehicleSpec getVehicleSpecFromVIN(int vin) {
+        return vinToVehicleSpec.get(vin);
+    }
 
-  /**
-   * Get a spawn point from the VIN of a vehicle
-   *
-   * @param vin  the VIN of the vehicle
-   * @return the spawn point
-   */
-  public static SpawnPoint getSpawnPointFromVIN(int vin) {
-    return vinToSpawnPoint.get(vin);
-  }
+    /**
+     * Get a spawn point from the VIN of a vehicle
+     *
+     * @param vin the VIN of the vehicle
+     * @return the spawn point
+     */
+    public static SpawnPoint getSpawnPointFromVIN(int vin) {
+        return vinToSpawnPoint.get(vin);
+    }
 
-  /**
-   * Get the destination road from the VIN of a vehicle
-   *
-   * @param vin  the VIN of the vehicle
-   * @return the destination road
-   */
-  public static Road getDestRoadFromVIN(int vin) {
-    return vinToDestRoad.get(vin);
-  }
+    /**
+     * Get the destination road from the VIN of a vehicle
+     *
+     * @param vin the VIN of the vehicle
+     * @return the destination road
+     */
+    public static Road getDestRoadFromVIN(int vin) {
+        return vinToDestRoad.get(vin);
+    }
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * This class should never be instantiated.
-   */
-  private VinRegistry(){};
+    /**
+     * This class should never be instantiated.
+     */
+    private VinRegistry() {
+    }
+
+    ;
 
 }

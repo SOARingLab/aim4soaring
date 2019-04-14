@@ -40,34 +40,34 @@ import aim4.msg.udp.Real2ProxyMsg;
  */
 public interface ProxyVehicleSimView extends AutoVehicleSimView {
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  ProxyDriver getDriver();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    ProxyDriver getDriver();
 
-  /**
-   * Set this proxy vehicle's driver.
-   *
-   * @param driver  the new driver to control this Vehicle
-   */
-  void setDriver(ProxyDriver driver);
+    /**
+     * Set this proxy vehicle's driver.
+     *
+     * @param driver the new driver to control this Vehicle
+     */
+    void setDriver(ProxyDriver driver);
 
-  /**
-   * @return the socket address
-   */
-  SocketAddress getSa();
+    /**
+     * @return the socket address
+     */
+    SocketAddress getSa();
 
-  /**
-   * @param sa the new socket address to set
-   */
-  void setSa(SocketAddress sa);
+    /**
+     * @param sa the new socket address to set
+     */
+    void setSa(SocketAddress sa);
 
-  /**
-   * Process the incoming Real2Proxy message
-   *
-   * @param msg  the Real2Proxy message
-   */
-  void processReal2ProxyMsg(Real2ProxyMsg msg);
+    /**
+     * Process the incoming Real2Proxy message
+     *
+     * @param msg the Real2Proxy message
+     */
+    void processReal2ProxyMsg(Real2ProxyMsg msg);
 
 }

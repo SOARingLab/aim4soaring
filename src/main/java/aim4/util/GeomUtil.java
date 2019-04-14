@@ -41,96 +41,99 @@ import java.awt.geom.Point2D;
  */
 public class GeomUtil {
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Convert a line into a rectangle
-   *
-   * @param line       the line
-   * @param halfWidth  half of the width of the rectangle
-   *
-   * @return the rectangle
-   */
-  public Shape convertLineIntoRectangle(Line2D line, double halfWidth) {
-    double heading = GeomMath.canonicalAngle(
-                         Math.atan2(line.getY2() - line.getY1(),
-                                    line.getX2() - line.getX1()));
-    GeneralPath result = new GeneralPath();
-    double xDifferential = halfWidth * Math.cos(heading + Math.PI/2);
-    double yDifferential = halfWidth * Math.sin(heading + Math.PI/2);
-    result.moveTo((line.getX1() + xDifferential),
-                  (line.getY1() + yDifferential));
-    result.lineTo((line.getX2() + xDifferential),
-                  (line.getY2() + yDifferential));
-    result.lineTo((line.getX2() - xDifferential),
-                  (line.getY2() - yDifferential));
-    result.lineTo((line.getX1() - xDifferential),
-                  (line.getY1() - yDifferential));
-    result.closePath();
-    return result;
-  }
-
-
-  /**
-   * Convert an arc into a fan (i.e., an arc-shape shape with width)
-   *
-   * @param arc        the arc
-   * @param halfWidth  half of the width of the fan
-   *
-   * @return the fan
-   */
-  public Shape convertArcIntoFan(Arc2D arc, double halfWidth) {
-    // create the outer and inner arcs
-    double x = arc.getX();
-    double y = arc.getY();
-    double w = arc.getWidth();
-    double h = arc.getHeight();
-    double start = arc.getAngleStart();
-    double extent = arc.getAngleExtent();
-
-    Arc2D arc1 = new Arc2D.Double(x-halfWidth, y-halfWidth,
-                                  w+2*halfWidth, h+2*halfWidth,
-                                  start, extent, Arc2D.OPEN);
-    Arc2D arc2 = new Arc2D.Double(x+halfWidth, y+halfWidth,
-                                  w-2*halfWidth, h-2*halfWidth,
-                                  start+extent, -extent, Arc2D.OPEN);
-
-    // create the shape
-    GeneralPath result = new GeneralPath();
-    result.append(arc1, false);
-    result.append(arc2, true);
-    result.closePath();
-
-    return result;
-  }
-
-
-  /**
-   * Construct a shape out of a set of corner points.
-   *
-   * @param points  a set of points at the corners of the shape
-   * @return        the shape
-   */
-  public static Shape convertPointsToShape(Point2D[] points) {
-    GeneralPath result = new GeneralPath();
-    result.moveTo((float)points[0].getX(), (float)points[0].getY());
-    for(int i = 1; i < points.length; i++) {
-      result.lineTo((float)points[i].getX(), (float)points[i].getY());
+    /**
+     * Convert a line into a rectangle
+     *
+     * @param line      the line
+     * @param halfWidth half of the width of the rectangle
+     * @return the rectangle
+     */
+    public Shape convertLineIntoRectangle(Line2D line, double halfWidth) {
+        double heading = GeomMath.canonicalAngle(
+                Math.atan2(line.getY2() - line.getY1(),
+                        line.getX2() - line.getX1()));
+        GeneralPath result = new GeneralPath();
+        double xDifferential = halfWidth * Math.cos(heading + Math.PI / 2);
+        double yDifferential = halfWidth * Math.sin(heading + Math.PI / 2);
+        result.moveTo((line.getX1() + xDifferential),
+                (line.getY1() + yDifferential));
+        result.lineTo((line.getX2() + xDifferential),
+                (line.getY2() + yDifferential));
+        result.lineTo((line.getX2() - xDifferential),
+                (line.getY2() - yDifferential));
+        result.lineTo((line.getX1() - xDifferential),
+                (line.getY1() - yDifferential));
+        result.closePath();
+        return result;
     }
-    result.closePath();
-    return result;
-  }
 
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /**
+     * Convert an arc into a fan (i.e., an arc-shape shape with width)
+     *
+     * @param arc       the arc
+     * @param halfWidth half of the width of the fan
+     * @return the fan
+     */
+    public Shape convertArcIntoFan(Arc2D arc, double halfWidth) {
+        // create the outer and inner arcs
+        double x = arc.getX();
+        double y = arc.getY();
+        double w = arc.getWidth();
+        double h = arc.getHeight();
+        double start = arc.getAngleStart();
+        double extent = arc.getAngleExtent();
+
+        Arc2D arc1 = new Arc2D.Double(x - halfWidth, y - halfWidth,
+                w + 2 * halfWidth, h + 2 * halfWidth,
+                start, extent, Arc2D.OPEN);
+        Arc2D arc2 = new Arc2D.Double(x + halfWidth, y + halfWidth,
+                w - 2 * halfWidth, h - 2 * halfWidth,
+                start + extent, -extent, Arc2D.OPEN);
+
+        // create the shape
+        GeneralPath result = new GeneralPath();
+        result.append(arc1, false);
+        result.append(arc2, true);
+        result.closePath();
+
+        return result;
+    }
 
 
-  /** This class should never be instantiated. */
-  private GeomUtil(){};
+    /**
+     * Construct a shape out of a set of corner points.
+     *
+     * @param points a set of points at the corners of the shape
+     * @return the shape
+     */
+    public static Shape convertPointsToShape(Point2D[] points) {
+        GeneralPath result = new GeneralPath();
+        result.moveTo((float) points[0].getX(), (float) points[0].getY());
+        for (int i = 1; i < points.length; i++) {
+            result.lineTo((float) points[i].getX(), (float) points[i].getY());
+        }
+        result.closePath();
+        return result;
+    }
+
+
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
+
+
+    /**
+     * This class should never be instantiated.
+     */
+    private GeomUtil() {
+    }
+
+    ;
 
 
 }

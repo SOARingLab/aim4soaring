@@ -32,21 +32,42 @@ package aim4.im;
 
 import java.awt.Color;
 
-/** Possible states of traffic lights. */
+/**
+ * Possible states of traffic lights.
+ */
 public enum LightState {
-  /** Cars may not cross the intersection. */
-  RED {@Override
-  public Color getColor(){return Color.RED.brighter();}},
-  /** Cars will soon not be able to cross the intersection. */
-  YELLOW {@Override
-  public Color getColor(){return Color.YELLOW;}},
-  /** Cars may cross the intersection. */
-  GREEN {@Override
-  public Color getColor(){return Color.GREEN.brighter();}};
-  /**
-   * Get the Color associated with this LightState.
-   *
-   * @return the Color associated with this LightState
-   */
-  public abstract Color getColor();
+    /**
+     * Cars may not cross the intersection.
+     */
+    RED {
+        @Override
+        public Color getColor() {
+            return Color.RED.brighter();
+        }
+    },
+    /**
+     * Cars will soon not be able to cross the intersection.
+     */
+    YELLOW {
+        @Override
+        public Color getColor() {
+            return Color.YELLOW;
+        }
+    },
+    /**
+     * Cars may cross the intersection.
+     */
+    GREEN {
+        @Override
+        public Color getColor() {
+            return Color.GREEN.brighter();
+        }
+    };
+
+    /**
+     * Get the Color associated with this LightState.
+     *
+     * @return the Color associated with this LightState
+     */
+    public abstract Color getColor();
 }

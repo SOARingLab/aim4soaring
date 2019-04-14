@@ -40,150 +40,156 @@ import aim4.util.Util;
  */
 public class AccelProfile {
 
-  /////////////////////////////////
-  // NESTED CLASSES
-  /////////////////////////////////
-
-  /**
-   * A pair of acceleration and duration.
-   */
-  public static class DurAccel {
-    /** The duration */
-    private double duration;
-    /** The acceleration */
-    private double acceleration;
+    /////////////////////////////////
+    // NESTED CLASSES
+    /////////////////////////////////
 
     /**
-     * Create a pair of acceleration and duration
-     *
-     * @param duration      the duration
-     * @param acceleration  the acceleration
+     * A pair of acceleration and duration.
      */
-    public DurAccel(double duration, double acceleration) {
-      this.duration = duration;
-      this.acceleration = acceleration;
+    public static class DurAccel {
+        /**
+         * The duration
+         */
+        private double duration;
+        /**
+         * The acceleration
+         */
+        private double acceleration;
+
+        /**
+         * Create a pair of acceleration and duration
+         *
+         * @param duration     the duration
+         * @param acceleration the acceleration
+         */
+        public DurAccel(double duration, double acceleration) {
+            this.duration = duration;
+            this.acceleration = acceleration;
+        }
+
+        /**
+         * Get the duration.
+         *
+         * @return the duration
+         */
+        public double getDuration() {
+            return duration;
+        }
+
+        /**
+         * Get the acceleration.
+         *
+         * @return the acceleration
+         */
+        public double getAcceleration() {
+            return acceleration;
+        }
+
+        /**
+         * Set the duration.
+         *
+         * @param duration the duration
+         */
+        public void setDuration(double duration) {
+            this.duration = duration;
+        }
+
+        /**
+         * Set the acceleration.
+         *
+         * @param acceleration the acceleration
+         */
+        public void setAcceleration(double acceleration) {
+            this.acceleration = acceleration;
+        }
+    }
+
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
+
+    /**
+     * The list of pairs of acceleration and duration
+     */
+    private List<DurAccel> durAccelList;
+
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
+
+    /**
+     * Create an acceleration profile.
+     */
+    public AccelProfile() {
+        durAccelList = new LinkedList<DurAccel>();
+    }
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * Add a duration and acceleration pair to the profile.
+     *
+     * @param dur the duration
+     * @param acc the acceleration
+     */
+    public void add(double dur, double acc) {
+        if (!Util.isDoubleZero(dur)) {
+            durAccelList.add(new DurAccel(dur, acc));
+        }  // otherwise, ignore it
     }
 
     /**
-     * Get the duration.
+     * Get the number of acceleration-duration pairs in the profile.
      *
-     * @return the duration
+     * @return the number of acceleration-duration pairs
      */
-    public double getDuration() {
-      return duration;
+    public int size() {
+        return durAccelList.size();
     }
 
     /**
-     * Get the acceleration.
+     * Get the list of the acceleration-duration pairs.
      *
-     * @return the acceleration
+     * @return the list of the acceleration-duration pairs
      */
-    public double getAcceleration() {
-      return acceleration;
+    public List<DurAccel> getDurAccelList() {
+        return durAccelList;
     }
 
     /**
-     * Set the duration.
+     * Convert the acceleration profile to an acceleration schedule.
      *
-     * @param duration  the duration
+     * @param initTime the initial time of the acceleration schedule
      */
-    public void setDuration(double duration) {
-      this.duration = duration;
+    public AccelSchedule toAccelSchedule(double initTime) {
+        AccelSchedule accelProfile = new AccelSchedule();
+        double t = initTime;
+        for (DurAccel durAccel : durAccelList) {
+            accelProfile.add(t, durAccel.getAcceleration());
+            t += durAccel.getDuration();
+        }
+        // ignore the last acceleration
+        return accelProfile;
     }
 
     /**
-     * Set the acceleration.
+     * Convert the acceleration profile to an acceleration schedule.
      *
-     * @param acceleration  the acceleration
+     * @param initTime  the initial time of the acceleration schedule
+     * @param lastAccel the last acceleration
      */
-    public void setAcceleration(double acceleration) {
-      this.acceleration = acceleration;
+    public AccelSchedule toAccelSchedule(double initTime, double lastAccel) {
+        AccelSchedule accelProfile = new AccelSchedule();
+        double t = initTime;
+        for (DurAccel durAccel : durAccelList) {
+            accelProfile.add(t, durAccel.getAcceleration());
+            t += durAccel.getDuration();
+        }
+        accelProfile.add(t, lastAccel);
+        return accelProfile;
     }
-  }
-
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
-
-  /** The list of pairs of acceleration and duration */
-  private List<DurAccel> durAccelList;
-
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
-
-  /**
-   * Create an acceleration profile.
-   */
-  public AccelProfile() {
-    durAccelList = new LinkedList<DurAccel>();
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Add a duration and acceleration pair to the profile.
-   *
-   * @param dur  the duration
-   * @param acc  the acceleration
-   */
-  public void add(double dur, double acc) {
-    if (!Util.isDoubleZero(dur)) {
-      durAccelList.add(new DurAccel(dur, acc));
-    }  // otherwise, ignore it
-  }
-
-  /**
-   * Get the number of acceleration-duration pairs in the profile.
-   *
-   * @return the number of acceleration-duration pairs
-   */
-  public int size() {
-    return durAccelList.size();
-  }
-
-  /**
-   * Get the list of the acceleration-duration pairs.
-   *
-   * @return the list of the acceleration-duration pairs
-   */
-  public List<DurAccel> getDurAccelList() {
-    return durAccelList;
-  }
-
-  /**
-   * Convert the acceleration profile to an acceleration schedule.
-   *
-   * @param initTime  the initial time of the acceleration schedule
-   */
-  public AccelSchedule toAccelSchedule(double initTime) {
-    AccelSchedule accelProfile = new AccelSchedule();
-    double t = initTime;
-    for(DurAccel durAccel : durAccelList) {
-      accelProfile.add(t, durAccel.getAcceleration());
-      t += durAccel.getDuration();
-    }
-    // ignore the last acceleration
-    return accelProfile;
-  }
-
-  /**
-   * Convert the acceleration profile to an acceleration schedule.
-   *
-   * @param initTime   the initial time of the acceleration schedule
-   * @param lastAccel  the last acceleration
-   */
-  public AccelSchedule toAccelSchedule(double initTime, double lastAccel) {
-    AccelSchedule accelProfile = new AccelSchedule();
-    double t = initTime;
-    for(DurAccel durAccel : durAccelList) {
-      accelProfile.add(t, durAccel.getAcceleration());
-      t += durAccel.getDuration();
-    }
-    accelProfile.add(t, lastAccel);
-    return accelProfile;
-  }
 
 }

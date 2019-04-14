@@ -36,11 +36,11 @@ import aim4.config.TrafficSignal;
  * The interface for request handler with traffic signals.
  */
 public interface TrafficSignalRequestHandler extends RequestHandler {
-  /**
-   * Get the traffic signal of a lane.
-   *
-   * @param laneId  the land ID
-   * @return traffic signal
-   */
-  TrafficSignal getSignal(int laneId);
+    /**
+     * Get the traffic signal of a lane.
+     *
+     * @param laneId the land ID
+     * @return traffic signal
+     */
+    TrafficSignal getSignal(int laneId);
 }

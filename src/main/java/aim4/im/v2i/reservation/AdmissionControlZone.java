@@ -41,139 +41,143 @@ import java.util.Map;
  */
 public class AdmissionControlZone {
 
-  /////////////////////////////////
-  // CONSTANTS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTANTS
+    /////////////////////////////////
 
-  private static final double MIN_DIST_BETWEEN_VEHICLES = 0.5;
+    private static final double MIN_DIST_BETWEEN_VEHICLES = 0.5;
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The maximum length of the zone. */
-  private double maxSize;
+    /**
+     * The maximum length of the zone.
+     */
+    private double maxSize;
 
 
-  /** The currently occupied length of the zone. */
-  private double currentSize = 0.0;
+    /**
+     * The currently occupied length of the zone.
+     */
+    private double currentSize = 0.0;
 
-  /**
-   * A <code>Map</code> from the VIN number of the vehicle to the
-   * length of the vehicle thus the stopping distance.
-   */
-  private Map<Integer, Double> vinToReservationLength =
-    new HashMap<Integer, Double>();
+    /**
+     * A <code>Map</code> from the VIN number of the vehicle to the
+     * length of the vehicle thus the stopping distance.
+     */
+    private Map<Integer, Double> vinToReservationLength =
+            new HashMap<Integer, Double>();
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Construct a new AdmissionControlZone with the given maximum length.
-   *
-   * @param maxSize the maximum length's worth of cars that the zone
-   *                will hold
-   */
-  public AdmissionControlZone(double maxSize) {
-    this.maxSize = maxSize;
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Get the maximum length's worth of vehicles allowed in this
-   * admission control zone at one time.
-   *
-   * @return the maximum length's worth of vehicles allowed in this
-   *         AdmissionControlZone at one time
-   */
-  public double getMaxSize() {
-    return maxSize;
-  }
-
-  /**
-   * Get the current size of the admission control zone.
-   *
-   * @return the current size of the admission control zone.
-   */
-  public double getCurrentSize() {
-    return currentSize;
-  }
-
-  /**
-   * Check to see if the vehicle can reserve space to enter this
-   * admission control zone.
-   *
-   * @param vin              the VIN number of the vehicle to try to add
-   * @param vehicleLength    the length of the vehicle to try to add
-   * @param stoppingDistance the distance it will take the vehicle to
-   *                         stop if it begins decelerating as soon as
-   *                         it enters the admission control zone
-   * @return whether or not the vehicle can be successfully added
-   */
-  public boolean isAdmissible(int vin, double vehicleLength,
-                              double stoppingDistance) {
-    if (!vinToReservationLength.containsKey(vin)) {
-      return (currentSize + vehicleLength + stoppingDistance <= maxSize);
-    } else {
-      return false;
+    /**
+     * Construct a new AdmissionControlZone with the given maximum length.
+     *
+     * @param maxSize the maximum length's worth of cars that the zone
+     *                will hold
+     */
+    public AdmissionControlZone(double maxSize) {
+        this.maxSize = maxSize;
     }
-  }
 
-  /**
-   * Reserve space for a vehicle to enter this admission control zone.
-   *
-   * @param vin              the VIN number of the vehicle to try to add
-   * @param vehicleLength    the length of the vehicle to try to add
-   * @param stoppingDistance the distance it will take the vehicle to
-   *                         stop if it begins decelerating as soon as
-   *                         it enters the admission control zone
-   */
-  public void admit(int vin, double vehicleLength, double stoppingDistance) {
-    // If this vehicle is already scheduled to be admitted, we must be
-    // extra careful
-    if (!vinToReservationLength.containsKey(vin)) {
-      assert (currentSize + vehicleLength + stoppingDistance <= maxSize);
-      double reservationLength = vehicleLength + MIN_DIST_BETWEEN_VEHICLES;
-      currentSize += reservationLength;
-      vinToReservationLength.put(vin, reservationLength);
-    } else {
-      throw new RuntimeException("Error in ACZ: admitting vehicle " + vin +
-                                 " already not exists in ACZ.");
-    }
-  }
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Indicates that the vehicle with the given ID number no longer wants to
-   * enter this AdmissionControlZone.
-   *
-   * @param vin the ID number of the vehicle canceling
-   */
-  public void cancel(int vin) {
-    if (vinToReservationLength.containsKey(vin)) {
-      currentSize -= vinToReservationLength.remove(vin);
-    } else {
-      throw new RuntimeException("Error in ACZ: canceling vehicle " + vin +
-                                 " does not exist in ACZ.");
+    /**
+     * Get the maximum length's worth of vehicles allowed in this
+     * admission control zone at one time.
+     *
+     * @return the maximum length's worth of vehicles allowed in this
+     * AdmissionControlZone at one time
+     */
+    public double getMaxSize() {
+        return maxSize;
     }
-  }
 
-  /**
-   * Indicates that the vehicle with the given ID number has left the
-   * admission control zone by driving out of it within the lane.
-   *
-   * @param vin the ID number of the vehicle to remove
-   */
-  public void away(int vin) {
-    if (vinToReservationLength.containsKey(vin)) {
-      currentSize -= vinToReservationLength.remove(vin);
-    } else {
-      throw new RuntimeException("Error in ACZ: departing vehicle " + vin +
-                                 " does not exist in ACZ.");
+    /**
+     * Get the current size of the admission control zone.
+     *
+     * @return the current size of the admission control zone.
+     */
+    public double getCurrentSize() {
+        return currentSize;
     }
-  }
+
+    /**
+     * Check to see if the vehicle can reserve space to enter this
+     * admission control zone.
+     *
+     * @param vin              the VIN number of the vehicle to try to add
+     * @param vehicleLength    the length of the vehicle to try to add
+     * @param stoppingDistance the distance it will take the vehicle to
+     *                         stop if it begins decelerating as soon as
+     *                         it enters the admission control zone
+     * @return whether or not the vehicle can be successfully added
+     */
+    public boolean isAdmissible(int vin, double vehicleLength,
+                                double stoppingDistance) {
+        if (!vinToReservationLength.containsKey(vin)) {
+            return (currentSize + vehicleLength + stoppingDistance <= maxSize);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Reserve space for a vehicle to enter this admission control zone.
+     *
+     * @param vin              the VIN number of the vehicle to try to add
+     * @param vehicleLength    the length of the vehicle to try to add
+     * @param stoppingDistance the distance it will take the vehicle to
+     *                         stop if it begins decelerating as soon as
+     *                         it enters the admission control zone
+     */
+    public void admit(int vin, double vehicleLength, double stoppingDistance) {
+        // If this vehicle is already scheduled to be admitted, we must be
+        // extra careful
+        if (!vinToReservationLength.containsKey(vin)) {
+            assert (currentSize + vehicleLength + stoppingDistance <= maxSize);
+            double reservationLength = vehicleLength + MIN_DIST_BETWEEN_VEHICLES;
+            currentSize += reservationLength;
+            vinToReservationLength.put(vin, reservationLength);
+        } else {
+            throw new RuntimeException("Error in ACZ: admitting vehicle " + vin +
+                    " already not exists in ACZ.");
+        }
+    }
+
+    /**
+     * Indicates that the vehicle with the given ID number no longer wants to
+     * enter this AdmissionControlZone.
+     *
+     * @param vin the ID number of the vehicle canceling
+     */
+    public void cancel(int vin) {
+        if (vinToReservationLength.containsKey(vin)) {
+            currentSize -= vinToReservationLength.remove(vin);
+        } else {
+            throw new RuntimeException("Error in ACZ: canceling vehicle " + vin +
+                    " does not exist in ACZ.");
+        }
+    }
+
+    /**
+     * Indicates that the vehicle with the given ID number has left the
+     * admission control zone by driving out of it within the lane.
+     *
+     * @param vin the ID number of the vehicle to remove
+     */
+    public void away(int vin) {
+        if (vinToReservationLength.containsKey(vin)) {
+            currentSize -= vinToReservationLength.remove(vin);
+        } else {
+            throw new RuntimeException("Error in ACZ: departing vehicle " + vin +
+                    " does not exist in ACZ.");
+        }
+    }
 
 }

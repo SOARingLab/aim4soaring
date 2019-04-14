@@ -36,72 +36,77 @@ package aim4.util;
  */
 public class MotionMath {
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Calculate the velocity after accelerating for a given distance, starting
-   * with a given velocity.
-   *
-   * @param v1     the initial velocity
-   * @param accel  the (constant) acceleration
-   * @param dist   the distance traveled
-   * @return the end velocity; Double.NaN if there is no solution
-   */
-  public static double calcEndVelocity(double v1, double accel, double dist) {
-    return Math.sqrt(v1 * v1 + 2.0 * accel * dist);
-  }
-
-  /**
-   * Calculate the time it takes to accelerate (or decelerate) from the
-   * initial velocity to the end velocity.
-   *
-   * @param v1     the initial velocity
-   * @param v2     the end velocity
-   * @param accel  the acceleration
-   * @return the time it takes to accelerate from v1 to v2; Double.NaN if
-   *         the acceleration is zero.
-   */
-  public static double calcDuration(double  v1, double v2, double accel) {
-    if (!Util.isDoubleZero(accel)) {
-      return (v2 - v1) / accel;
-    } else {
-      return Double.NaN;
+    /**
+     * Calculate the velocity after accelerating for a given distance, starting
+     * with a given velocity.
+     *
+     * @param v1    the initial velocity
+     * @param accel the (constant) acceleration
+     * @param dist  the distance traveled
+     * @return the end velocity; Double.NaN if there is no solution
+     */
+    public static double calcEndVelocity(double v1, double accel, double dist) {
+        return Math.sqrt(v1 * v1 + 2.0 * accel * dist);
     }
-  }
 
-  /**
-   * Calculate the time it takes to accelerate (or decelerate) from the
-   * initial velocity to the end velocity.  If the acceleration is zero,
-   * it uses the distance traveled to compute the time.
-   *
-   * @param v1       the initial velocity
-   * @param v2       the end velocity
-   * @param accel    the acceleration
-   * @param distance the distance traveled
-   * @return the time it takes to accelerate from v1 to v2; Double.NaN if
-   *         both the acceleration and the initial velocity is zero.
-   */
-  public static double calcDuration(double v1, double v2, double accel,
-                                    double distance) {
-    if (!Util.isDoubleZero(accel)) {
-      return (v2 - v1) / accel;
-    } else {
-      if (!Util.isDoubleZero(v1)) {
-        return distance / v1;
-      } else {
-        return Double.NaN;
-      }
+    /**
+     * Calculate the time it takes to accelerate (or decelerate) from the
+     * initial velocity to the end velocity.
+     *
+     * @param v1    the initial velocity
+     * @param v2    the end velocity
+     * @param accel the acceleration
+     * @return the time it takes to accelerate from v1 to v2; Double.NaN if
+     * the acceleration is zero.
+     */
+    public static double calcDuration(double v1, double v2, double accel) {
+        if (!Util.isDoubleZero(accel)) {
+            return (v2 - v1) / accel;
+        } else {
+            return Double.NaN;
+        }
     }
-  }
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /**
+     * Calculate the time it takes to accelerate (or decelerate) from the
+     * initial velocity to the end velocity.  If the acceleration is zero,
+     * it uses the distance traveled to compute the time.
+     *
+     * @param v1       the initial velocity
+     * @param v2       the end velocity
+     * @param accel    the acceleration
+     * @param distance the distance traveled
+     * @return the time it takes to accelerate from v1 to v2; Double.NaN if
+     * both the acceleration and the initial velocity is zero.
+     */
+    public static double calcDuration(double v1, double v2, double accel,
+                                      double distance) {
+        if (!Util.isDoubleZero(accel)) {
+            return (v2 - v1) / accel;
+        } else {
+            if (!Util.isDoubleZero(v1)) {
+                return distance / v1;
+            } else {
+                return Double.NaN;
+            }
+        }
+    }
 
-  /** This class should never be instantiated. */
-  private MotionMath(){};
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
+
+    /**
+     * This class should never be instantiated.
+     */
+    private MotionMath() {
+    }
+
+    ;
 
 
 }

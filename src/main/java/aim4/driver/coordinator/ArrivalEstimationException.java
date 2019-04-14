@@ -35,14 +35,14 @@ package aim4.driver.coordinator;
  */
 public class ArrivalEstimationException extends Exception {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * Construct an arrival estimation exception.
-   *
-   * @param message  the exception message
-   */
-  public ArrivalEstimationException(String message) {
-    super(message);
-  }
+    /**
+     * Construct an arrival estimation exception.
+     *
+     * @param message the exception message
+     */
+    public ArrivalEstimationException(String message) {
+        super(message);
+    }
 }

@@ -37,42 +37,42 @@ import java.awt.Shape;
  */
 public interface Track {
 
-  /**
-   * Get the starting waypoint of the track segment.
-   *
-   * @return the starting waypoint
-   */
-  WayPoint getStartWayPoint();
+    /**
+     * Get the starting waypoint of the track segment.
+     *
+     * @return the starting waypoint
+     */
+    WayPoint getStartWayPoint();
 
-  /**
-   * Get the ending waypoint of the track segment.
-   *
-   * @return the ending waypoint
-   */
-  WayPoint getEndWayPoint();
+    /**
+     * Get the ending waypoint of the track segment.
+     *
+     * @return the ending waypoint
+     */
+    WayPoint getEndWayPoint();
 
-  /**
-   * Get the length of the track.
-   *
-   * @return the length of the track.
-   */
-  double getLength();
+    /**
+     * Get the length of the track.
+     *
+     * @return the length of the track.
+     */
+    double getLength();
 
-  /**
-   * Get the position on the track that is a given distance from
-   * the starting waypoint.  It returns null if the position is off the track
-   * (i.e., beyond the ending waypoint.)
-   *
-   * @param dist  the distance from the starting waypoint; null if the
-   *              distance is longer than the length of the track.
-   */
-  TrackPosition getPosition(double dist);
+    /**
+     * Get the position on the track that is a given distance from
+     * the starting waypoint.  It returns null if the position is off the track
+     * (i.e., beyond the ending waypoint.)
+     *
+     * @param dist the distance from the starting waypoint; null if the
+     *             distance is longer than the length of the track.
+     */
+    TrackPosition getPosition(double dist);
 
-  /**
-   * Get the shape of the track segment
-   *
-   * @return the shape of the track segment
-   */
-  Shape getShape();
+    /**
+     * Get the shape of the track segment
+     *
+     * @return the shape of the track segment
+     */
+    Shape getShape();
 
 }

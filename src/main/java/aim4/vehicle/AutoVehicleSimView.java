@@ -34,17 +34,16 @@ package aim4.vehicle;
  * The interface of an autonomous vehicle from the viewpoint of a simulator.
  */
 public interface AutoVehicleSimView extends AutoVehicleDriverView,
-                                            VehicleSimView {
+        VehicleSimView {
 
-  /**
-   * Set whether or not the laser range finder is sensing anything. This
-   * should only be called by the actual physical simulator when it is
-   * providing sensing information to the Vehicle.
-   *
-   * @param sensing whether or not the laser range finder is sensing anything
-   */
-  void setLRFSensing(boolean sensing);
-
+    /**
+     * Set whether or not the laser range finder is sensing anything. This
+     * should only be called by the actual physical simulator when it is
+     * providing sensing information to the Vehicle.
+     *
+     * @param sensing whether or not the laser range finder is sensing anything
+     */
+    void setLRFSensing(boolean sensing);
 
 
 }

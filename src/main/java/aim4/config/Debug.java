@@ -44,333 +44,336 @@ import aim4.map.BasicMap;
  */
 public class Debug {
 
-  /**
-   * A global variable referring to the global map.
-   */
-  public static BasicMap currentMap;
+    /**
+     * A global variable referring to the global map.
+     */
+    public static BasicMap currentMap;
 
-  /**
-   * A global variable referring to the GUI object.
-   */
-  public static ViewerDebugView viewer;
+    /**
+     * A global variable referring to the GUI object.
+     */
+    public static ViewerDebugView viewer;
 
-  ////////////////////////////////////////////////////////////
-  // INFORMATION DISPLAY SETTINGS FOR ONE PARTICULAR VEHICLE
-  ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
+    // INFORMATION DISPLAY SETTINGS FOR ONE PARTICULAR VEHICLE
+    ////////////////////////////////////////////////////////////
 
-  /**
-   * The VIN of the target vehicle for debugging.
-   * Set it to -10 when no vehicle is being selected.
-   */
-  private static int targetVIN = -10;
+    /**
+     * The VIN of the target vehicle for debugging.
+     * Set it to -10 when no vehicle is being selected.
+     */
+    private static int targetVIN = -10;
 
-  /**
-   * The ID of the target intersection manager for debugging
-   * Set it to -10 when no intersection manager is being selected.
-   */
-  private static int targetIMid = -10;
+    /**
+     * The ID of the target intersection manager for debugging
+     * Set it to -10 when no intersection manager is being selected.
+     */
+    private static int targetIMid = -10;
 
-  /////////////////////////////////
-  // SIMULATOR SETTINGS
-  /////////////////////////////////
+    /////////////////////////////////
+    // SIMULATOR SETTINGS
+    /////////////////////////////////
 
-  /**
-   * Whether or not the vehicle is allowed to change lanes
-   */
-  public static final boolean CAN_CHANGE_LANE = false;
+    /**
+     * Whether or not the vehicle is allowed to change lanes
+     */
+    public static final boolean CAN_CHANGE_LANE = false;
 
-  /**
-   * Whether or not the driver considers the expected time the IM takes
-   * to reply a request.
-   */
-  public static final boolean IS_EXPECTED_IM_REPLY_TIME_CONSIDERED = true;
-
-
-  /////////////////////////////////
-  // PUBLIC STATIC METHODS
-  /////////////////////////////////
-
-  /**
-   * Whether or not the simulator shows the vin of the vehicles on screen.
-   */
-  public static boolean isTargetVIN(int vin) {
-    return vin == targetVIN;
-  }
-
-  /**
-   * Get the target vehicle's ID
-   */
-  public static int getTargetVIN() {
-    return targetVIN;
-  }
-
-  /**
-   * Set the target vehicle's ID
-   */
-  public static void setTargetVIN(int vin) {
-    targetVIN = vin;
-  }
-
-  /**
-   * Remove the target vehicle's ID
-   */
-  public static void removeTargetVIN() {
-    targetVIN = -10;
-  }
-
-  /**
-   * Get the target intersection manager's ID
-   */
-  public static int getTargetIMid() {
-    return targetIMid;
-  }
-
-  /**
-   * Set the target intersection manager's ID
-   */
-  public static void setTargetIMid(int vin) {
-    targetIMid = vin;
-  }
-
-  /**
-   * Remove the target intersection manager's ID
-   */
-  public static void removeTargetIMid() {
-    targetIMid = -10;
-  }
-
-  /**
-   * Whether or not the simulator print the state of the driver of the target
-   * vehicle
-   */
-  public static boolean isPrintDriverStateOfVIN(int vin) {
-    return (vin == targetVIN);
-    // return false;
-  }
-
-  /**
-   * Whether or not the simulator print the state of the target vehicle.
-   */
-  public static boolean isPrintVehicleStateOfVIN(int vin) {
-    // return (vin == targetVIN);
-    return false;
-  }
-
-  /**
-   * Whether or not the simulator print the messages received by IM of the
-   * target vehicle.
-   */
-  public static boolean isPrintIMInboxMessageOfVIN(int vin) {
-    // return (vin == targetVIN);
-    return false;
-  }
-
-  /**
-   * Whether or not the simulator print the messages sent by IM of the target
-   * vehicle.
-   */
-  public static boolean isPrintIMOutboxMessageOfVIN(int vin) {
-    return (vin == targetVIN);
-    // return false;
-  }
-
-  /**
-   * Whether or not the simulator print the messages received by the target
-   * vehicle.
-   */
-  public static boolean isPrintVehicleInboxMessageOfVIN(int vin) {
-    // return (vin == targetVIN);
-    return false;
-  }
-
-  /**
-   * Whether or not the simulator print the messages sent by the target vehicle.
-   */
-  public static boolean isPrintVehicleOutboxMessageOfVIN(int vin) {
-    // return (vin == targetVIN);
-    return false;
-  }
+    /**
+     * Whether or not the driver considers the expected time the IM takes
+     * to reply a request.
+     */
+    public static final boolean IS_EXPECTED_IM_REPLY_TIME_CONSIDERED = true;
 
 
-  /**
-   * Whether or not the simulator print the parameters for arrival estimation
-   */
-  public static boolean isPrintArrivalEstimationParameters(int vin) {
-    return (vin == targetVIN);
-  }
+    /////////////////////////////////
+    // PUBLIC STATIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Whether or not the simulator print the parameters for reservation
-   * acceptence check
-   */
-  public static boolean isPrintReservationAcceptanceCheck(int vin) {
-    return (vin == targetVIN);
-  }
+    /**
+     * Whether or not the simulator shows the vin of the vehicles on screen.
+     */
+    public static boolean isTargetVIN(int vin) {
+        return vin == targetVIN;
+    }
 
-  /**
-   * Whether or not the simulator print the high level control of
-   * the target vehicle.
-   */
-  public static boolean isPrintVehicleHighLevelControlOfVIN(int vin) {
-    return false;
-  }
+    /**
+     * Get the target vehicle's ID
+     */
+    public static int getTargetVIN() {
+        return targetVIN;
+    }
 
-  /////////////////////////////////
-  // INFORMATION DISPLAY SETTINGS
-  /////////////////////////////////
+    /**
+     * Set the target vehicle's ID
+     */
+    public static void setTargetVIN(int vin) {
+        targetVIN = vin;
+    }
 
-  /**
-   * Whether or not the simulator shows the (expected) arrival time of the
-   * request (if any) of the vehicles on screen.
-   */
-  public static final boolean SHOW_ARRIVAL_TIME = false;
+    /**
+     * Remove the target vehicle's ID
+     */
+    public static void removeTargetVIN() {
+        targetVIN = -10;
+    }
 
-  /**
-   * Whether or not the simulator shows the (expected) arrival time of the
-   * request (if any) of the vehicles minus the current time on screen.
-   */
-  public static final boolean SHOW_REMAINING_ARRIVAL_TIME = false;
+    /**
+     * Get the target intersection manager's ID
+     */
+    public static int getTargetIMid() {
+        return targetIMid;
+    }
 
-  /**
-   * Whether or not the simulator prints out the stage of the simulation in
-   * the simulation's main loop.
-   */
-  public static final boolean PRINT_SIMULATOR_STAGE = false;
+    /**
+     * Set the target intersection manager's ID
+     */
+    public static void setTargetIMid(int vin) {
+        targetIMid = vin;
+    }
 
-  /**
-   * Whether or not the proxy vehicle shows the debug message.
-   */
-  public static final boolean SHOW_PROXY_VEHICLE_DEBUG_MSG = true;
+    /**
+     * Remove the target intersection manager's ID
+     */
+    public static void removeTargetIMid() {
+        targetIMid = -10;
+    }
 
-  /**
-   * Whether or not to show the PVUpdate message.
-   */
-  public static final boolean SHOW_PROXY_VEHICLE_PVUPDATE_MSG = false;
+    /**
+     * Whether or not the simulator print the state of the driver of the target
+     * vehicle
+     */
+    public static boolean isPrintDriverStateOfVIN(int vin) {
+        return (vin == targetVIN);
+        // return false;
+    }
 
-  /**
-   * Whether or not to print the random seed.
-   */
-  public static final boolean IS_PRINT_RANDOM_SEED = true;
+    /**
+     * Whether or not the simulator print the state of the target vehicle.
+     */
+    public static boolean isPrintVehicleStateOfVIN(int vin) {
+        // return (vin == targetVIN);
+        return false;
+    }
 
-  // TODO: remove the following later.
-  /**
-   * Whether to show the vehicle according to its messaging state.
-   */
-  public static boolean SHOW_VEHICLE_COLOR_BY_MSG_STATE = true;
+    /**
+     * Whether or not the simulator print the messages received by IM of the
+     * target vehicle.
+     */
+    public static boolean isPrintIMInboxMessageOfVIN(int vin) {
+        // return (vin == targetVIN);
+        return false;
+    }
+
+    /**
+     * Whether or not the simulator print the messages sent by IM of the target
+     * vehicle.
+     */
+    public static boolean isPrintIMOutboxMessageOfVIN(int vin) {
+        return (vin == targetVIN);
+        // return false;
+    }
+
+    /**
+     * Whether or not the simulator print the messages received by the target
+     * vehicle.
+     */
+    public static boolean isPrintVehicleInboxMessageOfVIN(int vin) {
+        // return (vin == targetVIN);
+        return false;
+    }
+
+    /**
+     * Whether or not the simulator print the messages sent by the target vehicle.
+     */
+    public static boolean isPrintVehicleOutboxMessageOfVIN(int vin) {
+        // return (vin == targetVIN);
+        return false;
+    }
 
 
-  /////////////////////////////////
-  // Debug Points
-  /////////////////////////////////
+    /**
+     * Whether or not the simulator print the parameters for arrival estimation
+     */
+    public static boolean isPrintArrivalEstimationParameters(int vin) {
+        return (vin == targetVIN);
+    }
 
-  /**
-   * The list of long term debug points.
-   */
-  private static List<DebugPoint> longTermDebugPoints =
-    new LinkedList<DebugPoint>();
+    /**
+     * Whether or not the simulator print the parameters for reservation
+     * acceptence check
+     */
+    public static boolean isPrintReservationAcceptanceCheck(int vin) {
+        return (vin == targetVIN);
+    }
 
-  /**
-   * The list of short term debug points.
-   */
-  private static List<DebugPoint> shortTermDebugPoints =
-    new LinkedList<DebugPoint>();
+    /**
+     * Whether or not the simulator print the high level control of
+     * the target vehicle.
+     */
+    public static boolean isPrintVehicleHighLevelControlOfVIN(int vin) {
+        return false;
+    }
 
-  /**
-   * Get the long-term debugging points.
-   *
-   * @return an list of long-term debug points.
-   */
-  public static List<DebugPoint> getLongTermDebugPoints() {
-    return longTermDebugPoints;
-  }
+    /////////////////////////////////
+    // INFORMATION DISPLAY SETTINGS
+    /////////////////////////////////
 
-  /**
-   * Clear out all the long-term debug points.
-   */
-  public static void clearLongTermDebugPoints() {
-    longTermDebugPoints.clear();
-  }
+    /**
+     * Whether or not the simulator shows the (expected) arrival time of the
+     * request (if any) of the vehicles on screen.
+     */
+    public static final boolean SHOW_ARRIVAL_TIME = false;
 
-  /**
-   * Add a new long-term debug point.
-   *
-   * @param dp  a new long-term debug point.
-   */
-  public static void addLongTermDebugPoint(DebugPoint dp) {
-    longTermDebugPoints.add(dp);
-  }
+    /**
+     * Whether or not the simulator shows the (expected) arrival time of the
+     * request (if any) of the vehicles minus the current time on screen.
+     */
+    public static final boolean SHOW_REMAINING_ARRIVAL_TIME = false;
 
-  /**
-   * Get the short-term debugging points
-   *
-   * @return an list of short-term debug points
-   */
-  public static List<DebugPoint> getShortTermDebugPoints() {
-    return shortTermDebugPoints;
-  }
+    /**
+     * Whether or not the simulator prints out the stage of the simulation in
+     * the simulation's main loop.
+     */
+    public static final boolean PRINT_SIMULATOR_STAGE = false;
 
-  /**
-   * Clear out all the short-term debug points.
-   */
-  public static void clearShortTermDebugPoints() {
-    shortTermDebugPoints.clear();
-  }
+    /**
+     * Whether or not the proxy vehicle shows the debug message.
+     */
+    public static final boolean SHOW_PROXY_VEHICLE_DEBUG_MSG = true;
 
-  /**
-   * Add a new short-term debug point.
-   *
-   * @param dp  a new short-term debug point
-   */
-  public static void addShortTermDebugPoint(DebugPoint dp) {
-    shortTermDebugPoints.add(dp);
-  }
+    /**
+     * Whether or not to show the PVUpdate message.
+     */
+    public static final boolean SHOW_PROXY_VEHICLE_PVUPDATE_MSG = false;
 
-  /////////////////////////////////
-  // VEHICLE COLORING
-  /////////////////////////////////
+    /**
+     * Whether or not to print the random seed.
+     */
+    public static final boolean IS_PRINT_RANDOM_SEED = true;
 
-  /**
-   * A mapping from vehicle's VINs to the color of the vehicles.
-   */
-  private static Map<Integer,Color> vinToVehicleColor =
-    new HashMap<Integer,Color>();
+    // TODO: remove the following later.
+    /**
+     * Whether to show the vehicle according to its messaging state.
+     */
+    public static boolean SHOW_VEHICLE_COLOR_BY_MSG_STATE = true;
 
-  /**
-   * Get the color of a vehicle.
-   *
-   * @param vin the VIN number of the vehicle
-   * @return the color of the vehicle
-   */
-  public static Color getVehicleColor(int vin) {
-    return vinToVehicleColor.get(vin);
-  }
 
-  /**
-   * Set the color of a vehicle.
-   *
-   * @param vin   the VIN number of the vehicle
-   * @param color the color of the vehicle
-   */
-  public static void setVehicleColor(int vin, Color color) {
-    vinToVehicleColor.put(vin, color);
-  }
+    /////////////////////////////////
+    // Debug Points
+    /////////////////////////////////
 
-  /**
-   * Remove the color assignment of a vehicle.
-   *
-   * @param vin the VIN number of the vehicle
-   */
-  public static void removeVehicleColor(int vin) {
-    vinToVehicleColor.remove(vin);
-  }
+    /**
+     * The list of long term debug points.
+     */
+    private static List<DebugPoint> longTermDebugPoints =
+            new LinkedList<DebugPoint>();
 
-  /////////////////////////////////
-  // PRIVATE METHODS
-  /////////////////////////////////
+    /**
+     * The list of short term debug points.
+     */
+    private static List<DebugPoint> shortTermDebugPoints =
+            new LinkedList<DebugPoint>();
 
-  /**
-   * This private constructor ensures t hat this class is never instantiated.
-   */
-  private Debug(){};
+    /**
+     * Get the long-term debugging points.
+     *
+     * @return an list of long-term debug points.
+     */
+    public static List<DebugPoint> getLongTermDebugPoints() {
+        return longTermDebugPoints;
+    }
+
+    /**
+     * Clear out all the long-term debug points.
+     */
+    public static void clearLongTermDebugPoints() {
+        longTermDebugPoints.clear();
+    }
+
+    /**
+     * Add a new long-term debug point.
+     *
+     * @param dp a new long-term debug point.
+     */
+    public static void addLongTermDebugPoint(DebugPoint dp) {
+        longTermDebugPoints.add(dp);
+    }
+
+    /**
+     * Get the short-term debugging points
+     *
+     * @return an list of short-term debug points
+     */
+    public static List<DebugPoint> getShortTermDebugPoints() {
+        return shortTermDebugPoints;
+    }
+
+    /**
+     * Clear out all the short-term debug points.
+     */
+    public static void clearShortTermDebugPoints() {
+        shortTermDebugPoints.clear();
+    }
+
+    /**
+     * Add a new short-term debug point.
+     *
+     * @param dp a new short-term debug point
+     */
+    public static void addShortTermDebugPoint(DebugPoint dp) {
+        shortTermDebugPoints.add(dp);
+    }
+
+    /////////////////////////////////
+    // VEHICLE COLORING
+    /////////////////////////////////
+
+    /**
+     * A mapping from vehicle's VINs to the color of the vehicles.
+     */
+    private static Map<Integer, Color> vinToVehicleColor =
+            new HashMap<Integer, Color>();
+
+    /**
+     * Get the color of a vehicle.
+     *
+     * @param vin the VIN number of the vehicle
+     * @return the color of the vehicle
+     */
+    public static Color getVehicleColor(int vin) {
+        return vinToVehicleColor.get(vin);
+    }
+
+    /**
+     * Set the color of a vehicle.
+     *
+     * @param vin   the VIN number of the vehicle
+     * @param color the color of the vehicle
+     */
+    public static void setVehicleColor(int vin, Color color) {
+        vinToVehicleColor.put(vin, color);
+    }
+
+    /**
+     * Remove the color assignment of a vehicle.
+     *
+     * @param vin the VIN number of the vehicle
+     */
+    public static void removeVehicleColor(int vin) {
+        vinToVehicleColor.remove(vin);
+    }
+
+    /////////////////////////////////
+    // PRIVATE METHODS
+    /////////////////////////////////
+
+    /**
+     * This private constructor ensures t hat this class is never instantiated.
+     */
+    private Debug() {
+    }
+
+    ;
 
 }

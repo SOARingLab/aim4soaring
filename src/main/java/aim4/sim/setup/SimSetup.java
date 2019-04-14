@@ -37,24 +37,24 @@ import aim4.sim.Simulator;
  */
 public interface SimSetup {
 
-  /**
-   * Set the traffic level.
-   *
-   * @param trafficLevel  the traffic level
-   */
-  void setTrafficLevel(double trafficLevel);
+    /**
+     * Set the traffic level.
+     *
+     * @param trafficLevel the traffic level
+     */
+    void setTrafficLevel(double trafficLevel);
 
-  /**
-   * Set the stopping distance before intersection.
-   *
-   * @param stopDistBeforeIntersection  the stopping distance
-   */
-  void setStopDistBeforeIntersection(double stopDistBeforeIntersection);
+    /**
+     * Set the stopping distance before intersection.
+     *
+     * @param stopDistBeforeIntersection the stopping distance
+     */
+    void setStopDistBeforeIntersection(double stopDistBeforeIntersection);
 
-  /**
-   * Get the simulator.
-   *
-   * @return the simulator
-   */
-  Simulator getSimulator();
+    /**
+     * Get the simulator.
+     *
+     * @return the simulator
+     */
+    Simulator getSimulator();
 }

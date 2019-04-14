@@ -38,29 +38,29 @@ import aim4.noise.DoubleGauge;
  */
 public interface HumanDrivenVehicleDriverView extends VehicleDriverView {
 
-  /**
-   * Get the state of the traffic light of the current lane at
-   * the upcoming intersection.  Return null if there is no
-   * upcoming intersection.
-   */
-   LightState getLightState();
+    /**
+     * Get the state of the traffic light of the current lane at
+     * the upcoming intersection.  Return null if there is no
+     * upcoming intersection.
+     */
+    LightState getLightState();
 
-  /**
-   * Set the state of the traffic light of the current lane at
-   * the upcoming intersection.
-   *
-   * @param s  the state of the traffic light. null if there is
-   *           no upcoming intersection
-   */
-  void setLightState(LightState s);
+    /**
+     * Set the state of the traffic light of the current lane at
+     * the upcoming intersection.
+     *
+     * @param s the state of the traffic light. null if there is
+     *          no upcoming intersection
+     */
+    void setLightState(LightState s);
 
-  /**
-   * Get this Vehicle's interval-to-vehicle-in-front gauge. This should
-   * <b>only</b> be followed by a call to <code>read</code>, <b>except</b> in
-   * the actual physical simulator which is allowed to set these values.
-   *
-   * @return the Vehicle's interval-to-vehicle-in-front gauge
-   */
-  DoubleGauge getIntervalometer();
+    /**
+     * Get this Vehicle's interval-to-vehicle-in-front gauge. This should
+     * <b>only</b> be followed by a call to <code>read</code>, <b>except</b> in
+     * the actual physical simulator which is allowed to set these values.
+     *
+     * @return the Vehicle's interval-to-vehicle-in-front gauge
+     */
+    DoubleGauge getIntervalometer();
 
 }

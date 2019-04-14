@@ -37,70 +37,78 @@ import java.util.ArrayList;
  */
 public class ArrayListRegistry<T> implements Registry<T> {
 
-  /** The initial capacity of the array */
-  private static final int INITIAL_CAPACITY = 10;
+    /**
+     * The initial capacity of the array
+     */
+    private static final int INITIAL_CAPACITY = 10;
 
-  /** The initial ID */
-  private int initId;
-  /** The next ID */
-  private int nextId;
-  /** The mapping from IDs to objects */
-  private ArrayList<T> idToObj = new ArrayList<T>(INITIAL_CAPACITY);
+    /**
+     * The initial ID
+     */
+    private int initId;
+    /**
+     * The next ID
+     */
+    private int nextId;
+    /**
+     * The mapping from IDs to objects
+     */
+    private ArrayList<T> idToObj = new ArrayList<T>(INITIAL_CAPACITY);
 
-  /**
-   * Create an array list registry.
-   */
-  public ArrayListRegistry() {
-    this(0);
-  }
-
-  /**
-   * Create an array list registry.
-   *
-   * @param initId  the initial ID
-   */
-  public ArrayListRegistry(int initId) {
-    this.initId = initId;
-    this.nextId = initId;
-  }
-
-  @Override
-  public int register(T obj) {
-    int id = nextId++;
-    idToObj.add(obj);
-    return id;
-  }
-
-  @Override
-  public boolean isIdExist(int id) {
-    return initId <= id && id < nextId;
-  }
-
-  @Override
-  public T get(int id) {
-    if (isIdExist(id)) {
-      return idToObj.get(id-initId);
-    } else {
-      return null;
+    /**
+     * Create an array list registry.
+     */
+    public ArrayListRegistry() {
+        this(0);
     }
-  }
 
-  @Override
-  public int getNewId() {
-    int id = nextId++;
-    idToObj.add(null);
-    return id;
-  }
+    /**
+     * Create an array list registry.
+     *
+     * @param initId the initial ID
+     */
+    public ArrayListRegistry(int initId) {
+        this.initId = initId;
+        this.nextId = initId;
+    }
 
-  @Override
-  public void set(int id, T obj) {
-    assert isIdExist(id);
-    idToObj.set(id-initId, obj);
-  }
+    @Override
+    public int register(T obj) {
+        int id = nextId++;
+        idToObj.add(obj);
+        return id;
+    }
 
-  // for clean up
-  @Override
-  public void setNull(int id) {
-    idToObj.set(id-initId, null);
-  }
+    @Override
+    public boolean isIdExist(int id) {
+        return initId <= id && id < nextId;
+    }
+
+    @Override
+    public T get(int id) {
+        if (isIdExist(id)) {
+            return idToObj.get(id - initId);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int getNewId() {
+        int id = nextId++;
+        idToObj.add(null);
+        return id;
+    }
+
+    @Override
+    public void set(int id, T obj) {
+        assert isIdExist(id);
+        idToObj.set(id - initId, obj);
+    }
+
+    // for clean up
+    @Override
+    public void setNull(int id) {
+        idToObj.set(id - initId, null);
+    }
 }

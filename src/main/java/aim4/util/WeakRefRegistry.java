@@ -39,76 +39,82 @@ import java.util.Map;
  */
 public class WeakRefRegistry<T> implements Registry<T> {
 
-  /** The initial ID */
-  private int initId;
-  /** The next ID */
-  private int nextId;
-  /** A mapping from IDs to weak references of objects */
-  private Map<Integer,WeakReference<T>> idToObj =
-    new HashMap<Integer,WeakReference<T>>();
+    /**
+     * The initial ID
+     */
+    private int initId;
+    /**
+     * The next ID
+     */
+    private int nextId;
+    /**
+     * A mapping from IDs to weak references of objects
+     */
+    private Map<Integer, WeakReference<T>> idToObj =
+            new HashMap<Integer, WeakReference<T>>();
 
-  /**
-   * Create a weak reference registry.
-   */
-  public WeakRefRegistry() {
-    this(0);
-  }
-
-  /**
-   * Create a weak reference registry.
-   *
-   * @param initId  the initial ID
-   */
-  public WeakRefRegistry(int initId) {
-    this.initId = initId;
-    this.nextId = initId;
-  }
-
-  @Override
-  public int register(T obj) {
-    int id = nextId++;
-    idToObj.put(id, new WeakReference<T>(obj));
-    return id;
-  }
-
-  @Override
-  public boolean isIdExist(int id) {
-    return initId <= id && id < nextId;
-  }
-
-  @Override
-  public T get(int id) {
-    WeakReference<T> wr = idToObj.get(id);
-    if(wr == null) {
-      return null;
-    } else {
-      T obj = wr.get();  // Unwrap the reference
-      // If it's null, then the object no longer exists
-      if (obj == null) {
-        idToObj.remove(id);
-        return null;
-      } else {
-        return obj;
-      }
+    /**
+     * Create a weak reference registry.
+     */
+    public WeakRefRegistry() {
+        this(0);
     }
-  }
 
-  @Override
-  public int getNewId() {
-    int id = nextId++;
-    idToObj.put(id, null);
-    return id;
-  }
+    /**
+     * Create a weak reference registry.
+     *
+     * @param initId the initial ID
+     */
+    public WeakRefRegistry(int initId) {
+        this.initId = initId;
+        this.nextId = initId;
+    }
 
-  @Override
-  public void set(int id, T obj) {
-    assert idToObj.containsKey(id);
-    idToObj.put(id, new WeakReference<T>(obj));
-  }
+    @Override
+    public int register(T obj) {
+        int id = nextId++;
+        idToObj.put(id, new WeakReference<T>(obj));
+        return id;
+    }
 
-  // for clean up
-  @Override
-  public void setNull(int id) {
-    idToObj.remove(id);
-  }
+    @Override
+    public boolean isIdExist(int id) {
+        return initId <= id && id < nextId;
+    }
+
+    @Override
+    public T get(int id) {
+        WeakReference<T> wr = idToObj.get(id);
+        if (wr == null) {
+            return null;
+        } else {
+            T obj = wr.get();  // Unwrap the reference
+            // If it's null, then the object no longer exists
+            if (obj == null) {
+                idToObj.remove(id);
+                return null;
+            } else {
+                return obj;
+            }
+        }
+    }
+
+    @Override
+    public int getNewId() {
+        int id = nextId++;
+        idToObj.put(id, null);
+        return id;
+    }
+
+    @Override
+    public void set(int id, T obj) {
+        assert idToObj.containsKey(id);
+        idToObj.put(id, new WeakReference<T>(obj));
+    }
+
+    // for clean up
+    @Override
+    public void setNull(int id) {
+        idToObj.remove(id);
+    }
 }

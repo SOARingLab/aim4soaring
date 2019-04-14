@@ -38,31 +38,31 @@ import java.io.IOException;
  */
 public class Real2ProxyDone extends Real2ProxyMsg {
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a real vehicle to proxy vehicle message for done message.
-   *
-   * @param dis           the I/O stream
-   * @param receivedTime  the time stamp
-   * @throws IOException
-   */
-  public Real2ProxyDone(DataInputStream dis, double receivedTime)
-      throws IOException {
-    super(Type.DONE, receivedTime);
-  }
+    /**
+     * Create a real vehicle to proxy vehicle message for done message.
+     *
+     * @param dis          the I/O stream
+     * @param receivedTime the time stamp
+     * @throws IOException
+     */
+    public Real2ProxyDone(DataInputStream dis, double receivedTime)
+            throws IOException {
+        super(Type.DONE, receivedTime);
+    }
 
-  /////////////////////////////////
-  // DEBUG
-  /////////////////////////////////
+    /////////////////////////////////
+    // DEBUG
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString() {
-    return "Real2ProxyDone()";
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Real2ProxyDone()";
+    }
 }

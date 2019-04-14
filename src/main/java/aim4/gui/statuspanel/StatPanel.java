@@ -45,104 +45,114 @@ import aim4.sim.Simulator;
  * The statistics Panel
  */
 public class StatPanel extends JPanel
-                       implements StatusPanelInterface {
+        implements StatusPanelInterface {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  // ///////////////////////////////
-  // PRIVATE FIELDS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PRIVATE FIELDS
+    // ///////////////////////////////
 
-  /** The current time in the simulator. */
-  private FormattedLabel currentTimeLabel =
-    new FormattedLabel("Current Time: ", "%8.2f s", 10);
-  /** The number of completed vehicles. */
-  private FormattedLabel overallCompletedVehiclesLabel =
-    new FormattedLabel("Completed Vehicles: ", "%5d", 5);
-  /** The average amount of data transmitted. */
-  private FormattedLabel overallAverageTransmittedLabel =
-    new FormattedLabel("Average Data Transmitted: ", "%5.2f kB", 8);
-  /** The average amount of data received. */
-  private FormattedLabel overallAverageReceivedLabel =
-    new FormattedLabel("Average Data Received: ", "%5.2f kB", 8);
+    /**
+     * The current time in the simulator.
+     */
+    private FormattedLabel currentTimeLabel =
+            new FormattedLabel("Current Time: ", "%8.2f s", 10);
+    /**
+     * The number of completed vehicles.
+     */
+    private FormattedLabel overallCompletedVehiclesLabel =
+            new FormattedLabel("Completed Vehicles: ", "%5d", 5);
+    /**
+     * The average amount of data transmitted.
+     */
+    private FormattedLabel overallAverageTransmittedLabel =
+            new FormattedLabel("Average Data Transmitted: ", "%5.2f kB", 8);
+    /**
+     * The average amount of data received.
+     */
+    private FormattedLabel overallAverageReceivedLabel =
+            new FormattedLabel("Average Data Received: ", "%5.2f kB", 8);
 
-  /** The viewer object */
-  private Viewer viewer;
+    /**
+     * The viewer object
+     */
+    private Viewer viewer;
 
-  // ///////////////////////////////
-  // CONSTRUCTORS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // CONSTRUCTORS
+    // ///////////////////////////////
 
-  /**
-   * The statistics panel.
-   *
-   * @param viewer  the viewer object
-   */
-  public StatPanel(Viewer viewer) {
-    this.viewer = viewer;
+    /**
+     * The statistics panel.
+     *
+     * @param viewer the viewer object
+     */
+    public StatPanel(Viewer viewer) {
+        this.viewer = viewer;
 
-    GridBagLayout gridbag = new GridBagLayout();
-    setLayout(gridbag);
+        GridBagLayout gridbag = new GridBagLayout();
+        setLayout(gridbag);
 
-    GridBagConstraints c = new GridBagConstraints();
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 1.0;
-    c.weighty = 1.0;
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
 
-    // Time
-    c.gridwidth = 1; // restore default
-    gridbag.setConstraints(currentTimeLabel, c);
-    add(currentTimeLabel);
-    // Completed Vehicles
-    c.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(overallCompletedVehiclesLabel, c);
-    add(overallCompletedVehiclesLabel);
-    // Information Transmitted
-    c.gridwidth = 1; // restore default
-    gridbag.setConstraints(overallAverageTransmittedLabel, c);
-    add(overallAverageTransmittedLabel);
-    // Information Received
-    c.gridwidth = GridBagConstraints.REMAINDER;
-    gridbag.setConstraints(overallAverageReceivedLabel, c);
-    add(overallAverageReceivedLabel);
-  }
-
-  // ///////////////////////////////
-  // PUBLIC METHODS
-  // ///////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void update() {
-    Simulator sim = viewer.getSimulator();
-    if (sim != null) {
-      // Current Time
-      currentTimeLabel.update(sim.getSimulationTime());
-      // Completed Vehicles
-      overallCompletedVehiclesLabel.update(sim.getNumCompletedVehicles());
-      // Average Data Transmitted
-      overallAverageTransmittedLabel.update(sim
-        .getAvgBitsTransmittedByCompletedVehicles()
-        / Constants.BITS_PER_KB);
-      // Average Data Received
-      overallAverageReceivedLabel.update(sim
-        .getAvgBitsReceivedByCompletedVehicles()
-        / Constants.BITS_PER_KB);
-    } else {
-      clear();
+        // Time
+        c.gridwidth = 1; // restore default
+        gridbag.setConstraints(currentTimeLabel, c);
+        add(currentTimeLabel);
+        // Completed Vehicles
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridbag.setConstraints(overallCompletedVehiclesLabel, c);
+        add(overallCompletedVehiclesLabel);
+        // Information Transmitted
+        c.gridwidth = 1; // restore default
+        gridbag.setConstraints(overallAverageTransmittedLabel, c);
+        add(overallAverageTransmittedLabel);
+        // Information Received
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridbag.setConstraints(overallAverageReceivedLabel, c);
+        add(overallAverageReceivedLabel);
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void clear() {
-    currentTimeLabel.clear();
-    overallCompletedVehiclesLabel.clear();
-    overallAverageTransmittedLabel.clear();
-    overallAverageReceivedLabel.clear();
-  }
+    // ///////////////////////////////
+    // PUBLIC METHODS
+    // ///////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update() {
+        Simulator sim = viewer.getSimulator();
+        if (sim != null) {
+            // Current Time
+            currentTimeLabel.update(sim.getSimulationTime());
+            // Completed Vehicles
+            overallCompletedVehiclesLabel.update(sim.getNumCompletedVehicles());
+            // Average Data Transmitted
+            overallAverageTransmittedLabel.update(sim
+                    .getAvgBitsTransmittedByCompletedVehicles()
+                    / Constants.BITS_PER_KB);
+            // Average Data Received
+            overallAverageReceivedLabel.update(sim
+                    .getAvgBitsReceivedByCompletedVehicles()
+                    / Constants.BITS_PER_KB);
+        } else {
+            clear();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        currentTimeLabel.clear();
+        overallCompletedVehiclesLabel.clear();
+        overallAverageTransmittedLabel.clear();
+        overallAverageReceivedLabel.clear();
+    }
 }

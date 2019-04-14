@@ -38,16 +38,17 @@ import java.io.PrintStream;
  * @param <T> the type of the statistic collector
  */
 public interface StatCollector<T> {
-  /**
-   * Collect the statistic about a given object.
-   *
-   * @param obj  the given object
-   */
-  void collect(T obj);
-  /**
-   * Print the statistics to an output stream.
-   *
-   * @param outfile  the output stream
-   */
-  void print(PrintStream outfile);
+    /**
+     * Collect the statistic about a given object.
+     *
+     * @param obj the given object
+     */
+    void collect(T obj);
+
+    /**
+     * Print the statistics to an output stream.
+     *
+     * @param outfile the output stream
+     */
+    void print(PrintStream outfile);
 }

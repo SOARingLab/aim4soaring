@@ -45,45 +45,45 @@ import aim4.util.Util;
  */
 public class RandomDestinationSelector implements DestinationSelector {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /**
-   * The Set of legal Roads that a vehicle can use as an ultimate destination.
-   */
-  private List<Road> destinationRoads;
+    /**
+     * The Set of legal Roads that a vehicle can use as an ultimate destination.
+     */
+    private List<Road> destinationRoads;
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a new RandomDestinationSelector from the given Layout.
-   *
-   * @param layout the Layout from which to create the
-   *               RandomDestinationSelector
-   */
-  public RandomDestinationSelector(BasicMap layout) {
-    destinationRoads = layout.getDestinationRoads();
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Road selectDestination(Lane currentLane) {
-    Road currentRoad = Debug.currentMap.getRoad(currentLane);
-    Road dest =
-      destinationRoads.get(Util.random.nextInt(destinationRoads.size()));
-    while(dest.getDual() == currentRoad) {
-      dest =
-        destinationRoads.get(Util.random.nextInt(destinationRoads.size()));
+    /**
+     * Create a new RandomDestinationSelector from the given Layout.
+     *
+     * @param layout the Layout from which to create the
+     *               RandomDestinationSelector
+     */
+    public RandomDestinationSelector(BasicMap layout) {
+        destinationRoads = layout.getDestinationRoads();
     }
-    return dest;
-  }
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Road selectDestination(Lane currentLane) {
+        Road currentRoad = Debug.currentMap.getRoad(currentLane);
+        Road dest =
+                destinationRoads.get(Util.random.nextInt(destinationRoads.size()));
+        while (dest.getDual() == currentRoad) {
+            dest =
+                    destinationRoads.get(Util.random.nextInt(destinationRoads.size()));
+        }
+        return dest;
+    }
 }

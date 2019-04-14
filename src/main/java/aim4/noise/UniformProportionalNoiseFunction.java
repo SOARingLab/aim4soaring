@@ -38,29 +38,29 @@ import aim4.util.Util;
  */
 public class UniformProportionalNoiseFunction implements NoiseFunction {
 
-  /**
-   * The proportion of the true value to use as a range for noise.  For
-   * example, if this is .1, then each value will vary uniformly between
-   * 90% and 110% of the true value.
-   */
-  private double proportion;
+    /**
+     * The proportion of the true value to use as a range for noise.  For
+     * example, if this is .1, then each value will vary uniformly between
+     * 90% and 110% of the true value.
+     */
+    private double proportion;
 
-  /**
-   * Class constructor.
-   *
-   * @param proportion the proportion of the true value to use as bounds for
-   *        the noise function.
-   */
-  public UniformProportionalNoiseFunction(double proportion) {
-    this.proportion = proportion;
-  }
+    /**
+     * Class constructor.
+     *
+     * @param proportion the proportion of the true value to use as bounds for
+     *                   the noise function.
+     */
+    public UniformProportionalNoiseFunction(double proportion) {
+        this.proportion = proportion;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public double apply(double trueValue) {
-    double range = 2 * trueValue * proportion;
-    return trueValue + (Util.random.nextDouble() * range) - range/2;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double apply(double trueValue) {
+        double range = 2 * trueValue * proportion;
+        return trueValue + (Util.random.nextDouble() * range) - range / 2;
+    }
 }

@@ -38,35 +38,35 @@ import aim4.util.Registry;
  */
 public class DummyManager extends IntersectionManager {
 
-  /**
-   * Create a dummy manager.
-   *
-   * @param intersection     an intersection
-   * @param trajectoryModel  a trajectory model
-   * @param currentTime      the current time
-   * @param registry         the intersection managers registry
-   */
-  public DummyManager(Intersection intersection,
-                      TrackModel trajectoryModel,
-                      double currentTime,
-                      Registry<IntersectionManager> registry) {
-    super(intersection, trajectoryModel, currentTime, registry);
-  }
+    /**
+     * Create a dummy manager.
+     *
+     * @param intersection    an intersection
+     * @param trajectoryModel a trajectory model
+     * @param currentTime     the current time
+     * @param registry        the intersection managers registry
+     */
+    public DummyManager(Intersection intersection,
+                        TrackModel trajectoryModel,
+                        double currentTime,
+                        Registry<IntersectionManager> registry) {
+        super(intersection, trajectoryModel, currentTime, registry);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void act(double timeStep) {
-    // do nothing
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void act(double timeStep) {
+        // do nothing
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void printData(String outFileName) {
-    // do nothing
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void printData(String outFileName) {
+        // do nothing
+    }
 
 }

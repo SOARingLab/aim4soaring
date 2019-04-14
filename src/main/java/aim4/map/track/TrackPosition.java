@@ -34,34 +34,36 @@ package aim4.map.track;
  * A position on a track.
  */
 public interface TrackPosition {
-  /**
-   * Get the x-coordinate of the current position.
-   *
-   * @return the x-coordinate of the current position.
-   */
-  double getX();
-  /**
-   * Get the y-coordinate of the current position.
-   *
-   * @return the y-coordinate of the current position.
-   */
-  double getY();
-  /**
-   * Get the slope of the tangent at the location.
-   *
-   * @return The slope of the tangent at the location.
-   */
-  double getTangentSlope();
-  /**
-   * Move the position by a certain distance on the track but not beyond the
-   * end waypoint. Return the remaining distance if it moves beyond the
-   * end waypoint.
-   *
-   * @param dist  the distance
-   *
-   * @return the remaining distance of the traversal; exactly 0 (that can be
-   *         tested with "== 0.0") if the traversal has not reached the
-   *         end waypoint.
-   */
-  double move(double dist);
+    /**
+     * Get the x-coordinate of the current position.
+     *
+     * @return the x-coordinate of the current position.
+     */
+    double getX();
+
+    /**
+     * Get the y-coordinate of the current position.
+     *
+     * @return the y-coordinate of the current position.
+     */
+    double getY();
+
+    /**
+     * Get the slope of the tangent at the location.
+     *
+     * @return The slope of the tangent at the location.
+     */
+    double getTangentSlope();
+
+    /**
+     * Move the position by a certain distance on the track but not beyond the
+     * end waypoint. Return the remaining distance if it moves beyond the
+     * end waypoint.
+     *
+     * @param dist the distance
+     * @return the remaining distance of the traversal; exactly 0 (that can be
+     * tested with "== 0.0") if the traversal has not reached the
+     * end waypoint.
+     */
+    double move(double dist);
 }

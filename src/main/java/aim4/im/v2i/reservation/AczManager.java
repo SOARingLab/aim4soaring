@@ -34,201 +34,219 @@ package aim4.im.v2i.reservation;
  * The ACZ manager.
  */
 public class AczManager implements
-  ReservationManager<AczManager.Query,AczManager.Plan,Integer> {
+        ReservationManager<AczManager.Query, AczManager.Plan, Integer> {
 
-  /////////////////////////////////
-  // NESTED CLASSES
-  /////////////////////////////////
-
-  /**
-   * The query for the ACZ manager.
-   */
-  public static class Query {
-    /** The VIN */
-    private int vin;
-    /** The arrival time */
-    private double arrivalTime;
-    /** The arrival velocity */
-    private double arrivalVelocity;
-    /** The vehicle length */
-    private double vehicleLength;
-    /** The stop distance */
-    private double stopDist;
+    /////////////////////////////////
+    // NESTED CLASSES
+    /////////////////////////////////
 
     /**
-     *  Create a query for the ACZ manager.
-     *
-     * @param vin              the VIN of a vehicle
-     * @param arrivalTime      the arrival time
-     * @param arrivalVelocity  the arrival velocity
-     * @param vehicleLength    the vehicle length
-     * @param stopDist         the stopping distance
+     * The query for the ACZ manager.
      */
-    public Query(int vin, double arrivalTime, double arrivalVelocity,
-                 double vehicleLength, double stopDist) {
-      this.vin = vin;
-      this.arrivalTime = arrivalTime;
-      this.arrivalVelocity = arrivalVelocity;
-      this.vehicleLength = vehicleLength;
-      this.stopDist = stopDist;
-    }
+    public static class Query {
+        /**
+         * The VIN
+         */
+        private int vin;
+        /**
+         * The arrival time
+         */
+        private double arrivalTime;
+        /**
+         * The arrival velocity
+         */
+        private double arrivalVelocity;
+        /**
+         * The vehicle length
+         */
+        private double vehicleLength;
+        /**
+         * The stop distance
+         */
+        private double stopDist;
 
-    /**
-     * Get the VIN of a vehicle
-     *
-     * @return the VIN of a vehicle
-     */
-    public int getVin() {
-      return vin;
-    }
+        /**
+         * Create a query for the ACZ manager.
+         *
+         * @param vin             the VIN of a vehicle
+         * @param arrivalTime     the arrival time
+         * @param arrivalVelocity the arrival velocity
+         * @param vehicleLength   the vehicle length
+         * @param stopDist        the stopping distance
+         */
+        public Query(int vin, double arrivalTime, double arrivalVelocity,
+                     double vehicleLength, double stopDist) {
+            this.vin = vin;
+            this.arrivalTime = arrivalTime;
+            this.arrivalVelocity = arrivalVelocity;
+            this.vehicleLength = vehicleLength;
+            this.stopDist = stopDist;
+        }
 
-    /**
-     * Get the arrival time.
-     *
-     * @return the arrival time
-     */
-    public double getArrivalTime() {
-      return arrivalTime;
-    }
+        /**
+         * Get the VIN of a vehicle
+         *
+         * @return the VIN of a vehicle
+         */
+        public int getVin() {
+            return vin;
+        }
 
-    /**
-     * Get the arrival velocity.
-     *
-     * @return the arrival velocity
-     */
-    public double getArrivalVelocity() {
-      return arrivalVelocity;
-    }
+        /**
+         * Get the arrival time.
+         *
+         * @return the arrival time
+         */
+        public double getArrivalTime() {
+            return arrivalTime;
+        }
 
-    /**
-     * Get the vehicle length.
-     *
-     * @return the vehicle length
-     */
-    public double getVehicleLength() {
-      return vehicleLength;
-    }
+        /**
+         * Get the arrival velocity.
+         *
+         * @return the arrival velocity
+         */
+        public double getArrivalVelocity() {
+            return arrivalVelocity;
+        }
 
-    /**
-     * Get the stopping distance.
-     *
-     * @return the stopping distance
-     */
-    public double getStopDist() {
-      return stopDist;
-    }
-  }
+        /**
+         * Get the vehicle length.
+         *
+         * @return the vehicle length
+         */
+        public double getVehicleLength() {
+            return vehicleLength;
+        }
 
-  /**
-   * The plan of the reservation.
-   */
-  public static class Plan {
-    /** The VIN of the vehicle */
-    private int vin;
-    /** The length of the vehicle */
-    private double length;
-    /** The stopping distance */
-    private double stopDist;
-
-    /**
-     * Create a plan of the reservation.
-     *
-     * @param vin       the VIN of the vehicle
-     * @param length    the length of the vehicle
-     * @param stopDist  the stopping distance
-     */
-    public Plan(int vin, double length, double stopDist) {
-      this.vin = vin;
-      this.length = length;
-      this.stopDist = stopDist;
+        /**
+         * Get the stopping distance.
+         *
+         * @return the stopping distance
+         */
+        public double getStopDist() {
+            return stopDist;
+        }
     }
 
     /**
-     * Get the VIN of the vehicle.
-     *
-     * @return the VIN of the vehicle
+     * The plan of the reservation.
      */
-    public int getVin() {
-      return vin;
+    public static class Plan {
+        /**
+         * The VIN of the vehicle
+         */
+        private int vin;
+        /**
+         * The length of the vehicle
+         */
+        private double length;
+        /**
+         * The stopping distance
+         */
+        private double stopDist;
+
+        /**
+         * Create a plan of the reservation.
+         *
+         * @param vin      the VIN of the vehicle
+         * @param length   the length of the vehicle
+         * @param stopDist the stopping distance
+         */
+        public Plan(int vin, double length, double stopDist) {
+            this.vin = vin;
+            this.length = length;
+            this.stopDist = stopDist;
+        }
+
+        /**
+         * Get the VIN of the vehicle.
+         *
+         * @return the VIN of the vehicle
+         */
+        public int getVin() {
+            return vin;
+        }
+
+        /**
+         * Get the length of the vehicle.
+         *
+         * @return the length of the vehicle
+         */
+        public double getLength() {
+            return length;
+        }
+
+        /**
+         * Get the stopping distance.
+         *
+         * @return the stopping distance
+         */
+        public double getStopDist() {
+            return stopDist;
+        }
+    }
+
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
+
+    /**
+     * The ACZ
+     */
+    private AdmissionControlZone acz;
+
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
+
+    /**
+     * Create a ACZ manager.
+     *
+     * @param acz the ACZ
+     */
+    public AczManager(AdmissionControlZone acz) {
+        this.acz = acz;
+    }
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Plan query(Query q) {
+        if (acz.isAdmissible(q.getVin(),
+                q.getVehicleLength(),
+                q.getStopDist())) {
+            return new Plan(q.getVin(),
+                    q.getVehicleLength(),
+                    q.getStopDist());
+        } else {
+            return null;
+        }
     }
 
     /**
-     * Get the length of the vehicle.
-     *
-     * @return the length of the vehicle
+     * {@inheritDoc}
      */
-    public double getLength() {
-      return length;
+    @Override
+    public Integer accept(Plan plan) {
+        acz.admit(plan.getVin(),
+                plan.getLength(),
+                plan.getStopDist());
+        return plan.getVin();
     }
 
     /**
-     * Get the stopping distance.
-     *
-     * @return the stopping distance
+     * {@inheritDoc}
      */
-    public double getStopDist() {
-      return stopDist;
+    @Override
+    public void cancel(Integer vin) {
+        acz.cancel(vin);
     }
-  }
-
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
-
-  /** The ACZ */
-  private AdmissionControlZone acz;
-
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
-
-  /**
-   * Create a ACZ manager.
-   *
-   * @param acz  the ACZ
-   */
-  public AczManager(AdmissionControlZone acz) {
-    this.acz = acz;
-  }
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Plan query(Query q) {
-    if (acz.isAdmissible(q.getVin(),
-                         q.getVehicleLength(),
-                         q.getStopDist())) {
-      return new Plan(q.getVin(),
-                      q.getVehicleLength(),
-                      q.getStopDist());
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Integer accept(Plan plan) {
-    acz.admit(plan.getVin(),
-              plan.getLength(),
-              plan.getStopDist());
-    return plan.getVin();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void cancel(Integer vin) {
-    acz.cancel(vin);
-  }
 
 }

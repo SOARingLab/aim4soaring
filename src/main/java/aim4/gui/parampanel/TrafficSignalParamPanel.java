@@ -39,81 +39,81 @@ import aim4.gui.component.LabeledSlider;
  * The traffic signal parameter panel.
  */
 public class TrafficSignalParamPanel extends JPanel {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  LabeledSlider trafficRateSlider;
-  LabeledSlider greenLightDurationSlider;
-  LabeledSlider yelloLightDurationSlider;
-  LabeledSlider lanesPerRoadSlider;
+    LabeledSlider trafficRateSlider;
+    LabeledSlider greenLightDurationSlider;
+    LabeledSlider yelloLightDurationSlider;
+    LabeledSlider lanesPerRoadSlider;
 
-  /**
-   * Create a traffic signal parameter panel.
-   */
-  public TrafficSignalParamPanel() {
-    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+    /**
+     * Create a traffic signal parameter panel.
+     */
+    public TrafficSignalParamPanel() {
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-    // create the components
+        // create the components
 
-    trafficRateSlider =
-      new LabeledSlider(0.0, 2500.0,
+        trafficRateSlider =
+                new LabeledSlider(0.0, 2500.0,
                         800.0,
                         500.0, 100.0,
                         "Traffic Level: %.0f vehicles/hour/lane",
                         "%.0f");
-    add(trafficRateSlider);
+        add(trafficRateSlider);
 
-    lanesPerRoadSlider =
-      new LabeledSlider(1.0, 8.0, 3.0, 1.0, 1.0,
+        lanesPerRoadSlider =
+                new LabeledSlider(1.0, 8.0, 3.0, 1.0, 1.0,
                         "Number of Lanes per Road: %.0f",
                         "%.0f");
-    add(lanesPerRoadSlider);
+        add(lanesPerRoadSlider);
 
-    greenLightDurationSlider =
-      new LabeledSlider(0.0, 60.0, 30.0, 5.0, 1.0,
+        greenLightDurationSlider =
+                new LabeledSlider(0.0, 60.0, 30.0, 5.0, 1.0,
                         "Green Signal Duration: %.1f seconds",
                         "%.0f");
-    add(greenLightDurationSlider);
+        add(greenLightDurationSlider);
 
-    yelloLightDurationSlider =
-      new LabeledSlider(0.0, 60.0, 5.0, 5.0, 1.0,
+        yelloLightDurationSlider =
+                new LabeledSlider(0.0, 60.0, 5.0, 5.0, 1.0,
                         "Yellow Signal Duration: %.1f seconds",
                         "%.0f");
-    add(yelloLightDurationSlider);
-  }
+        add(yelloLightDurationSlider);
+    }
 
-  /**
-   * Get the traffic rate.
-   *
-   * @return the traffic rate
-   */
-  public double getTrafficRate() {
-    return trafficRateSlider.getValue() / 3600.0;
-  }
+    /**
+     * Get the traffic rate.
+     *
+     * @return the traffic rate
+     */
+    public double getTrafficRate() {
+        return trafficRateSlider.getValue() / 3600.0;
+    }
 
-  /**
-   * Get the green light duration.
-   *
-   * @return the green light duration
-   */
-  public double getGreenLightDuration() {
-    return greenLightDurationSlider.getValue();
-  }
+    /**
+     * Get the green light duration.
+     *
+     * @return the green light duration
+     */
+    public double getGreenLightDuration() {
+        return greenLightDurationSlider.getValue();
+    }
 
-  /**
-   * Get the yellow light duration.
-   *
-   * @return the yellow light duration
-   */
-  public double getYellowLightDuration() {
-    return yelloLightDurationSlider.getValue();
-  }
+    /**
+     * Get the yellow light duration.
+     *
+     * @return the yellow light duration
+     */
+    public double getYellowLightDuration() {
+        return yelloLightDurationSlider.getValue();
+    }
 
-  /**
-   * Get the number of lanes per road.
-   *
-   * @return the number of lanes per road
-   */
-  public int getLanesPerRoad() {
-    return (int)lanesPerRoadSlider.getValue();
-  }
+    /**
+     * Get the number of lanes per road.
+     *
+     * @return the number of lanes per road
+     */
+    public int getLanesPerRoad() {
+        return (int) lanesPerRoadSlider.getValue();
+    }
 }

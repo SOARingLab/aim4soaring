@@ -38,40 +38,42 @@ import java.io.IOException;
  */
 public class Real2ProxyCancel extends Real2ProxyMsg {
 
-  /////////////////////////////////
-  // PUBLIC FINAL FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC FINAL FIELDS
+    /////////////////////////////////
 
-  /** The reservation ID */
-  public final int reservationId;
+    /**
+     * The reservation ID
+     */
+    public final int reservationId;
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a real vehicle to proxy vehicle message for cancel message.
-   *
-   * @param dis           the I/O stream
-   * @param receivedTime  the time stamp
-   * @throws IOException
-   */
-  public Real2ProxyCancel(DataInputStream dis, double receivedTime)
-      throws IOException {
-    super(Type.REQUEST, receivedTime);
-    reservationId = dis.readInt();
-  }
+    /**
+     * Create a real vehicle to proxy vehicle message for cancel message.
+     *
+     * @param dis          the I/O stream
+     * @param receivedTime the time stamp
+     * @throws IOException
+     */
+    public Real2ProxyCancel(DataInputStream dis, double receivedTime)
+            throws IOException {
+        super(Type.REQUEST, receivedTime);
+        reservationId = dis.readInt();
+    }
 
-  /////////////////////////////////
-  // DEBUG
-  /////////////////////////////////
+    /////////////////////////////////
+    // DEBUG
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString() {
-    return "Real2ProxyCancel()";
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Real2ProxyCancel()";
+    }
 
 }

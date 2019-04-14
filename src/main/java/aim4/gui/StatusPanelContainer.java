@@ -45,107 +45,119 @@ import aim4.gui.statuspanel.VehicleInfoPanel;
  * A tabbed panel for showing statistics and status of the simulator.
  */
 public class StatusPanelContainer extends JTabbedPane
-                                  implements ChangeListener {
+        implements ChangeListener {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  // ///////////////////////////////
-  // PRIVATE FIELDS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PRIVATE FIELDS
+    // ///////////////////////////////
 
-  /** The simulation control panel */
-  SimControlPanel controlPanel;
-  /** The statistic panel */
-  StatPanel statPanel;
-  /** The system panel */
-  SystemPanel systemPanel;
-  /** The console panel */
-  ConsolePanel consolePanel;
-  /** The vehicle information panel */
-  VehicleInfoPanel vehicleInfoPanel;
-  /** The administration control panel */
-  AdminControlPanel adminControlPanel;
+    /**
+     * The simulation control panel
+     */
+    SimControlPanel controlPanel;
+    /**
+     * The statistic panel
+     */
+    StatPanel statPanel;
+    /**
+     * The system panel
+     */
+    SystemPanel systemPanel;
+    /**
+     * The console panel
+     */
+    ConsolePanel consolePanel;
+    /**
+     * The vehicle information panel
+     */
+    VehicleInfoPanel vehicleInfoPanel;
+    /**
+     * The administration control panel
+     */
+    AdminControlPanel adminControlPanel;
 
-  // ///////////////////////////////
-  // CLASS CONSTRUCTORS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // CLASS CONSTRUCTORS
+    // ///////////////////////////////
 
-  /**
-   * Create a new status pane with the given preferred width.
-   *
-   * @param viewer  the viewer object
-   */
-  public StatusPanelContainer(Viewer viewer) {
-    controlPanel = new SimControlPanel(viewer);
-    add("Simulation", controlPanel);
-    statPanel = new StatPanel(viewer);
-    add("Statistics", statPanel);
-    systemPanel = new SystemPanel();
-    add("System", systemPanel);
-    consolePanel = new ConsolePanel();
-    add("Console", consolePanel);
-    vehicleInfoPanel = new VehicleInfoPanel();
-    add("Vehicle", vehicleInfoPanel);
-    adminControlPanel = new AdminControlPanel(viewer);
-    add("Admin", adminControlPanel);
+    /**
+     * Create a new status pane with the given preferred width.
+     *
+     * @param viewer the viewer object
+     */
+    public StatusPanelContainer(Viewer viewer) {
+        controlPanel = new SimControlPanel(viewer);
+        add("Simulation", controlPanel);
+        statPanel = new StatPanel(viewer);
+        add("Statistics", statPanel);
+        systemPanel = new SystemPanel();
+        add("System", systemPanel);
+        consolePanel = new ConsolePanel();
+        add("Console", consolePanel);
+        vehicleInfoPanel = new VehicleInfoPanel();
+        add("Vehicle", vehicleInfoPanel);
+        adminControlPanel = new AdminControlPanel(viewer);
+        add("Admin", adminControlPanel);
 
-    addChangeListener(this);
-  }
+        addChangeListener(this);
+    }
 
-  // ///////////////////////////////
-  // PUBLIC METHODS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PUBLIC METHODS
+    // ///////////////////////////////
 
-  /**
-   * Initialize the status panel before the beginning of the simulation
-   */
-  public void init() {
-    clear();
-  }
+    /**
+     * Initialize the status panel before the beginning of the simulation
+     */
+    public void init() {
+        clear();
+    }
 
-  /**
-   * Update the status pane to reflect the latest information
-   */
-  public void update() {
-    StatusPanelInterface selectedPanel =
-      (StatusPanelInterface) getSelectedComponent();
-    selectedPanel.update();
-  }
+    /**
+     * Update the status pane to reflect the latest information
+     */
+    public void update() {
+        StatusPanelInterface selectedPanel =
+                (StatusPanelInterface) getSelectedComponent();
+        selectedPanel.update();
+    }
 
-  /**
-   * Clear the content on the status pane
-   */
-  public void clear() {
-    controlPanel.clear();
-    statPanel.clear();
-    systemPanel.clear();
-    consolePanel.clear();
-    vehicleInfoPanel.clear();
-  }
+    /**
+     * Clear the content on the status pane
+     */
+    public void clear() {
+        controlPanel.clear();
+        statPanel.clear();
+        systemPanel.clear();
+        consolePanel.clear();
+        vehicleInfoPanel.clear();
+    }
 
-  /**
-   * Write a message on the console
-   *
-   * @param str  the message
-   */
-  public void writeToConsole(String str) {
-    consolePanel.append(str);
-  }
+    /**
+     * Write a message on the console
+     *
+     * @param str the message
+     */
+    public void writeToConsole(String str) {
+        consolePanel.append(str);
+    }
 
-  /**
-   * Get the simulation speed.
-   *
-   * @return the simulation speed
-   */
-  public double getSimSpeed() {
-    return controlPanel.getSimSpeed();
-  }
+    /**
+     * Get the simulation speed.
+     *
+     * @return the simulation speed
+     */
+    public double getSimSpeed() {
+        return controlPanel.getSimSpeed();
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void stateChanged(ChangeEvent evt) {
-    update();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stateChanged(ChangeEvent evt) {
+        update();
+    }
 }

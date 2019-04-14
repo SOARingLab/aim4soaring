@@ -44,106 +44,108 @@ import aim4.gui.component.LabeledSlider;
  * The Speed Control Panel
  */
 public class SimControlPanel extends JPanel
-                             implements StatusPanelInterface,
-                                        ChangeListener {
+        implements StatusPanelInterface,
+        ChangeListener {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  // ///////////////////////////////
-  // PRIVATE FIELDS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // PRIVATE FIELDS
+    // ///////////////////////////////
 
-  LabeledSlider targetSimSpeedSlider;
-  LabeledSlider targetFrameRateSlider;
+    LabeledSlider targetSimSpeedSlider;
+    LabeledSlider targetFrameRateSlider;
 
-  /** The viewer object */
-  Viewer viewer;
+    /**
+     * The viewer object
+     */
+    Viewer viewer;
 
-  // ///////////////////////////////
-  // CONSTRUCTORS
-  // ///////////////////////////////
+    // ///////////////////////////////
+    // CONSTRUCTORS
+    // ///////////////////////////////
 
-  /**
-   * Create a simulation control panel.
-   *
-   * @param viewer the viewer object
-   */
-  public SimControlPanel(Viewer viewer) {
-    this.viewer = viewer;
-    targetSimSpeedSlider =
-      new LabeledSlider(
-        0.0, Viewer.TURBO_SIM_SPEED,
-        Math.min(Viewer.DEFAULT_SIM_SPEED, Viewer.TURBO_SIM_SPEED),
-        1.0, 0.25,
-        "Simulation Speed: %.1f simulation second / second",
-        "%.1f", this);
-    targetSimSpeedSlider.setTickLabel(Viewer.TURBO_SIM_SPEED, "max",
-                                "Simulation Speed: %s");
+    /**
+     * Create a simulation control panel.
+     *
+     * @param viewer the viewer object
+     */
+    public SimControlPanel(Viewer viewer) {
+        this.viewer = viewer;
+        targetSimSpeedSlider =
+                new LabeledSlider(
+                        0.0, Viewer.TURBO_SIM_SPEED,
+                        Math.min(Viewer.DEFAULT_SIM_SPEED, Viewer.TURBO_SIM_SPEED),
+                        1.0, 0.25,
+                        "Simulation Speed: %.1f simulation second / second",
+                        "%.1f", this);
+        targetSimSpeedSlider.setTickLabel(Viewer.TURBO_SIM_SPEED, "max",
+                "Simulation Speed: %s");
 
-    targetFrameRateSlider =
-      new LabeledSlider(
-        0.0, SimConfig.CYCLES_PER_SECOND,
-        Math.min(Viewer.DEFAULT_TARGET_FRAME_RATE, SimConfig.CYCLES_PER_SECOND),
-        5.0, 1.0,
-        "Target frame rate: %.0f frame / second", "%.0f",
-        this);
-    targetFrameRateSlider.setTickLabel(SimConfig.CYCLES_PER_SECOND, "max",
-                                       "Target frame rate: %s");
+        targetFrameRateSlider =
+                new LabeledSlider(
+                        0.0, SimConfig.CYCLES_PER_SECOND,
+                        Math.min(Viewer.DEFAULT_TARGET_FRAME_RATE, SimConfig.CYCLES_PER_SECOND),
+                        5.0, 1.0,
+                        "Target frame rate: %.0f frame / second", "%.0f",
+                        this);
+        targetFrameRateSlider.setTickLabel(SimConfig.CYCLES_PER_SECOND, "max",
+                "Target frame rate: %s");
 
-    // layout
-    GroupLayout layout = new GroupLayout(this);
-    setLayout(layout);
-    layout.setAutoCreateGaps(false);
-    layout.setAutoCreateContainerGaps(false);
+        // layout
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
+        layout.setAutoCreateGaps(false);
+        layout.setAutoCreateContainerGaps(false);
 
-    layout.setHorizontalGroup(layout
-      .createParallelGroup(GroupLayout.Alignment.LEADING)
-      .addComponent(targetSimSpeedSlider)
-      .addComponent(targetFrameRateSlider));
+        layout.setHorizontalGroup(layout
+                .createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(targetSimSpeedSlider)
+                .addComponent(targetFrameRateSlider));
 
-    layout.setVerticalGroup(layout.createSequentialGroup()
-      .addComponent(targetSimSpeedSlider)
-      .addComponent(targetFrameRateSlider));
-  }
-
-  // ///////////////////////////////
-  // PUBLIC METHODS
-  // ///////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void update() {
-    // do nothing
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void clear() {
-    // do nothing
-  }
-
-  /**
-   * Get the simulation speed.
-   *
-   * @return the simulation speed
-   */
-  public double getSimSpeed() {
-    return targetSimSpeedSlider.getValue();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void stateChanged(ChangeEvent evt) {
-    if (evt.getSource() == targetSimSpeedSlider) {
-      viewer.setTargetSimSpeed(targetSimSpeedSlider.getValue());
-    } else if (evt.getSource() == targetFrameRateSlider) {
-      viewer.setTargetFrameRate(targetFrameRateSlider.getValue());
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addComponent(targetSimSpeedSlider)
+                .addComponent(targetFrameRateSlider));
     }
-  }
+
+    // ///////////////////////////////
+    // PUBLIC METHODS
+    // ///////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update() {
+        // do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        // do nothing
+    }
+
+    /**
+     * Get the simulation speed.
+     *
+     * @return the simulation speed
+     */
+    public double getSimSpeed() {
+        return targetSimSpeedSlider.getValue();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stateChanged(ChangeEvent evt) {
+        if (evt.getSource() == targetSimSpeedSlider) {
+            viewer.setTargetSimSpeed(targetSimSpeedSlider.getValue());
+        } else if (evt.getSource() == targetFrameRateSlider) {
+            viewer.setTargetFrameRate(targetFrameRateSlider.getValue());
+        }
+    }
 }

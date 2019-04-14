@@ -40,58 +40,60 @@ import aim4.sim.StatCollector;
  */
 public class AllStopRequestHandler implements RequestHandler {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The base policy */
-  private BasePolicyCallback basePolicy;
+    /**
+     * The base policy
+     */
+    private BasePolicyCallback basePolicy;
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Set the base policy call-back.
-   *
-   * @param basePolicy  the base policy's call-back
-   */
-  @Override
-  public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
-    this.basePolicy = basePolicy;
-  }
+    /**
+     * Set the base policy call-back.
+     *
+     * @param basePolicy the base policy's call-back
+     */
+    @Override
+    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+        this.basePolicy = basePolicy;
+    }
 
-  /**
-   * Let the request handler to act for a given time period.
-   *
-   * @param timeStep  the time period
-   */
-  @Override
-  public void act(double timeStep) {
-    // do nothing
-  }
+    /**
+     * Let the request handler to act for a given time period.
+     *
+     * @param timeStep the time period
+     */
+    @Override
+    public void act(double timeStep) {
+        // do nothing
+    }
 
-  /**
-   * Process the request message.
-   *
-   * @param msg the request message
-   */
-  @Override
-  public void processRequestMsg(Request msg) {
-    basePolicy.sendRejectMsg(msg.getVin(),
-                             msg.getRequestId(),
-                             Reject.Reason.NO_CLEAR_PATH);
-  }
+    /**
+     * Process the request message.
+     *
+     * @param msg the request message
+     */
+    @Override
+    public void processRequestMsg(Request msg) {
+        basePolicy.sendRejectMsg(msg.getVin(),
+                msg.getRequestId(),
+                Reject.Reason.NO_CLEAR_PATH);
+    }
 
-  /**
-   * Get the statistic collector.
-   *
-   * @return the statistic collector
-   */
-  @Override
-  public StatCollector<?> getStatCollector() {
-    return null;
-  }
+    /**
+     * Get the statistic collector.
+     *
+     * @return the statistic collector
+     */
+    @Override
+    public StatCollector<?> getStatCollector() {
+        return null;
+    }
 
 }

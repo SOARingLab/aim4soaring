@@ -39,53 +39,53 @@ import aim4.vehicle.AutoVehicleDriverView;
  */
 public class NoIntersectionCoordinator implements Coordinator {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  // vehicle and agents
+    // vehicle and agents
 
-  /**
-   * The sub-agent that controls physical manipulation of the vehicle
-   */
-  private V2IPilot pilot;
+    /**
+     * The sub-agent that controls physical manipulation of the vehicle
+     */
+    private V2IPilot pilot;
 
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create an coordinator to coordinate a vehicle.
-   *
-   * @param vehicle  the Vehicle to coordinate
-   * @param driver   the driver
-   */
-  public NoIntersectionCoordinator(AutoVehicleDriverView vehicle,
-                                   AutoDriver driver) {
-    pilot = new V2IPilot(vehicle, driver);
-  }
+    /**
+     * Create an coordinator to coordinate a vehicle.
+     *
+     * @param vehicle the Vehicle to coordinate
+     * @param driver  the driver
+     */
+    public NoIntersectionCoordinator(AutoVehicleDriverView vehicle,
+                                     AutoDriver driver) {
+        pilot = new V2IPilot(vehicle, driver);
+    }
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void act() {
-    pilot.simpleThrottleAction();
-    // TODO:  think how to remove dontEnterIntersection()
-    // in simpleThrottleAction()
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void act() {
+        pilot.simpleThrottleAction();
+        // TODO:  think how to remove dontEnterIntersection()
+        // in simpleThrottleAction()
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean isTerminated() {
-    return false;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isTerminated() {
+        return false;
+    }
 
 }

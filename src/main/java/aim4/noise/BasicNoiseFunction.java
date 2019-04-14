@@ -36,18 +36,19 @@ package aim4.noise;
  */
 public class BasicNoiseFunction implements NoiseFunction {
 
-  /**
-   * Holds the one instance of the singleton class.
-   */
-  public static BasicNoiseFunction noNoise = new BasicNoiseFunction();
+    /**
+     * Holds the one instance of the singleton class.
+     */
+    public static BasicNoiseFunction noNoise = new BasicNoiseFunction();
 
-  // For a singleton class we can't allow anyone to make one of these
-  private BasicNoiseFunction() {}
+    // For a singleton class we can't allow anyone to make one of these
+    private BasicNoiseFunction() {
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public double apply(double trueValue) {
-    return trueValue;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public double apply(double trueValue) {
+        return trueValue;
+    }
 }

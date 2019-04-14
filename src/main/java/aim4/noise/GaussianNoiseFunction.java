@@ -37,27 +37,31 @@ import java.util.Random;
  */
 public class GaussianNoiseFunction implements NoiseFunction {
 
-  /** Random seed for creating noise. */
-  protected static Random rnd = new Random();
+    /**
+     * Random seed for creating noise.
+     */
+    protected static Random rnd = new Random();
 
-  /** The standard deviation of the Gaussian that will generate the noise. */
-  private double standardDeviation;
+    /**
+     * The standard deviation of the Gaussian that will generate the noise.
+     */
+    private double standardDeviation;
 
-  /**
-   * Class constructor.  Takes the standard deviation of the Gaussian and uses
-   * it to generate noise with mean zero.
-   *
-   * @param standardDeviation the standard deviation of the desired Gaussian
-   */
-  public GaussianNoiseFunction(double standardDeviation) {
-    this.standardDeviation = standardDeviation;
-  }
+    /**
+     * Class constructor.  Takes the standard deviation of the Gaussian and uses
+     * it to generate noise with mean zero.
+     *
+     * @param standardDeviation the standard deviation of the desired Gaussian
+     */
+    public GaussianNoiseFunction(double standardDeviation) {
+        this.standardDeviation = standardDeviation;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public double apply(double trueValue) {
-    return trueValue + rnd.nextGaussian() * standardDeviation;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double apply(double trueValue) {
+        return trueValue + rnd.nextGaussian() * standardDeviation;
+    }
 }

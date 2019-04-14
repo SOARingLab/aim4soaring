@@ -39,70 +39,76 @@ import java.util.HashMap;
  */
 public class HashMapRegistry<T> implements Registry<T> {
 
-  /** The initial ID */
-  private int initId;
-  /** The next ID */
-  private int nextId;
-  /** A mapping from IDs to objects */
-  private HashMap<Integer,T> idToObj = new HashMap<Integer,T>();
+    /**
+     * The initial ID
+     */
+    private int initId;
+    /**
+     * The next ID
+     */
+    private int nextId;
+    /**
+     * A mapping from IDs to objects
+     */
+    private HashMap<Integer, T> idToObj = new HashMap<Integer, T>();
 
-  /**
-   * Create a hashmap-based registry
-   */
-  public HashMapRegistry() {
-    this(0);
-  }
-
-  /**
-   * Create a hashmap-based registry
-   *
-   * @param initId  the initial ID
-   */
-  public HashMapRegistry(int initId) {
-    this.initId = initId;
-    this.nextId = initId;
-  }
-
-  @Override
-  public int register(T obj) {
-    int id = nextId++;
-    idToObj.put(id, obj);
-    return id;
-  }
-
-  @Override
-  public boolean isIdExist(int id) {
-    return initId <= id && id < nextId;
-  }
-
-  @Override
-  public T get(int id) {
-    T obj = idToObj.get(id);
-    // If it's null, then the object no longer exists
-    if (obj == null) {
-      idToObj.remove(id);
-      return null;
-    } else {
-      return obj;
+    /**
+     * Create a hashmap-based registry
+     */
+    public HashMapRegistry() {
+        this(0);
     }
-  }
 
-  @Override
-  public int getNewId() {
-    int id = nextId++;
-    idToObj.put(id, null);
-    return id;
-  }
+    /**
+     * Create a hashmap-based registry
+     *
+     * @param initId the initial ID
+     */
+    public HashMapRegistry(int initId) {
+        this.initId = initId;
+        this.nextId = initId;
+    }
 
-  @Override
-  public void set(int id, T obj) {
-    assert idToObj.containsKey(id);
-    idToObj.put(id, obj);
-  }
+    @Override
+    public int register(T obj) {
+        int id = nextId++;
+        idToObj.put(id, obj);
+        return id;
+    }
 
-  // for clean up
-  @Override
-  public void setNull(int id) {
-    idToObj.remove(id);  // remove both key and object to save space
-  }
+    @Override
+    public boolean isIdExist(int id) {
+        return initId <= id && id < nextId;
+    }
+
+    @Override
+    public T get(int id) {
+        T obj = idToObj.get(id);
+        // If it's null, then the object no longer exists
+        if (obj == null) {
+            idToObj.remove(id);
+            return null;
+        } else {
+            return obj;
+        }
+    }
+
+    @Override
+    public int getNewId() {
+        int id = nextId++;
+        idToObj.put(id, null);
+        return id;
+    }
+
+    @Override
+    public void set(int id, T obj) {
+        assert idToObj.containsKey(id);
+        idToObj.put(id, obj);
+    }
+
+    // for clean up
+    @Override
+    public void setNull(int id) {
+        idToObj.remove(id);  // remove both key and object to save space
+    }
 }

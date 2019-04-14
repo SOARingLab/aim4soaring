@@ -35,11 +35,11 @@ package aim4.gui;
  */
 public interface ViewerDebugView {
 
-  /**
-   * Highlight a vehicle immediately.
-   *
-   * @param vin  the VIN number of the vehicle
-   */
-  void highlightVehicle(int vin);
+    /**
+     * Highlight a vehicle immediately.
+     *
+     * @param vin the VIN number of the vehicle
+     */
+    void highlightVehicle(int vin);
 
 }

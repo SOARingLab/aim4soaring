@@ -36,48 +36,48 @@ import java.awt.geom.Point2D;
  * A waypoint.
  */
 public class WayPoint extends Point2D.Double {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * The ID of the waypoint.
-   */
-  int id = -1;
+    /**
+     * The ID of the waypoint.
+     */
+    int id = -1;
 
-  /**
-   * Create a waypoint.
-   *
-   * @param x  the x-coordinate of the waypoint
-   * @param y  the y-coordinate of the waypoint
-   */
-  public WayPoint(double x, double y) {
-    super(x, y);
-  }
+    /**
+     * Create a waypoint.
+     *
+     * @param x the x-coordinate of the waypoint
+     * @param y the y-coordinate of the waypoint
+     */
+    public WayPoint(double x, double y) {
+        super(x, y);
+    }
 
-  /**
-   * Create a waypoint
-   *
-   * @param point  the point
-   */
-  public WayPoint(Point2D point) {
-    super(point.getX(), point.getY());
-  }
+    /**
+     * Create a waypoint
+     *
+     * @param point the point
+     */
+    public WayPoint(Point2D point) {
+        super(point.getX(), point.getY());
+    }
 
-  /**
-   * Get the ID of the waypoint
-   *
-   * @return the ID of the waypoint
-   */
-  public int getId() {
-    return id;
-  }
+    /**
+     * Get the ID of the waypoint
+     *
+     * @return the ID of the waypoint
+     */
+    public int getId() {
+        return id;
+    }
 
-  /**
-   * Set the ID of the waypoint
-   *
-   * @param id  the ID of the waypoint
-   */
-  public void setId(int id) {
-    this.id = id;
-  }
+    /**
+     * Set the ID of the waypoint
+     *
+     * @param id the ID of the waypoint
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }

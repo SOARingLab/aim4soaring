@@ -40,43 +40,43 @@ import aim4.vehicle.AutoVehicleDriverView;
  */
 public class ProxyDriver extends AutoDriver {
 
-  /**
-   * Construct a proxy driver.
-   *
-   * @param vehicle the vehicle object
-   * @param basicMap  the map object
-   */
-  public ProxyDriver(AutoVehicleDriverView vehicle, BasicMap basicMap) {
-    super(vehicle, basicMap);
-    // TODO Auto-generated constructor stub
-  }
+    /**
+     * Construct a proxy driver.
+     *
+     * @param vehicle  the vehicle object
+     * @param basicMap the map object
+     */
+    public ProxyDriver(AutoVehicleDriverView vehicle, BasicMap basicMap) {
+        super(vehicle, basicMap);
+        // TODO Auto-generated constructor stub
+    }
 
-  /**
-   * Take control actions for driving the agent's Vehicle.  This allows
-   * both the Coordinator and the Pilot to act (in that order).
-   */
-  @Override
-  public void act() {
-  }
+    /**
+     * Take control actions for driving the agent's Vehicle.  This allows
+     * both the Coordinator and the Pilot to act (in that order).
+     */
+    @Override
+    public void act() {
+    }
 
-  /**
-   * Get where this DriverAgent is coming from.
-   *
-   * @return the Road where this DriverAgent is coming from
-   */
-  @Override
-  public SpawnPoint getSpawnPoint() {
-    return null;
-  }
+    /**
+     * Get where this DriverAgent is coming from.
+     *
+     * @return the Road where this DriverAgent is coming from
+     */
+    @Override
+    public SpawnPoint getSpawnPoint() {
+        return null;
+    }
 
-  /**
-   * Get where this DriverAgent is going.
-   *
-   * @return the Road where this DriverAgent is going
-   */
-  @Override
-  public Road getDestination() {
-    return null;
-  }
+    /**
+     * Get where this DriverAgent is going.
+     *
+     * @return the Road where this DriverAgent is going
+     */
+    @Override
+    public Road getDestination() {
+        return null;
+    }
 
 }

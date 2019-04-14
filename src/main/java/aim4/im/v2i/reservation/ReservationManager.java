@@ -37,29 +37,29 @@ package aim4.im.v2i.reservation;
  * @param <Plan>   the Plan class
  * @param <Ticket> the Ticket class
  */
-public interface ReservationManager<Query,Plan,Ticket> {
+public interface ReservationManager<Query, Plan, Ticket> {
 
-  /**
-   * Make a query.
-   *
-   * @param q  the query
-   * @return the plan generated to achieve the query; null if no plan is found.
-   */
-  Plan query(Query q);
+    /**
+     * Make a query.
+     *
+     * @param q the query
+     * @return the plan generated to achieve the query; null if no plan is found.
+     */
+    Plan query(Query q);
 
 
-  /**
-   * Accept the proposed plan.
-   *
-   * @param plan  the plan genreated by query()
-   * @return the ticket of this reservation
-   */
-  Ticket accept(Plan plan);
+    /**
+     * Accept the proposed plan.
+     *
+     * @param plan the plan genreated by query()
+     * @return the ticket of this reservation
+     */
+    Ticket accept(Plan plan);
 
-  /**
-   * Cancel the reservation.
-   *
-   * @param ticket  the reservation
-   */
-  void cancel(Ticket ticket);
+    /**
+     * Cancel the reservation.
+     *
+     * @param ticket the reservation
+     */
+    void cancel(Ticket ticket);
 }

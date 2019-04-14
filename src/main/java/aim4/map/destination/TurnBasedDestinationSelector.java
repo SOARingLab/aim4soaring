@@ -45,71 +45,71 @@ import aim4.map.lane.Lane;
  */
 public class TurnBasedDestinationSelector implements DestinationSelector {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /**
-   * The Set of legal Roads that a vehicle can use as an ultimate destination.
-   */
-  private List<Road> destinationRoads;
+    /**
+     * The Set of legal Roads that a vehicle can use as an ultimate destination.
+     */
+    private List<Road> destinationRoads;
 
-  /////////////////////////////////
-  // CLASS CONSTRUCTORS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CLASS CONSTRUCTORS
+    /////////////////////////////////
 
-  /**
-   * Create a new identity destination selector from the given Layout.
-   *
-   * @param layout  the layout from which to create the new
-   *                identity destination selector
-   */
-  public TurnBasedDestinationSelector(BasicMap layout) {
-    destinationRoads = layout.getDestinationRoads();
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Road selectDestination(Lane currentLane) {
-    Road currentRoad = Debug.currentMap.getRoad(currentLane);
-
-    boolean hasLeft = currentLane.hasLeftNeighbor();
-    boolean hasRight = currentLane.hasRightNeighbor();
-
-    if (hasLeft && hasRight) {
-      return currentRoad;
-    } else if (!hasLeft && hasRight) {
-      if (currentRoad.getName().equals("1st Street E")) {
-        return destinationRoads.get(2);
-      } else if (currentRoad.getName().equals("1st Street W")) {
-        return destinationRoads.get(3);
-      } else if (currentRoad.getName().equals("1st Avenue N")) {
-        return destinationRoads.get(1);
-      } else if (currentRoad.getName().equals("1st Avenue S")) {
-        return destinationRoads.get(0);
-      } else {
-        throw new RuntimeException("Error in TurnBasedDestination");
-      }
-    } else if (hasLeft && !hasRight) {
-      if (currentRoad.getName().equals("1st Street E")) {
-        return destinationRoads.get(3);
-      } else if (currentRoad.getName().equals("1st Street W")) {
-        return destinationRoads.get(2);
-      } else if (currentRoad.getName().equals("1st Avenue N")) {
-        return destinationRoads.get(0);
-      } else if (currentRoad.getName().equals("1st Avenue S")) {
-        return destinationRoads.get(1);
-      } else {
-        throw new RuntimeException("Error in TurnBasedDestination");
-      }
-    } else {
-      return currentRoad;
+    /**
+     * Create a new identity destination selector from the given Layout.
+     *
+     * @param layout the layout from which to create the new
+     *               identity destination selector
+     */
+    public TurnBasedDestinationSelector(BasicMap layout) {
+        destinationRoads = layout.getDestinationRoads();
     }
-  }
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Road selectDestination(Lane currentLane) {
+        Road currentRoad = Debug.currentMap.getRoad(currentLane);
+
+        boolean hasLeft = currentLane.hasLeftNeighbor();
+        boolean hasRight = currentLane.hasRightNeighbor();
+
+        if (hasLeft && hasRight) {
+            return currentRoad;
+        } else if (!hasLeft && hasRight) {
+            if (currentRoad.getName().equals("1st Street E")) {
+                return destinationRoads.get(2);
+            } else if (currentRoad.getName().equals("1st Street W")) {
+                return destinationRoads.get(3);
+            } else if (currentRoad.getName().equals("1st Avenue N")) {
+                return destinationRoads.get(1);
+            } else if (currentRoad.getName().equals("1st Avenue S")) {
+                return destinationRoads.get(0);
+            } else {
+                throw new RuntimeException("Error in TurnBasedDestination");
+            }
+        } else if (hasLeft && !hasRight) {
+            if (currentRoad.getName().equals("1st Street E")) {
+                return destinationRoads.get(3);
+            } else if (currentRoad.getName().equals("1st Street W")) {
+                return destinationRoads.get(2);
+            } else if (currentRoad.getName().equals("1st Avenue N")) {
+                return destinationRoads.get(0);
+            } else if (currentRoad.getName().equals("1st Avenue S")) {
+                return destinationRoads.get(1);
+            } else {
+                throw new RuntimeException("Error in TurnBasedDestination");
+            }
+        } else {
+            return currentRoad;
+        }
+    }
 }

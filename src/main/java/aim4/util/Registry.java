@@ -33,53 +33,53 @@ package aim4.util;
 /**
  * A generic registry.
  *
- * @param <T>  the type of object in the registry
+ * @param <T> the type of object in the registry
  */
 public interface Registry<T> {
 
-  /**
-   * Register an object.
-   *
-   * @param obj  the object
-   * @return the ID of the object
-   */
-  int register(T obj);
+    /**
+     * Register an object.
+     *
+     * @param obj the object
+     * @return the ID of the object
+     */
+    int register(T obj);
 
-  /**
-   * Whether or not an object is in the registry.
-   *
-   * @param id  the ID of the object
-   * @return Whether or not an object is in the registry
-   */
-  boolean isIdExist(int id);
+    /**
+     * Whether or not an object is in the registry.
+     *
+     * @param id the ID of the object
+     * @return Whether or not an object is in the registry
+     */
+    boolean isIdExist(int id);
 
-  /**
-   * Retrieve an object from the registry.
-   *
-   * @param id  the ID of the object
-   * @return the object
-   */
-  T get(int id);
+    /**
+     * Retrieve an object from the registry.
+     *
+     * @param id the ID of the object
+     * @return the object
+     */
+    T get(int id);
 
-  /**
-   * Get a new unused ID.
-   *
-   * @return a new unused ID
-   */
-  int getNewId();
+    /**
+     * Get a new unused ID.
+     *
+     * @return a new unused ID
+     */
+    int getNewId();
 
-  /**
-   * Associate an object to a given ID.
-   *
-   * @param id   the ID
-   * @param obj  the object
-   */
-  void set(int id, T obj);
+    /**
+     * Associate an object to a given ID.
+     *
+     * @param id  the ID
+     * @param obj the object
+     */
+    void set(int id, T obj);
 
-  /**
-   * Remove the object associated with a given ID from the registry.
-   *
-   * @param id  the ID
-   */
-  void setNull(int id);
+    /**
+     * Remove the object associated with a given ID from the registry.
+     *
+     * @param id the ID
+     */
+    void setNull(int id);
 }

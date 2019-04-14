@@ -46,134 +46,142 @@ import aim4.sim.StatCollector;
  */
 public class GoStraightRequestHandler implements RequestHandler {
 
-  /////////////////////////////////
-  // CONSTANTS
-  /////////////////////////////////
+    /////////////////////////////////
+    // CONSTANTS
+    /////////////////////////////////
 
-  /** The switch time interval */
-  private static final double SWITCH_TIME_INTERVAL = 20.0;
+    /**
+     * The switch time interval
+     */
+    private static final double SWITCH_TIME_INTERVAL = 20.0;
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The base policy */
-  private BasePolicyCallback basePolicy;
-  /** The next switch time */
-  private double nextSwitchTime;
-  /** Whether the vehicle should go straight */
-  private boolean isGoStraight;
+    /**
+     * The base policy
+     */
+    private BasePolicyCallback basePolicy;
+    /**
+     * The next switch time
+     */
+    private double nextSwitchTime;
+    /**
+     * Whether the vehicle should go straight
+     */
+    private boolean isGoStraight;
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Set the base policy call-back.
-   *
-   * @param basePolicy  the base policy's call-back
-   */
-  @Override
-  public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
-    this.basePolicy = basePolicy;
-    this.nextSwitchTime = basePolicy.getCurrentTime() + SWITCH_TIME_INTERVAL;
-    this.isGoStraight = true;
-  }
-
-  /**
-   * Let the request handler to act for a given time period.
-   *
-   * @param timeStep  the time period
-   */
-  @Override
-  public void act(double timeStep) {
-    if (basePolicy.getCurrentTime() > nextSwitchTime) {
-      if (isGoStraight) {
-        isGoStraight = false;
-      } else {
-        isGoStraight = true;
-      }
-      nextSwitchTime = basePolicy.getCurrentTime() + SWITCH_TIME_INTERVAL;
-    }
-  }
-
-  /**
-   * Process the request message.
-   *
-   * @param msg the request message
-   */
-  @Override
-  public void processRequestMsg(Request msg) {
-    int vin = msg.getVin();
-
-    // If the vehicle has got a reservation already, reject it.
-    if (basePolicy.hasReservation(vin)) {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-      return;
+    /**
+     * Set the base policy call-back.
+     *
+     * @param basePolicy the base policy's call-back
+     */
+    @Override
+    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+        this.basePolicy = basePolicy;
+        this.nextSwitchTime = basePolicy.getCurrentTime() + SWITCH_TIME_INTERVAL;
+        this.isGoStraight = true;
     }
 
-    // filter the proposals
-    ProposalFilterResult filterResult =
-      BasePolicy.standardProposalsFilter(msg.getProposals(),
-                                         basePolicy.getCurrentTime());
-    if (filterResult.isNoProposalLeft()) {
-      basePolicy.sendRejectMsg(vin,
-                               msg.getRequestId(),
-                               filterResult.getReason());
-    }
-
-    List<Request.Proposal> proposals = filterResult.getProposals();
-
-    // remove proposals that is not in the correct turn direction.
-    removeProposalWithIncorrectTurnDirection(proposals);
-    if (proposals.isEmpty()) {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-      return;
-    }
-
-    // try to see if reservation is possible for the remaining proposals.
-    ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
-    if (reserveParam != null) {
-      basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
-    } else {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-    }
-  }
-
-  /**
-   * Get the statistic collector.
-   *
-   * @return the statistic collector
-   */
-  @Override
-  public StatCollector<?> getStatCollector() {
-    return null;
-  }
-
-  /**
-   * Remove proposals whose arrival time is prohibited from entering
-   * the intersection according to {@code canEnterAtArrivalTime()}.
-   *
-   * @param proposals  a set of proposals
-   */
-  private void removeProposalWithIncorrectTurnDirection(
-                                             List<Request.Proposal> proposals) {
-    for (Iterator<Request.Proposal> tpIter = proposals.listIterator();
-         tpIter.hasNext();) {
-      Request.Proposal p = tpIter.next();
-      if (isGoStraight) {
-        if (p.getArrivalLaneID() == p.getDepartureLaneID()) {
-          tpIter.remove();
+    /**
+     * Let the request handler to act for a given time period.
+     *
+     * @param timeStep the time period
+     */
+    @Override
+    public void act(double timeStep) {
+        if (basePolicy.getCurrentTime() > nextSwitchTime) {
+            if (isGoStraight) {
+                isGoStraight = false;
+            } else {
+                isGoStraight = true;
+            }
+            nextSwitchTime = basePolicy.getCurrentTime() + SWITCH_TIME_INTERVAL;
         }
-      } else {
-        if (p.getArrivalLaneID() != p.getDepartureLaneID()) {
-          tpIter.remove();
-        }
-      }
     }
-  }
+
+    /**
+     * Process the request message.
+     *
+     * @param msg the request message
+     */
+    @Override
+    public void processRequestMsg(Request msg) {
+        int vin = msg.getVin();
+
+        // If the vehicle has got a reservation already, reject it.
+        if (basePolicy.hasReservation(vin)) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
+            return;
+        }
+
+        // filter the proposals
+        ProposalFilterResult filterResult =
+                BasePolicy.standardProposalsFilter(msg.getProposals(),
+                        basePolicy.getCurrentTime());
+        if (filterResult.isNoProposalLeft()) {
+            basePolicy.sendRejectMsg(vin,
+                    msg.getRequestId(),
+                    filterResult.getReason());
+        }
+
+        List<Request.Proposal> proposals = filterResult.getProposals();
+
+        // remove proposals that is not in the correct turn direction.
+        removeProposalWithIncorrectTurnDirection(proposals);
+        if (proposals.isEmpty()) {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+            return;
+        }
+
+        // try to see if reservation is possible for the remaining proposals.
+        ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
+        if (reserveParam != null) {
+            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+        } else {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+        }
+    }
+
+    /**
+     * Get the statistic collector.
+     *
+     * @return the statistic collector
+     */
+    @Override
+    public StatCollector<?> getStatCollector() {
+        return null;
+    }
+
+    /**
+     * Remove proposals whose arrival time is prohibited from entering
+     * the intersection according to {@code canEnterAtArrivalTime()}.
+     *
+     * @param proposals a set of proposals
+     */
+    private void removeProposalWithIncorrectTurnDirection(
+            List<Request.Proposal> proposals) {
+        for (Iterator<Request.Proposal> tpIter = proposals.listIterator();
+             tpIter.hasNext(); ) {
+            Request.Proposal p = tpIter.next();
+            if (isGoStraight) {
+                if (p.getArrivalLaneID() == p.getDepartureLaneID()) {
+                    tpIter.remove();
+                }
+            } else {
+                if (p.getArrivalLaneID() != p.getDepartureLaneID()) {
+                    tpIter.remove();
+                }
+            }
+        }
+    }
 
 }

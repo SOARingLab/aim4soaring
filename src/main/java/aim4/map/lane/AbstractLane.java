@@ -43,348 +43,362 @@ import java.awt.geom.Point2D;
  */
 public abstract class AbstractLane implements Lane {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
-
-  /** The actual ID of this lane. */
-  private int id = -1;
-
-  /** The speed limit of this Lane, in meters per second. */
-  private double speedLimit;
-
-  /** The Lane this lane leads into, if any. */
-  private Lane nextLane;
-
-  /** The Lane that leads into this one, if any. */
-  private Lane prevLane;
-
-  /** The right neighbor of this Lane, if any. Otherwise, <code>null</code>. */
-  private Lane rightNeighbor;
-
-  /** The left neighbor of this Lane, if any.  Otherwise, <code>null</code>. */
-  private Lane leftNeighbor;
-
-  /** The LaneIM object that helps to locate the intersection managers. */
-  private LaneIM laneIM;
-
-  /////////////////////////////////
-  // CONSTRUCTORS
-  /////////////////////////////////
-
-  /**
-   * Create a new Lane.
-   */
-  public AbstractLane(double speedLimit) {
-    this.speedLimit = speedLimit;
-    this.laneIM = new LaneIM(this);
-  }
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int getId() {
-    return id;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public double getSpeedLimit() {
-    return speedLimit;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public LaneIM getLaneIM() {
-    return laneIM;
-  }
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  // the adjacent lanes
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasNextLane() {
-    return nextLane != null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Lane getNextLane() {
-    return nextLane;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setNextLane(Lane nextLane) {
-    this.nextLane = nextLane;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasPrevLane() {
-    return prevLane != null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Lane getPrevLane() {
-    return prevLane;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setPrevLane(Lane prevLane) {
-    this.prevLane = prevLane;
-  }
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  // neighor
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasLeftNeighbor() {
-    return (leftNeighbor != null);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Lane getLeftNeighbor() {
-    return leftNeighbor;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setLeftNeighbor(Lane ln) {
-    leftNeighbor = ln;
-  }
-
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasRightNeighbor() {
-    return (rightNeighbor != null);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Lane getRightNeighbor() {
-    return rightNeighbor;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setRightNeighbor(Lane ln) {
-    rightNeighbor = ln;
-  }
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  // lanes as lines
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double getLength();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D getStartPoint();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D getEndPoint();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D getPointAtNormalizedDistance(double
-                                                       normalizedDistance);
-
-  // nearest positions
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D nearestPoint(Point2D p);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double nearestDistance(Point2D pos);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D getLeadPoint(Point2D pos, double leadDist);
-
-
-  // distance along lane
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double distanceAlongLane(Point2D pos);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double remainingDistanceAlongLane(Point2D pos);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double normalizedDistanceAlongLane(Point2D pos);
-
-
-  // heading
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double getInitialHeading();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double getTerminalHeading();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double getHeadingAtNormalizedDistance(double
-                                                        normalizedDistance);
-
-
-  // intersection point
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D intersectionPoint(Line2D l);
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  // lanes as shapes
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract double getWidth();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Shape getShape();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Shape getShape(double startFraction, double endFraction);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract boolean contains(Point2D pos);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Shape leftBorder();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Shape rightBorder();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D leftIntersectionPoint(Line2D l);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public abstract Point2D rightIntersectionPoint(Line2D l);
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
+
+    /**
+     * The actual ID of this lane.
+     */
+    private int id = -1;
+
+    /**
+     * The speed limit of this Lane, in meters per second.
+     */
+    private double speedLimit;
+
+    /**
+     * The Lane this lane leads into, if any.
+     */
+    private Lane nextLane;
+
+    /**
+     * The Lane that leads into this one, if any.
+     */
+    private Lane prevLane;
+
+    /**
+     * The right neighbor of this Lane, if any. Otherwise, <code>null</code>.
+     */
+    private Lane rightNeighbor;
+
+    /**
+     * The left neighbor of this Lane, if any.  Otherwise, <code>null</code>.
+     */
+    private Lane leftNeighbor;
+
+    /**
+     * The LaneIM object that helps to locate the intersection managers.
+     */
+    private LaneIM laneIM;
+
+    /////////////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////////////
+
+    /**
+     * Create a new Lane.
+     */
+    public AbstractLane(double speedLimit) {
+        this.speedLimit = speedLimit;
+        this.laneIM = new LaneIM(this);
+    }
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getSpeedLimit() {
+        return speedLimit;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LaneIM getLaneIM() {
+        return laneIM;
+    }
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    // the adjacent lanes
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasNextLane() {
+        return nextLane != null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Lane getNextLane() {
+        return nextLane;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setNextLane(Lane nextLane) {
+        this.nextLane = nextLane;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasPrevLane() {
+        return prevLane != null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Lane getPrevLane() {
+        return prevLane;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setPrevLane(Lane prevLane) {
+        this.prevLane = prevLane;
+    }
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    // neighor
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasLeftNeighbor() {
+        return (leftNeighbor != null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Lane getLeftNeighbor() {
+        return leftNeighbor;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setLeftNeighbor(Lane ln) {
+        leftNeighbor = ln;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasRightNeighbor() {
+        return (rightNeighbor != null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Lane getRightNeighbor() {
+        return rightNeighbor;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setRightNeighbor(Lane ln) {
+        rightNeighbor = ln;
+    }
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    // lanes as lines
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double getLength();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D getStartPoint();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D getEndPoint();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D getPointAtNormalizedDistance(double
+                                                                 normalizedDistance);
+
+    // nearest positions
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D nearestPoint(Point2D p);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double nearestDistance(Point2D pos);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D getLeadPoint(Point2D pos, double leadDist);
+
+
+    // distance along lane
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double distanceAlongLane(Point2D pos);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double remainingDistanceAlongLane(Point2D pos);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double normalizedDistanceAlongLane(Point2D pos);
+
+
+    // heading
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double getInitialHeading();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double getTerminalHeading();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double getHeadingAtNormalizedDistance(double
+                                                                  normalizedDistance);
+
+
+    // intersection point
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D intersectionPoint(Line2D l);
+
+
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    // lanes as shapes
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract double getWidth();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Shape getShape();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Shape getShape(double startFraction, double endFraction);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract boolean contains(Point2D pos);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Shape leftBorder();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Shape rightBorder();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D leftIntersectionPoint(Line2D l);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public abstract Point2D rightIntersectionPoint(Line2D l);
 
 
 }

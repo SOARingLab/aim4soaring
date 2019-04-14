@@ -44,129 +44,129 @@ import aim4.vehicle.VehicleDriverView;
  */
 public abstract class BasicPilot {
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Get the vehicle this pilot controls.
-   */
-  public abstract VehicleDriverView getVehicle();
+    /**
+     * Get the vehicle this pilot controls.
+     */
+    public abstract VehicleDriverView getVehicle();
 
-  /**
-   * Get the driver this pilot controls.
-   */
-  public abstract Driver getDriver();
+    /**
+     * Get the driver this pilot controls.
+     */
+    public abstract Driver getDriver();
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  // steering
+    // steering
 
-  /**
-   * Turn the wheel to follow the current lane, using the
-   * <code>DEFAULT_LEAD_TIME</code>. This involves first projecting
-   * the Vehicle's current position onto the lane, and then projecting
-   * forward by a distance equal to the Vehicle's velocity multiplied
-   * by the lead time.
-   */
-  public void followCurrentLane() {
-    followCurrentLane(DriverUtil.DEFAULT_LEAD_TIME);
-  }
-
-  /**
-   * Turn the wheel to shift to the target lane of the vehicle.
-   */
-  public void followNewLane() {
-    double leadDist = DriverUtil.getLeadDistance(getVehicle());
-    // currentLane is the targetLane
-    Point2D aimPoint =
-      getDriver().getCurrentLane().getLeadPoint(getVehicle().gaugePosition(),
-                                                leadDist);
-    // TODO: do the following only when debugging
-    if (Debug.isTargetVIN(getVehicle().getVIN())) {
-      Debug.addShortTermDebugPoint(new DebugPoint(aimPoint, getVehicle()
-        .gaugePointBetweenFrontWheels(), "shift", Color.GREEN.brighter()));
+    /**
+     * Turn the wheel to follow the current lane, using the
+     * <code>DEFAULT_LEAD_TIME</code>. This involves first projecting
+     * the Vehicle's current position onto the lane, and then projecting
+     * forward by a distance equal to the Vehicle's velocity multiplied
+     * by the lead time.
+     */
+    public void followCurrentLane() {
+        followCurrentLane(DriverUtil.DEFAULT_LEAD_TIME);
     }
-    getVehicle().turnTowardPoint(aimPoint);
-  }
 
-  // TODO: what is the difference between followCurrentLane and followNewLane
+    /**
+     * Turn the wheel to shift to the target lane of the vehicle.
+     */
+    public void followNewLane() {
+        double leadDist = DriverUtil.getLeadDistance(getVehicle());
+        // currentLane is the targetLane
+        Point2D aimPoint =
+                getDriver().getCurrentLane().getLeadPoint(getVehicle().gaugePosition(),
+                        leadDist);
+        // TODO: do the following only when debugging
+        if (Debug.isTargetVIN(getVehicle().getVIN())) {
+            Debug.addShortTermDebugPoint(new DebugPoint(aimPoint, getVehicle()
+                    .gaugePointBetweenFrontWheels(), "shift", Color.GREEN.brighter()));
+        }
+        getVehicle().turnTowardPoint(aimPoint);
+    }
+
+    // TODO: what is the difference between followCurrentLane and followNewLane
 
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  // steering
+    // steering
 
-  /**
-   * Turn the wheels to follow the current lane, using the given lead time.
-   * This involves first projecting the Vehicle's current position onto the
-   * lane, and then projecting forward by a distance equal to the Vehicle's
-   * velocity multiplied by the lead time.
-   *
-   * @param leadTime  the lead time to use
-   */
-  private void followCurrentLane(double leadTime) {
+    /**
+     * Turn the wheels to follow the current lane, using the given lead time.
+     * This involves first projecting the Vehicle's current position onto the
+     * lane, and then projecting forward by a distance equal to the Vehicle's
+     * velocity multiplied by the lead time.
+     *
+     * @param leadTime the lead time to use
+     */
+    private void followCurrentLane(double leadTime) {
 
 //    AutoDriverPilotView driver = vehicle.getDriver();
-    Driver driver = getVehicle().getDriver();
+        Driver driver = getVehicle().getDriver();
 
-    double leadDist = leadTime * getVehicle().gaugeVelocity() +
-                      DriverUtil.MIN_LEAD_DIST;
-    Point2D aimPoint;
-    double remaining = driver.getCurrentLane().
-                       remainingDistanceAlongLane(getVehicle().gaugePosition());
-    // If there's not enough room in this Lane and there is a Lane that this
-    // Lane leads into, use the next Lane
-    if((leadDist > remaining) && (driver.getCurrentLane().hasNextLane())) {
-      // First make sure we shouldn't transfer to the next lane
-      if(remaining <= 0) {
-        // Switch to the next Lane
-        driver.setCurrentLane(driver.getCurrentLane().getNextLane());
-        // currentLane = currentLane.getNextLane();
-        // And do this over
-        followCurrentLane(leadTime);
-        return;
-      }
-      // Use what's left over after this Lane to go into the next one.
-      aimPoint = driver.getCurrentLane().getNextLane().getLeadPoint(
-                   driver.getCurrentLane().getNextLane().getStartPoint(),
-                   leadDist - remaining);
-      // Indicate that this is the point for which we are aiming
-      if (Debug.isTargetVIN(getVehicle().getVIN())) {
-        Debug.addShortTermDebugPoint(
-          new DebugPoint(aimPoint,
-                         getVehicle().gaugePointBetweenFrontWheels(),
-                         "next lane",
-                         Color.RED));
-      }
-    } else { // Otherwise, use the current Lane
-      aimPoint = driver.getCurrentLane().getLeadPoint(
-                   getVehicle().gaugePosition(), leadDist);
-      // Indicate that this is the point for which we are aiming
-      if (Debug.isTargetVIN(getVehicle().getVIN())) {
-        Debug.addShortTermDebugPoint(
-          new DebugPoint(aimPoint,
-                         getVehicle().gaugePointBetweenFrontWheels(),
-                         "lane",
-                         Color.PINK.brighter()));
-      }
+        double leadDist = leadTime * getVehicle().gaugeVelocity() +
+                DriverUtil.MIN_LEAD_DIST;
+        Point2D aimPoint;
+        double remaining = driver.getCurrentLane().
+                remainingDistanceAlongLane(getVehicle().gaugePosition());
+        // If there's not enough room in this Lane and there is a Lane that this
+        // Lane leads into, use the next Lane
+        if ((leadDist > remaining) && (driver.getCurrentLane().hasNextLane())) {
+            // First make sure we shouldn't transfer to the next lane
+            if (remaining <= 0) {
+                // Switch to the next Lane
+                driver.setCurrentLane(driver.getCurrentLane().getNextLane());
+                // currentLane = currentLane.getNextLane();
+                // And do this over
+                followCurrentLane(leadTime);
+                return;
+            }
+            // Use what's left over after this Lane to go into the next one.
+            aimPoint = driver.getCurrentLane().getNextLane().getLeadPoint(
+                    driver.getCurrentLane().getNextLane().getStartPoint(),
+                    leadDist - remaining);
+            // Indicate that this is the point for which we are aiming
+            if (Debug.isTargetVIN(getVehicle().getVIN())) {
+                Debug.addShortTermDebugPoint(
+                        new DebugPoint(aimPoint,
+                                getVehicle().gaugePointBetweenFrontWheels(),
+                                "next lane",
+                                Color.RED));
+            }
+        } else { // Otherwise, use the current Lane
+            aimPoint = driver.getCurrentLane().getLeadPoint(
+                    getVehicle().gaugePosition(), leadDist);
+            // Indicate that this is the point for which we are aiming
+            if (Debug.isTargetVIN(getVehicle().getVIN())) {
+                Debug.addShortTermDebugPoint(
+                        new DebugPoint(aimPoint,
+                                getVehicle().gaugePointBetweenFrontWheels(),
+                                "lane",
+                                Color.PINK.brighter()));
+            }
+        }
+
+        getVehicle().turnTowardPoint(aimPoint);
     }
 
-    getVehicle().turnTowardPoint(aimPoint);
-  }
-
-  /**
-   * Maintain a cruising speed.
-   */
-  protected void cruise() {
-    getVehicle().setTargetVelocityWithMaxAccel(
-        DriverUtil.calculateMaxFeasibleVelocity(getVehicle()));
-  }
+    /**
+     * Maintain a cruising speed.
+     */
+    protected void cruise() {
+        getVehicle().setTargetVelocityWithMaxAccel(
+                DriverUtil.calculateMaxFeasibleVelocity(getVehicle()));
+    }
 
 
 }

@@ -42,49 +42,50 @@ import aim4.msg.v2i.Request;
  */
 public interface BasePolicyCallback {
 
-  /**
-   * Send a confirm message
-   *
-   * @param latestRequestId  the latest request id of the vehicle
-   * @param reserveParam     the reservation parameter
-   */
-  void sendComfirmMsg(int latestRequestId,
-                      BasePolicy.ReserveParam reserveParam);
-  /**
-   * Send a reject message
-   *
-   * @param vin              the VIN
-   * @param latestRequestId  the latest request id of the vehicle
-   * @param reason           the reason of rejection
-   */
-  void sendRejectMsg(int vin, int latestRequestId, Reject.Reason reason);
+    /**
+     * Send a confirm message
+     *
+     * @param latestRequestId the latest request id of the vehicle
+     * @param reserveParam    the reservation parameter
+     */
+    void sendComfirmMsg(int latestRequestId,
+                        BasePolicy.ReserveParam reserveParam);
 
-  /**
-   * Compute the reservation parameter given the request message and a
-   * set of proposals.
-   *
-   * @param msg        the request message
-   * @param proposals  the set of proposals
-   * @return the reservation parameters; null if the reservation is infeasible.
-   */
-  ReserveParam findReserveParam(Request msg, List<Request.Proposal> proposals);
+    /**
+     * Send a reject message
+     *
+     * @param vin             the VIN
+     * @param latestRequestId the latest request id of the vehicle
+     * @param reason          the reason of rejection
+     */
+    void sendRejectMsg(int vin, int latestRequestId, Reject.Reason reason);
 
-  /**
-   * Get the current time
-   *
-   * @return the current time
-   */
-  double getCurrentTime();
+    /**
+     * Compute the reservation parameter given the request message and a
+     * set of proposals.
+     *
+     * @param msg       the request message
+     * @param proposals the set of proposals
+     * @return the reservation parameters; null if the reservation is infeasible.
+     */
+    ReserveParam findReserveParam(Request msg, List<Request.Proposal> proposals);
 
-  /**
-   * Check whether the vehicle currently has a reservation.
-   *
-   * @param vin  the VIN of the vehicle
-   * @return whether the vehicle currently has a reservation.
-   */
-  boolean hasReservation(int vin);
+    /**
+     * Get the current time
+     *
+     * @return the current time
+     */
+    double getCurrentTime();
+
+    /**
+     * Check whether the vehicle currently has a reservation.
+     *
+     * @param vin the VIN of the vehicle
+     * @return whether the vehicle currently has a reservation.
+     */
+    boolean hasReservation(int vin);
 
 
-  // TODO: remove this function
-  TrackModel getTrackMode();
+    // TODO: remove this function
+    TrackModel getTrackMode();
 }

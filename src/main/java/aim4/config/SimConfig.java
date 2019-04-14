@@ -34,43 +34,43 @@ package aim4.config;
  * The configuration of a simulation.
  */
 public class SimConfig {
-  /**
-   * The time the simulation should run.
-   * If it is less than or equal to zero, the simulation will run forever.
-   */
-  public static double TOTAL_SIMULATION_TIME = -1.0;
+    /**
+     * The time the simulation should run.
+     * If it is less than or equal to zero, the simulation will run forever.
+     */
+    public static double TOTAL_SIMULATION_TIME = -1.0;
 
-  /**
-   * The number of cycles per second ({@value}) at which the simulator runs.
-   */
-  public static final double CYCLES_PER_SECOND = 50.0;
+    /**
+     * The number of cycles per second ({@value}) at which the simulator runs.
+     */
+    public static final double CYCLES_PER_SECOND = 50.0;
 
-  /**
-   * The length of a time step (simulation time) in the simulator
-   * ({@value} seconds).
-   */
-  public static final double TIME_STEP = 1 / CYCLES_PER_SECOND;
+    /**
+     * The length of a time step (simulation time) in the simulator
+     * ({@value} seconds).
+     */
+    public static final double TIME_STEP = 1 / CYCLES_PER_SECOND;
 
-  /**
-   * The length of a time step (simulation time) in the reservation grid
-   * ({@value} seconds).
-   */
-  public static final double GRID_TIME_STEP = TIME_STEP;
+    /**
+     * The length of a time step (simulation time) in the reservation grid
+     * ({@value} seconds).
+     */
+    public static final double GRID_TIME_STEP = TIME_STEP;
 
-  /**
-   * How often the simulator should consider spawning vehicles.
-   */
-  public static final double SPAWN_TIME_STEP = TIME_STEP / 5.0;
+    /**
+     * How often the simulator should consider spawning vehicles.
+     */
+    public static final double SPAWN_TIME_STEP = TIME_STEP / 5.0;
 
-  /**
-   * Whether or not the vehicle must stop before an intersection
-   */
-  public static boolean MUST_STOP_BEFORE_INTERSECTION = false;
+    /**
+     * Whether or not the vehicle must stop before an intersection
+     */
+    public static boolean MUST_STOP_BEFORE_INTERSECTION = false;
 
-  /**
-   * The distance before the stopping distance before an intersection
-   * such that a vehicle can consider moving again when
-   * MUST_STOP_BEFORE_INTERSECTION is true.
-   */
-  public static final double ADDITIONAL_STOP_DIST_BEFORE_INTERSECTION = 0.01;
+    /**
+     * The distance before the stopping distance before an intersection
+     * such that a vehicle can consider moving again when
+     * MUST_STOP_BEFORE_INTERSECTION is true.
+     */
+    public static final double ADDITIONAL_STOP_DIST_BEFORE_INTERSECTION = 0.01;
 }

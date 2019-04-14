@@ -38,16 +38,16 @@ package aim4.driver.coordinator;
  * a part to reflect the current reservation status.
  */
 public interface Coordinator {
-  /**
-   * Receive, process, and send messages between Vehicles and
-   * IntersectionManagers, and maintain the reservation status in
-   * the Vehicle.
-   */
-  void act();
+    /**
+     * Receive, process, and send messages between Vehicles and
+     * IntersectionManagers, and maintain the reservation status in
+     * the Vehicle.
+     */
+    void act();
 
-  /**
-   * Whether of not the coordinator has finished its job.
-   */
-  boolean isTerminated();
+    /**
+     * Whether of not the coordinator has finished its job.
+     */
+    boolean isTerminated();
 
 }

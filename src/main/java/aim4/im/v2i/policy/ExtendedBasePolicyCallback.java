@@ -37,11 +37,11 @@ import aim4.im.v2i.reservation.ReservationGrid;
  */
 public interface ExtendedBasePolicyCallback extends BasePolicyCallback {
 
-  /**
-   * Get the reservation grid.
-   *
-   * @return the reservation grid.
-   */
-  ReservationGrid getReservationGrid();
+    /**
+     * Get the reservation grid.
+     *
+     * @return the reservation grid.
+     */
+    ReservationGrid getReservationGrid();
 
 }

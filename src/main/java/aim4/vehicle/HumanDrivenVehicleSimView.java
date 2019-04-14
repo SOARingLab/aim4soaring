@@ -34,6 +34,6 @@ package aim4.vehicle;
  * The interface of a manually-driven vehicle from the viewpoint of a simulator.
  */
 public interface HumanDrivenVehicleSimView extends HumanDrivenVehicleDriverView,
-                                                   VehicleSimView {
+        VehicleSimView {
 
 }

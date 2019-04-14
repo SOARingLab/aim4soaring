@@ -43,84 +43,86 @@ import aim4.sim.StatCollector;
  */
 public class FCFSRequestHandler implements RequestHandler {
 
-  /////////////////////////////////
-  // PRIVATE FIELDS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PRIVATE FIELDS
+    /////////////////////////////////
 
-  /** The base policy */
-  private BasePolicyCallback basePolicy = null;
+    /**
+     * The base policy
+     */
+    private BasePolicyCallback basePolicy = null;
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  /**
-   * Set the base policy call-back.
-   *
-   * @param basePolicy  the base policy's call-back
-   */
-  @Override
-  public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
-    this.basePolicy = basePolicy;
-  }
-
-  /**
-   * Let the request handler to act for a given time period.
-   *
-   * @param timeStep  the time period
-   */
-  @Override
-  public void act(double timeStep) {
-    // do nothing
-  }
-
-  /**
-   * Process the request message.
-   *
-   * @param msg the request message
-   */
-  @Override
-  public void processRequestMsg(Request msg) {
-    int vin = msg.getVin();
-
-    // If the vehicle has got a reservation already, reject it.
-    if (basePolicy.hasReservation(vin)) {
-      basePolicy.sendRejectMsg(vin,
-                               msg.getRequestId(),
-                               Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-      return;
+    /**
+     * Set the base policy call-back.
+     *
+     * @param basePolicy the base policy's call-back
+     */
+    @Override
+    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+        this.basePolicy = basePolicy;
     }
 
-    // filter the proposals
-    ProposalFilterResult filterResult =
-      BasePolicy.standardProposalsFilter(msg.getProposals(),
-                                         basePolicy.getCurrentTime());
-    if (filterResult.isNoProposalLeft()) {
-      basePolicy.sendRejectMsg(vin,
-                               msg.getRequestId(),
-                               filterResult.getReason());
+    /**
+     * Let the request handler to act for a given time period.
+     *
+     * @param timeStep the time period
+     */
+    @Override
+    public void act(double timeStep) {
+        // do nothing
     }
 
-    // try to see if reservation is possible for the remaining proposals.
-    ReserveParam reserveParam =
-      basePolicy.findReserveParam(msg, filterResult.getProposals());
-    if (reserveParam != null) {
-      basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
-    } else {
-      basePolicy.sendRejectMsg(vin, msg.getRequestId(),
-                               Reject.Reason.NO_CLEAR_PATH);
-    }
-  }
+    /**
+     * Process the request message.
+     *
+     * @param msg the request message
+     */
+    @Override
+    public void processRequestMsg(Request msg) {
+        int vin = msg.getVin();
 
-  /**
-   * Get the statistic collector.
-   *
-   * @return the statistic collector
-   */
-  @Override
-  public StatCollector<?> getStatCollector() {
-    return null;
-  }
+        // If the vehicle has got a reservation already, reject it.
+        if (basePolicy.hasReservation(vin)) {
+            basePolicy.sendRejectMsg(vin,
+                    msg.getRequestId(),
+                    Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
+            return;
+        }
+
+        // filter the proposals
+        ProposalFilterResult filterResult =
+                BasePolicy.standardProposalsFilter(msg.getProposals(),
+                        basePolicy.getCurrentTime());
+        if (filterResult.isNoProposalLeft()) {
+            basePolicy.sendRejectMsg(vin,
+                    msg.getRequestId(),
+                    filterResult.getReason());
+        }
+
+        // try to see if reservation is possible for the remaining proposals.
+        ReserveParam reserveParam =
+                basePolicy.findReserveParam(msg, filterResult.getProposals());
+        if (reserveParam != null) {
+            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+        } else {
+            basePolicy.sendRejectMsg(vin, msg.getRequestId(),
+                    Reject.Reason.NO_CLEAR_PATH);
+        }
+    }
+
+    /**
+     * Get the statistic collector.
+     *
+     * @return the statistic collector
+     */
+    @Override
+    public StatCollector<?> getStatCollector() {
+        return null;
+    }
 
 }

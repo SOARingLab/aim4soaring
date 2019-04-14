@@ -42,96 +42,94 @@ import aim4.vehicle.VehicleDriverView;
  */
 public interface DriverSimView {
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  // main function
+    // main function
 
-  /**
-   * Take control actions for driving the agent's Vehicle.  This includes
-   * physical manipulation of the Vehicle as well as sending any messages
-   * or performing any coordination tasks.
-   */
-  void act();
+    /**
+     * Take control actions for driving the agent's Vehicle.  This includes
+     * physical manipulation of the Vehicle as well as sending any messages
+     * or performing any coordination tasks.
+     */
+    void act();
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  // vehicle
+    // vehicle
 
-  /**
-   * Get the Vehicle this DriverAgent is controlling.
-   *
-   * @return the Vehicle this DriverAgent is controlling
-   */
-  VehicleDriverView getVehicle();
-
-
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
-
-  // lanes
-
-  /**
-   * Get the Lane the driver is currently following.
-   *
-   * @return the Lane the driver is currently following
-   */
-  Lane getCurrentLane();
-
-  /**
-   * Get the lanes the driver's vehicle currently occupies.
-   *
-   * @return the lanes the driver's vehicle currently occupies
-   */
-  Set<Lane> getCurrentlyOccupiedLanes();
-
-  /**
-   * Set the Lane the driver is currently following.
-   *
-   * @param lane the Lane the driver should follow
-   */
-  void setCurrentLane(Lane lane);
+    /**
+     * Get the Vehicle this DriverAgent is controlling.
+     *
+     * @return the Vehicle this DriverAgent is controlling
+     */
+    VehicleDriverView getVehicle();
 
 
-  /////////////////////////////////
-  // PUBLIC METHODS
-  /////////////////////////////////
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
 
-  // origin and destination
+    // lanes
 
-  /**
-   * Get where this driver is coming from.
-   *
-   * @return the Road where this driver is coming from
-   */
-  SpawnPoint getSpawnPoint();
+    /**
+     * Get the Lane the driver is currently following.
+     *
+     * @return the Lane the driver is currently following
+     */
+    Lane getCurrentLane();
 
-  /**
-   * Set where this driver agent is coming from.
-   *
-   * @param spawnPoint the spawn point that generated the driver
-   */
-  void setSpawnPoint(SpawnPoint spawnPoint);
+    /**
+     * Get the lanes the driver's vehicle currently occupies.
+     *
+     * @return the lanes the driver's vehicle currently occupies
+     */
+    Set<Lane> getCurrentlyOccupiedLanes();
 
-  /**
-   * Get where this driver is going.
-   *
-   * @return the Road where this driver is going
-   */
-  Road getDestination();
-
-  /**
-   * Set where this driver is going.
-   *
-   * @param destination the Road where this driver should go
-   */
-  void setDestination(Road destination);
+    /**
+     * Set the Lane the driver is currently following.
+     *
+     * @param lane the Lane the driver should follow
+     */
+    void setCurrentLane(Lane lane);
 
 
+    /////////////////////////////////
+    // PUBLIC METHODS
+    /////////////////////////////////
+
+    // origin and destination
+
+    /**
+     * Get where this driver is coming from.
+     *
+     * @return the Road where this driver is coming from
+     */
+    SpawnPoint getSpawnPoint();
+
+    /**
+     * Set where this driver agent is coming from.
+     *
+     * @param spawnPoint the spawn point that generated the driver
+     */
+    void setSpawnPoint(SpawnPoint spawnPoint);
+
+    /**
+     * Get where this driver is going.
+     *
+     * @return the Road where this driver is going
+     */
+    Road getDestination();
+
+    /**
+     * Set where this driver is going.
+     *
+     * @param destination the Road where this driver should go
+     */
+    void setDestination(Road destination);
 
 
 }

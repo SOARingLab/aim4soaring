@@ -44,63 +44,63 @@ import aim4.msg.i2v.I2VMessage;
  */
 public interface V2IManagerCallback {
 
-  /**
-   * A callback method for sending a I2V message.
-   *
-   * @param msg a I2V message
-   */
-  void sendI2VMessage(I2VMessage msg);
+    /**
+     * A callback method for sending a I2V message.
+     *
+     * @param msg a I2V message
+     */
+    void sendI2VMessage(I2VMessage msg);
 
-  /**
-   * Get the id of the intersection manager.
-   *
-   * @return the id of the intersection manager.
-   */
-  int getId();
+    /**
+     * Get the id of the intersection manager.
+     *
+     * @return the id of the intersection manager.
+     */
+    int getId();
 
-  /**
-   * Get the current time
-   *
-   * @return the current time
-   */
-  double getCurrentTime();
+    /**
+     * Get the current time
+     *
+     * @return the current time
+     */
+    double getCurrentTime();
 
-  /**
-   * Get the intersection managed by this intersection manager.
-   *
-   * @return the intersection managed by this intersection manager
-   */
-  Intersection getIntersection();
+    /**
+     * Get the intersection managed by this intersection manager.
+     *
+     * @return the intersection managed by this intersection manager
+     */
+    Intersection getIntersection();
 
 
-  // TODO: remove this function
-  TrackModel getTrackModel();
+    // TODO: remove this function
+    TrackModel getTrackModel();
 
-  /**
-   * Get the reservation grid.
-   *
-   * @return the reservation grid
-   */
-  ReservationGrid getReservationGrid();
+    /**
+     * Get the reservation grid.
+     *
+     * @return the reservation grid
+     */
+    ReservationGrid getReservationGrid();
 
-  /**
-   * Get the manager of the reservation grid
-   *
-   * @return the manager of the reservation grid
-   */
-  ReservationGridManager getReservationGridManager();
+    /**
+     * Get the manager of the reservation grid
+     *
+     * @return the manager of the reservation grid
+     */
+    ReservationGridManager getReservationGridManager();
 
-  /**
-   * Get the Admission Control Zone of a given lane.
-   *
-   * @param laneId  the id of the lane
-   * @return the admission control zone of the lane.
-   */
-  AdmissionControlZone getACZ(int laneId);
+    /**
+     * Get the Admission Control Zone of a given lane.
+     *
+     * @param laneId the id of the lane
+     * @return the admission control zone of the lane.
+     */
+    AdmissionControlZone getACZ(int laneId);
 
-  /**
-   * Get the manager of an ACZ
-   */
-  AczManager getAczManager(int laneId);
+    /**
+     * Get the manager of an ACZ
+     */
+    AczManager getAczManager(int laneId);
 
 }

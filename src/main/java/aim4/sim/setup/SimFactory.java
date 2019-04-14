@@ -40,16 +40,16 @@ import aim4.vehicle.VinRegistry;
  */
 public class SimFactory {
 
-  /**
-   * Create a simulator.
-   *
-   * @param simSetup  the simulation setup
-   * @return a simulator
-   */
-  public static Simulator makeSimulator(SimSetup simSetup) {
-    VinRegistry.reset();   // TODO: should make it part of the simulator
-    System.gc();
-    return simSetup.getSimulator();
-  }
+    /**
+     * Create a simulator.
+     *
+     * @param simSetup the simulation setup
+     * @return a simulator
+     */
+    public static Simulator makeSimulator(SimSetup simSetup) {
+        VinRegistry.reset();   // TODO: should make it part of the simulator
+        System.gc();
+        return simSetup.getSimulator();
+    }
 
 }
