@@ -36,9 +36,9 @@ import aim4.config.TrafficSignal;
 import java.util.List;
 
 import aim4.im.v2i.policy.BasePolicy;
-import aim4.im.v2i.policy.BasePolicyCallback;
-import aim4.im.v2i.policy.BasePolicy.ProposalFilterResult;
-import aim4.im.v2i.policy.BasePolicy.ReserveParam;
+import aim4.im.v2i.policy.PolicyCallback;
+import aim4.im.v2i.policy.utils.ProposalFilterResult;
+import aim4.im.v2i.policy.utils.ReserveParam;
 import aim4.map.Road;
 import aim4.msg.i2v.Reject;
 import aim4.msg.v2i.Request;
@@ -79,7 +79,7 @@ public class ApproxSimpleTrafficSignalRequestHandler implements
     /**
      * The base policy
      */
-    private BasePolicyCallback basePolicy;
+    private PolicyCallback basePolicy;
 
     /////////////////////////////////
     // CONSTRUCTORS
@@ -118,7 +118,7 @@ public class ApproxSimpleTrafficSignalRequestHandler implements
      * {@inheritDoc}
      */
     @Override
-    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+    public void setBasePolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
     }
 
@@ -165,7 +165,7 @@ public class ApproxSimpleTrafficSignalRequestHandler implements
         // try to see if reservation is possible for the remaining proposals.
         ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
         if (reserveParam != null) {
-            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+            basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
         } else {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);

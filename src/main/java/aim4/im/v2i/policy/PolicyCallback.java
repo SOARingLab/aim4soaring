@@ -30,18 +30,61 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.policy;
 
-import aim4.im.v2i.reservation.ReservationGrid;
+import java.util.List;
+
+import aim4.im.TrackModel;
+import aim4.im.v2i.policy.utils.ReserveParam;
+import aim4.msg.i2v.Reject;
+import aim4.msg.v2i.Request;
 
 /**
- * An extension to the base policy's callback interface.
+ * The base policy's callback interface.
  */
-public interface ExtendedBasePolicyCallback extends BasePolicyCallback {
+public interface PolicyCallback {
 
     /**
-     * Get the reservation grid.
+     * Send a confirm message
      *
-     * @return the reservation grid.
+     * @param latestRequestId the latest request id of the vehicle
+     * @param reserveParam    the reservation parameter
      */
-    ReservationGrid getReservationGrid();
+    void sendConfirmMsg(int latestRequestId, ReserveParam reserveParam);
 
+    /**
+     * Send a reject message
+     *
+     * @param vin             the VIN
+     * @param latestRequestId the latest request id of the vehicle
+     * @param reason          the reason of rejection
+     */
+    void sendRejectMsg(int vin, int latestRequestId, Reject.Reason reason);
+
+    /**
+     * Compute the reservation parameter given the request message and a
+     * set of proposals.
+     *
+     * @param msg       the request message
+     * @param proposals the set of proposals
+     * @return the reservation parameters; null if the reservation is infeasible.
+     */
+    ReserveParam findReserveParam(Request msg, List<Request.Proposal> proposals);
+
+    /**
+     * Get the current time
+     *
+     * @return the current time
+     */
+    double getCurrentTime();
+
+    /**
+     * Check whether the vehicle currently has a reservation.
+     *
+     * @param vin the VIN of the vehicle
+     * @return whether the vehicle currently has a reservation.
+     */
+    boolean hasReservation(int vin);
+
+
+    // TODO: remove this function
+    TrackModel getTrackMode();
 }

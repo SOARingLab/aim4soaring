@@ -30,39 +30,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.policy;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import aim4.config.Debug;
 import aim4.im.TrackModel;
+import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.V2IManager;
 import aim4.im.v2i.V2IManagerCallback;
-import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.policy.utils.ProposalFilterResult;
 import aim4.im.v2i.policy.utils.ReservationRecord;
 import aim4.im.v2i.policy.utils.ReserveParam;
 import aim4.im.v2i.reservation.AczManager;
 import aim4.im.v2i.reservation.ReservationGrid;
 import aim4.im.v2i.reservation.ReservationGridManager;
+import aim4.im.v2i.reservation.ReservationGridManager.Plan;
 import aim4.msg.i2v.Confirm;
 import aim4.msg.i2v.Reject;
-import aim4.msg.v2i.Away;
-import aim4.msg.v2i.Cancel;
-import aim4.msg.v2i.Done;
-import aim4.msg.v2i.Request;
-import aim4.msg.v2i.V2IMessage;
+import aim4.msg.i2v.Reject.Reason;
+import aim4.msg.v2i.*;
+import aim4.msg.v2i.Request.Proposal;
 import aim4.sim.StatCollector;
 import aim4.util.HashMapRegistry;
 import aim4.util.Registry;
 import aim4.vehicle.VehicleUtil;
 
+import java.util.*;
+
 /**
  * The base policy.
  */
-public final class BasePolicy implements Policy, BasePolicyCallback {
+public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
 
     /////////////////////////////////
     // CONSTANTS
@@ -97,24 +92,24 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      * @return the proposal filter result
      */
     public static ProposalFilterResult standardProposalsFilter(
-            List<Request.Proposal> proposals,
+            List<Proposal> proposals,
             double currentTime) {
         // copy the proposals to a list first.
-        List<Request.Proposal> myProposals =
-                new LinkedList<Request.Proposal>(proposals);
+        List<Proposal> myProposals =
+                new LinkedList<Proposal>(proposals);
 
         // Remove proposals whose arrival time is smaller than or equal to the
         // the current time.
-        BasePolicy.removeProposalWithLateArrivalTime(myProposals, currentTime);
+        PriorityBasedPolicy.removeProposalWithLateArrivalTime(myProposals, currentTime);
         if (myProposals.isEmpty()) {
-            return new ProposalFilterResult(Reject.Reason.ARRIVAL_TIME_TOO_LATE);
+            return new ProposalFilterResult(Reason.ARRIVAL_TIME_TOO_LATE);
         }
         // Check to see if not all of the arrival times in this reservation
         // request are too far in the future
-        BasePolicy.removeProposalWithLargeArrivalTime(
+        PriorityBasedPolicy.removeProposalWithLargeArrivalTime(
                 myProposals, currentTime + V2IManager.MAXIMUM_FUTURE_RESERVATION_TIME);
         if (myProposals.isEmpty()) {
-            return new ProposalFilterResult(Reject.Reason.ARRIVAL_TIME_TOO_LARGE);
+            return new ProposalFilterResult(Reason.ARRIVAL_TIME_TOO_LARGE);
         }
         // return the remaining proposals
         return new ProposalFilterResult(myProposals);
@@ -128,11 +123,11 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      * @param currentTime the current time
      */
     private static void removeProposalWithLateArrivalTime(
-            List<Request.Proposal> proposals,
+            List<Proposal> proposals,
             double currentTime) {
-        for (Iterator<Request.Proposal> tpIter = proposals.listIterator();
+        for (Iterator<Proposal> tpIter = proposals.listIterator();
              tpIter.hasNext(); ) {
-            Request.Proposal prop = tpIter.next();
+            Proposal prop = tpIter.next();
             // If this one is in the past
             if (prop.getArrivalTime() <= currentTime) {
                 tpIter.remove();
@@ -149,11 +144,11 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      *                   invalid.
      */
     private static void removeProposalWithLargeArrivalTime(
-            List<Request.Proposal> proposals,
+            List<Proposal> proposals,
             double futureTime) {
-        for (Iterator<Request.Proposal> tpIter = proposals.listIterator();
+        for (Iterator<Proposal> tpIter = proposals.listIterator();
              tpIter.hasNext(); ) {
-            Request.Proposal prop = tpIter.next();
+            Proposal prop = tpIter.next();
             // If this one is in the past
             if (prop.getArrivalTime() > futureTime) {
                 tpIter.remove();
@@ -191,7 +186,7 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
     /**
      * The statistic collector
      */
-    private StatCollector<BasePolicy> statCollector;
+    private StatCollector<PriorityBasedPolicy> statCollector;
 
 
     /////////////////////////////////
@@ -206,7 +201,7 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      *                       being created
      * @param requestHandler the request handler
      */
-    public BasePolicy(V2IManagerCallback im, RequestHandler requestHandler) {
+    public PriorityBasedPolicy(V2IManagerCallback im, RequestHandler requestHandler) {
         this(im, requestHandler, null);
     }
 
@@ -219,9 +214,9 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      * @param requestHandler the request handler
      * @param statCollector  the statistic collector
      */
-    public BasePolicy(V2IManagerCallback im,
-                      RequestHandler requestHandler,
-                      StatCollector<BasePolicy> statCollector) {
+    public PriorityBasedPolicy(V2IManagerCallback im,
+                               RequestHandler requestHandler,
+                               StatCollector<PriorityBasedPolicy> statCollector) {
         this.im = im;
         this.statCollector = statCollector;
         setRequestHandler(requestHandler);
@@ -333,7 +328,7 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      * {@inheritDoc}
      */
     @Override
-    public void sendRejectMsg(int vin, int latestRequestId, Reject.Reason reason) {
+    public void sendRejectMsg(int vin, int latestRequestId, Reason reason) {
         im.sendI2VMessage(new Reject(im.getId(),
                 vin,
                 latestRequestId,
@@ -347,16 +342,16 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      */
     @Override
     public ReserveParam findReserveParam(Request msg,
-                                         List<Request.Proposal> proposals) {
+                                         List<Proposal> proposals) {
         int vin = msg.getVin();
 
         // Okay, now let's actually try some of these proposals
-        Request.Proposal successfulProposal = null;
-        ReservationGridManager.Plan gridPlan = null;
+        Proposal successfulProposal = null;
+        Plan gridPlan = null;
         AczManager aczManager = null;
         AczManager.Plan aczPlan = null;
 
-        for (Request.Proposal proposal : proposals) {
+        for (Proposal proposal : proposals) {
             ReservationGridManager.Query gridQuery =
                     new ReservationGridManager.Query(vin,
                             proposal.getArrivalTime(),
@@ -539,7 +534,7 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      * {@inheritDoc}
      */
     @Override
-    public StatCollector<BasePolicy> getStatCollector() {
+    public StatCollector<PriorityBasedPolicy> getStatCollector() {
         return statCollector;
     }
 

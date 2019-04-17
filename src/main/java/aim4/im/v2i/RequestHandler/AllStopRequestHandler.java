@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.RequestHandler;
 
-import aim4.im.v2i.policy.BasePolicyCallback;
+import aim4.im.v2i.policy.PolicyCallback;
 import aim4.msg.i2v.Reject;
 import aim4.msg.v2i.Request;
 import aim4.sim.StatCollector;
@@ -47,7 +47,7 @@ public class AllStopRequestHandler implements RequestHandler {
     /**
      * The base policy
      */
-    private BasePolicyCallback basePolicy;
+    private PolicyCallback basePolicy;
 
 
     /////////////////////////////////
@@ -60,7 +60,7 @@ public class AllStopRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+    public void setBasePolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
     }
 

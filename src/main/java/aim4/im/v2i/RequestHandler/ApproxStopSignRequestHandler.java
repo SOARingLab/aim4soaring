@@ -35,10 +35,10 @@ import java.util.List;
 
 import aim4.config.Debug;
 import aim4.im.v2i.policy.BasePolicy;
+import aim4.im.v2i.policy.PolicyCallback;
 import aim4.im.v2i.policy.BasePolicyCallback;
-import aim4.im.v2i.policy.ExtendedBasePolicyCallback;
-import aim4.im.v2i.policy.BasePolicy.ProposalFilterResult;
-import aim4.im.v2i.policy.BasePolicy.ReserveParam;
+import aim4.im.v2i.policy.utils.ProposalFilterResult;
+import aim4.im.v2i.policy.utils.ReserveParam;
 import aim4.map.Road;
 import aim4.msg.i2v.Reject;
 import aim4.msg.v2i.Request;
@@ -67,7 +67,7 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
     /**
      * The base policy
      */
-    private ExtendedBasePolicyCallback basePolicy;
+    private BasePolicyCallback basePolicy;
     /**
      * The time window before last exit vehicle
      */
@@ -90,12 +90,12 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
-        if (basePolicy instanceof ExtendedBasePolicyCallback) {
-            this.basePolicy = (ExtendedBasePolicyCallback) basePolicy;
+    public void setBasePolicyCallback(PolicyCallback basePolicy) {
+        if (basePolicy instanceof BasePolicyCallback) {
+            this.basePolicy = (BasePolicyCallback) basePolicy;
         } else {
-            throw new RuntimeException("The BasePolicyCallback for " +
-                    "AllStopRequestHandler must be ExtendedBasePolicyCallback.");
+            throw new RuntimeException("The PolicyCallback for " +
+                    "AllStopRequestHandler must be BasePolicyCallback.");
         }
     }
 
@@ -154,7 +154,7 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
         // try to see if reservation is possible for the remaining proposals.
         ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
         if (reserveParam != null) {
-            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+            basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
         } else {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);

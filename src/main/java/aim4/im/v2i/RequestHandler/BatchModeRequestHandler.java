@@ -45,9 +45,9 @@ import java.util.TreeSet;
 import aim4.config.Debug;
 import aim4.im.v2i.batch.ReorderingStrategy;
 import aim4.im.v2i.policy.BasePolicy;
-import aim4.im.v2i.policy.BasePolicyCallback;
-import aim4.im.v2i.policy.BasePolicy.ProposalFilterResult;
-import aim4.im.v2i.policy.BasePolicy.ReserveParam;
+import aim4.im.v2i.policy.PolicyCallback;
+import aim4.im.v2i.policy.utils.ProposalFilterResult;
+import aim4.im.v2i.policy.utils.ReserveParam;
 import aim4.msg.i2v.Reject;
 import aim4.msg.i2v.Reject.Reason;
 import aim4.msg.v2i.Request;
@@ -326,7 +326,7 @@ public class BatchModeRequestHandler implements RequestHandler {
     /**
      * The base policy.
      */
-    private BasePolicyCallback basePolicy;
+    private PolicyCallback basePolicy;
 
     /**
      * A reordering strategy
@@ -408,7 +408,7 @@ public class BatchModeRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(BasePolicyCallback basePolicy) {
+    public void setBasePolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
         reorderingStrategy.setInitialTime(basePolicy.getCurrentTime());
         nextProcessingTime = reorderingStrategy.getNextProcessingTime();
@@ -492,7 +492,7 @@ public class BatchModeRequestHandler implements RequestHandler {
             ReserveParam reserveParam =
                     basePolicy.findReserveParam(msg, filterResult.getProposals());
             if (reserveParam != null) {
-                basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+                basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
             } else {
                 basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                         Reject.Reason.NO_CLEAR_PATH);
@@ -564,7 +564,7 @@ public class BatchModeRequestHandler implements RequestHandler {
         Request msg = iProposal.getRequest();
         ReserveParam reserveParam = basePolicy.findReserveParam(msg, l);
         if (reserveParam != null) {
-            basePolicy.sendComfirmMsg(msg.getRequestId(), reserveParam);
+            basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
             // Remove a set of indexed proposals (including the given one)
             // from the queue.
             for (IndexedProposal iProposal2 : iProposal.getProposalGroup()) {
