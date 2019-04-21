@@ -61,6 +61,8 @@ import aim4.vehicle.AccelSchedule;
 import aim4.vehicle.AutoVehicleDriverView;
 import aim4.vehicle.VehicleUtil;
 
+import static aim4.config.SimConfig.TIME_STEP;
+
 /**
  * An agent that autonomously controls the coordination of a
  * {@link AutoVehicleDriverView} with other Vehicles and with
@@ -117,7 +119,8 @@ public class V2ICoordinator implements Coordinator {
      * than zero, the vehicle will wait for the request forever. {@value}
      * seconds.
      */
-    private static final double REQUEST_TIMEOUT = -1.0;
+//    private static final double REQUEST_TIMEOUT = -1;
+    private static final double REQUEST_TIMEOUT = 4 * TIME_STEP;
 
     /**
      * The delay of sending another request message if the previous
@@ -573,13 +576,13 @@ public class V2ICoordinator implements Coordinator {
                     driver.setCurrentLane(targetLane);  // set the targetLane immediately
                     driver.addCurrentlyOccupiedLane(currentLane);
                     // update the driver's state
-                    setState(State.LC_CHANGING_LANE);
+                    setState(LaneChangeController.State.LC_CHANGING_LANE);
                     return true;  // check stopping condition immediately
                 } else if (vehicle.gaugeTime() > initiateTimeLimit) { // fail and stop
                     // must turn off the sensor
                     vehicle.setVehicleTracking(false);
                     isLaneChangeSuccessful = false;
-                    setState(State.LC_TERMINAL_STATE);
+                    setState(LaneChangeController.State.LC_TERMINAL_STATE);
                     return false;
                 } else {
                     // keep going
@@ -613,7 +616,7 @@ public class V2ICoordinator implements Coordinator {
                     driver.setCurrentLane(driver.getCurrentLane());
                     // done
                     isLaneChangeSuccessful = true;
-                    setState(State.LC_TERMINAL_STATE);
+                    setState(LaneChangeController.State.LC_TERMINAL_STATE);
                     return false;
                 } else {
                     // do nothing; continue lane changing
@@ -1764,7 +1767,7 @@ public class V2ICoordinator implements Coordinator {
             //   [rparameter.getArrivalTime()-rparameter.getEarlyError(),
             //    rparameter.getArrivalTime()-rparameter.getLateError() ]
             // check to see if both intervals intersect.
-            double a1 = vehicle.gaugeTime() - SimConfig.TIME_STEP;
+            double a1 = vehicle.gaugeTime() - TIME_STEP;
             double a2 = vehicle.gaugeTime();
             double b1 = rparameter.getArrivalTime() - rparameter.getEarlyError();
             double b2 = rparameter.getArrivalTime() + rparameter.getLateError();
