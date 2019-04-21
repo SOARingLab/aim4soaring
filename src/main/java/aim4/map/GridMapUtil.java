@@ -50,6 +50,7 @@ import aim4.im.v2i.RequestHandler.FCFSRequestHandler;
 import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.batch.RoadBasedReordering;
 import aim4.im.v2i.policy.BasePolicy;
+import aim4.im.v2i.policy.PriorityBasedPolicy;
 import aim4.im.v2i.reservation.ReservationGridManager;
 import aim4.map.SpawnPoint.SpawnSpec;
 import aim4.map.SpawnPoint.SpawnSpecGenerator;
@@ -357,6 +358,32 @@ public class GridMapUtil {
                         new V2IManager(intersection, trajectoryModel, currentTime,
                                 config, layout.getImRegistry());
                 im.setPolicy(new BasePolicy(im, new FCFSRequestHandler()));
+                layout.setManager(column, row, im);
+            }
+        }
+    }
+
+    /**
+     * Set the Priority managers at all intersections.
+     *
+     * @param layout      the map
+     * @param currentTime the current time
+     * @param config      the reservation grid manager configuration
+     */
+    public static void setPriorityManagers(GridMap layout,
+                                       double currentTime,
+                                       ReservationGridManager.Config config) {
+        layout.removeAllManagers();
+        for (int column = 0; column < layout.getColumns(); column++) {
+            for (int row = 0; row < layout.getRows(); row++) {
+                List<Road> roads = layout.getRoads(column, row);
+                RoadBasedIntersection intersection = new RoadBasedIntersection(roads);
+                RoadBasedTrackModel trajectoryModel = new RoadBasedTrackModel(intersection);
+                V2IManager im = new V2IManager(intersection, trajectoryModel, currentTime,
+                                config, layout.getImRegistry());
+                // use FCFSRequestHandler as well since it's the same to process request
+                // what's different is the order and the amount of messages to process
+                im.setPolicy(new PriorityBasedPolicy(im, new FCFSRequestHandler()));
                 layout.setManager(column, row, im);
             }
         }
