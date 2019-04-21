@@ -112,6 +112,7 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
      */
     private String trafficVolumeFileName = null;
 
+    private boolean usePriorityBasedPolicy = false;
     /////////////////////////////////
     // CONSTRUCTORS
     /////////////////////////////////
@@ -119,10 +120,12 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
     /**
      * Create a setup for the simulator in which all vehicles are autonomous.
      *
-     * @param basicSimSetup the basic simulator setup
+     * @param basicSimSetup          the basic simulator setup
+     * @param usePriorityBasedPolicy if use PriorityBasedPolicy
      */
-    public AutoDriverOnlySimSetup(BasicSimSetup basicSimSetup) {
+    public AutoDriverOnlySimSetup(BasicSimSetup basicSimSetup, boolean usePriorityBasedPolicy) {
         super(basicSimSetup);
+        this.usePriorityBasedPolicy = usePriorityBasedPolicy;
     }
 
     /**
@@ -301,8 +304,9 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
 
         if (!isBaseLineMode) {
             if (isBatchMode) {
-                GridMapUtil.setBatchManagers(layout, currentTime, gridConfig,
-                        processingInterval);
+                GridMapUtil.setBatchManagers(layout, currentTime, gridConfig, processingInterval);
+            } else if (usePriorityBasedPolicy) {
+                GridMapUtil.setPriorityManagers(layout, currentTime, gridConfig);
             } else {
                 GridMapUtil.setFCFSManagers(layout, currentTime, gridConfig);
             }
@@ -315,9 +319,7 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
                     GridMapUtil.setUniformTurnBasedSpawnPoints(layout, trafficLevel);
                     break;
                 case HVDIRECTIONAL_RANDOM:
-                    GridMapUtil.setDirectionalSpawnPoints(layout,
-                            hTrafficLevel,
-                            vTrafficLevel);
+                    GridMapUtil.setDirectionalSpawnPoints(layout, hTrafficLevel, vTrafficLevel);
                     break;
                 case FILE:
                     GridMapUtil.setUniformRatioSpawnPoints(layout, trafficVolumeFileName);
