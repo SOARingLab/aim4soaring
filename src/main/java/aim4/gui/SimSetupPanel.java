@@ -42,6 +42,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import aim4.gui.parampanel.AutoDriverOnlyParamPanel;
+import aim4.gui.parampanel.PriorityBasedAutoDriverOnlyParamPanel;
 import aim4.gui.parampanel.TrafficSignalParamPanel;
 import aim4.sim.setup.ApproxStopSignSimSetup;
 import aim4.sim.setup.ApproxNPhasesTrafficSignalSimSetup;
@@ -56,7 +57,8 @@ public class SimSetupPanel extends JPanel implements ItemListener {
 
     private static final long serialVersionUID = 1L;
 
-    final static String AUTO_DRIVER_ONLY_SETUP_PANEL = "AIM Protocol";
+    private final static String AUTO_DRIVER_ONLY_SETUP_PANEL = "AIM - FCFS policy";
+    private final static String PB_AUTO_DRIVER_ONLY_SETUP_PANEL = "AIM - Priority based policy";
     final static String TRAFFIC_SIGNAL_SETUP_PANEL = "Traffic Signals";
     final static String STOP_SIGN_SETUP_PANEL = "Stop Signs";
 
@@ -76,6 +78,10 @@ public class SimSetupPanel extends JPanel implements ItemListener {
      * the auto driver only simulation setup panel
      */
     private AutoDriverOnlyParamPanel autoDriverOnlySetupPanel;
+    /**
+     * the priority based auto driver only simulation setup panel
+     */
+    private PriorityBasedAutoDriverOnlyParamPanel pbAutoDriverOnlySetupPanel;
     /**
      * The traffic signal setup panel
      */
@@ -97,10 +103,12 @@ public class SimSetupPanel extends JPanel implements ItemListener {
         JPanel comboBoxPane = new JPanel(); //use FlowLayout
         comboBoxPane.setBackground(Color.WHITE);
 
-        String comboBoxItems[] =
-                {AUTO_DRIVER_ONLY_SETUP_PANEL,
-                        TRAFFIC_SIGNAL_SETUP_PANEL,
-                        STOP_SIGN_SETUP_PANEL};
+        String[] comboBoxItems = {
+                PB_AUTO_DRIVER_ONLY_SETUP_PANEL,
+                AUTO_DRIVER_ONLY_SETUP_PANEL,
+//                TRAFFIC_SIGNAL_SETUP_PANEL,
+//                STOP_SIGN_SETUP_PANEL
+        };
         comboBox = new JComboBox(comboBoxItems);
         comboBox.setEditable(false);
         comboBox.addItemListener(this);
@@ -111,12 +119,14 @@ public class SimSetupPanel extends JPanel implements ItemListener {
         cards = new JPanel(cardLayout);
 
         // add the parameter panels
-        autoDriverOnlySetupPanel =
-                new AutoDriverOnlyParamPanel(simSetup);
+        pbAutoDriverOnlySetupPanel = new PriorityBasedAutoDriverOnlyParamPanel(simSetup);
+        addParamPanel(pbAutoDriverOnlySetupPanel, PB_AUTO_DRIVER_ONLY_SETUP_PANEL);
+        autoDriverOnlySetupPanel = new AutoDriverOnlyParamPanel(simSetup);
         addParamPanel(autoDriverOnlySetupPanel, AUTO_DRIVER_ONLY_SETUP_PANEL);
-        trafficSignalSetupPanel = new TrafficSignalParamPanel();
-        cards.add(trafficSignalSetupPanel, TRAFFIC_SIGNAL_SETUP_PANEL);
-        cards.add(new JPanel(), STOP_SIGN_SETUP_PANEL);
+//        addParamPanel(autoDriverOnlySetupPanel, PB_AUTO_DRIVER_ONLY_SETUP_PANEL);
+//        trafficSignalSetupPanel = new TrafficSignalParamPanel();
+//        cards.add(trafficSignalSetupPanel, TRAFFIC_SIGNAL_SETUP_PANEL);
+//        cards.add(new JPanel(), STOP_SIGN_SETUP_PANEL);
 
         // add the combo box pane and cards pane
         setLayout(new BorderLayout());
@@ -143,7 +153,7 @@ public class SimSetupPanel extends JPanel implements ItemListener {
      */
     public SimSetup getSimSetup() {
         if (comboBox.getSelectedIndex() == 0) {
-            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup);
+            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup, true);
             simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
             simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
             simSetup2.setStopDistBeforeIntersection(
@@ -153,30 +163,40 @@ public class SimSetupPanel extends JPanel implements ItemListener {
             simSetup2.setLanesPerRoad(autoDriverOnlySetupPanel.getLanesPerRoad());
             return simSetup2;
         } else if (comboBox.getSelectedIndex() == 1) {
-            // ApproxNPhasesTrafficSignalSimSetup simSetup2 =
-            //  new ApproxNPhasesTrafficSignalSimSetup(simSetup,
-            //                                         "src/main/resources/SignalPhases/AIM4Phases.csv");
-            // simSetup2.setTrafficVolume("src/main/resources/SignalPhases/AIM4Volumes.csv");
-            ApproxNPhasesTrafficSignalSimSetup simSetup2 =
-                    new ApproxNPhasesTrafficSignalSimSetup(simSetup,
-                            "/SignalPhases/AIM4Phases.csv");
-            simSetup2.setTrafficVolume("/SignalPhases/AIM4Volumes.csv");
-
-            simSetup2.setLanesPerRoad(trafficSignalSetupPanel.getLanesPerRoad());
-            simSetup2.setStopDistBeforeIntersection(1.0);
-            return simSetup2;
-        } else if (comboBox.getSelectedIndex() == 2) {
-            ApproxStopSignSimSetup simSetup2 =
-                    new ApproxStopSignSimSetup(simSetup);
+            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup, false);
             simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
+            simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
             simSetup2.setStopDistBeforeIntersection(
                     autoDriverOnlySetupPanel.getStopDistToIntersection());
+            simSetup2.setNumOfColumns(autoDriverOnlySetupPanel.getNumOfColumns());
+            simSetup2.setNumOfRows(autoDriverOnlySetupPanel.getNumOfRows());
+            simSetup2.setLanesPerRoad(autoDriverOnlySetupPanel.getLanesPerRoad());
             return simSetup2;
         } else {
             throw new RuntimeException(
                     "SimSetupPane::getSimSetup(): not implemented yet");
         }
     }
+//        } else if (comboBox.getSelectedIndex() == 1) {
+//            // ApproxNPhasesTrafficSignalSimSetup simSetup2 =
+//            //  new ApproxNPhasesTrafficSignalSimSetup(simSetup,
+//            //                                         "src/main/resources/SignalPhases/AIM4Phases.csv");
+//            // simSetup2.setTrafficVolume("src/main/resources/SignalPhases/AIM4Volumes.csv");
+//            ApproxNPhasesTrafficSignalSimSetup simSetup2 =
+//                    new ApproxNPhasesTrafficSignalSimSetup(simSetup,
+//                            "/SignalPhases/AIM4Phases.csv");
+//            simSetup2.setTrafficVolume("/SignalPhases/AIM4Volumes.csv");
+//
+//            simSetup2.setLanesPerRoad(trafficSignalSetupPanel.getLanesPerRoad());
+//            simSetup2.setStopDistBeforeIntersection(1.0);
+//            return simSetup2;
+//        } else if (comboBox.getSelectedIndex() == 2) {
+//            ApproxStopSignSimSetup simSetup2 =
+//                    new ApproxStopSignSimSetup(simSetup);
+//            simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
+//            simSetup2.setStopDistBeforeIntersection(
+//                    autoDriverOnlySetupPanel.getStopDistToIntersection());
+//            return simSetup2;
 
     /**
      * {@inheritDoc}

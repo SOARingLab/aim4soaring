@@ -1239,7 +1239,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
             resetSimProcess();
         } else if (e.getSource() == dumpDataMenuItem) {
             JFileChooser chooser = new JFileChooser();
-            chooser.setFileSelectionMode(JFileChooser.SAVE_DIALOG);
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             int returnVal = chooser.showDialog(this, "Save");
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 boolean isDumpData = false;
