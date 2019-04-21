@@ -402,6 +402,11 @@ public class Request extends V2IMessage {
     private List<Proposal> proposals;
 
 
+    /**
+     * vehicle's priority
+     */
+    private int priority = 1;
+
     /////////////////////////////////
     // CONSTRUCTORS
     /////////////////////////////////
@@ -487,7 +492,13 @@ public class Request extends V2IMessage {
         return Collections.unmodifiableList(proposals);
     }
 
+    public int getPriority() {
+        return priority;
+    }
 
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
     /////////////////////////////////
     // DEBUG
     /////////////////////////////////
@@ -497,14 +508,14 @@ public class Request extends V2IMessage {
      */
     @Override
     public String toString() {
-        String s = "Request(vin" + getVin() + " -> im" + getImId() + ","
+        String s = "Request(vin=" + getVin() + " -> im=" + getImId() + ","
                 + "requestId=" + requestId + ","
-                + "spec=...,"
-                + "proposals=\n";
+                + "spec=...,priority=" + priority + ","
+                + "proposals=<";
         for (Proposal p : proposals) {
-            s += "  " + p + "\n";
+            s += p + ";";
         }
-        s += ")";
+        s += ">)";
         return s;
     }
 
