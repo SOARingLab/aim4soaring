@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.1
+#!/usr/bin/env python3
 
 import sys
 import getopt
@@ -32,7 +32,7 @@ def read_arrival_rate(infilename):
 
 
 #===============================================================================
-# Main
+# Main TEst
 #===============================================================================
 
 def usage():
