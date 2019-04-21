@@ -187,8 +187,8 @@ public class Debug {
      * Whether or not the simulator print the messages sent by the target vehicle.
      */
     public static boolean isPrintVehicleOutboxMessageOfVIN(int vin) {
-        // return (vin == targetVIN);
-        return false;
+         return (vin == targetVIN);
+//        return false;
     }
 
 
@@ -258,6 +258,7 @@ public class Debug {
      */
     public static boolean SHOW_VEHICLE_COLOR_BY_MSG_STATE = true;
 
+    public static boolean DEBUG = true;
 
     /////////////////////////////////
     // Debug Points
