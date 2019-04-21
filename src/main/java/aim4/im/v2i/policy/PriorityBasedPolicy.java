@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.im.v2i.policy;
 
 import aim4.config.Debug;
+import aim4.im.Intersection;
 import aim4.im.TrackModel;
 import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.V2IManager;
@@ -42,6 +43,7 @@ import aim4.im.v2i.reservation.AczManager;
 import aim4.im.v2i.reservation.ReservationGrid;
 import aim4.im.v2i.reservation.ReservationGridManager;
 import aim4.im.v2i.reservation.ReservationGridManager.Plan;
+import aim4.map.lane.Lane;
 import aim4.msg.i2v.Confirm;
 import aim4.msg.i2v.Reject;
 import aim4.msg.i2v.Reject.Reason;
@@ -52,7 +54,10 @@ import aim4.util.HashMapRegistry;
 import aim4.util.Registry;
 import aim4.vehicle.VehicleUtil;
 
+import java.lang.ref.ReferenceQueue;
 import java.util.*;
+
+import static aim4.config.Debug.DEBUG;
 
 /**
  * The base policy.
@@ -189,6 +194,16 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
     private StatCollector<PriorityBasedPolicy> statCollector;
 
 
+    /**
+     * A mapping from laneid to VINs in this lane
+     */
+    private HashMap<Integer, HashSet<Integer>> laneIdToVins = new HashMap<Integer, HashSet<Integer>>();
+
+    /**
+     * A mapping from VIN to its V2IMessage.
+     * assume every VIN has only one message at one time
+     */
+    private HashMap<Integer, Request> vinToMessage = new HashMap<Integer, Request>();
     /////////////////////////////////
     // CLASS CONSTRUCTORS
     /////////////////////////////////
@@ -220,6 +235,10 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
         this.im = im;
         this.statCollector = statCollector;
         setRequestHandler(requestHandler);
+
+        for (Lane lane : this.im.getIntersection().getLanes()) {
+            this.laneIdToVins.put(lane.getId(), new HashSet<Integer>());
+        }
     }
 
 
@@ -251,7 +270,7 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
      */
     public void setRequestHandler(RequestHandler RequestHandler) {
         this.requestHandler = RequestHandler;
-        requestHandler.setBasePolicyCallback(this);
+        requestHandler.setPolicyCallback(this);
     }
 
 
@@ -285,35 +304,30 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
         // when the request handler sends the confirm message.
         assert !vinToReservationId.containsKey(vin);
         // actually make the reservation
-        Integer gridTicket =
-                im.getReservationGridManager().accept(reserveParam.getGridPlan());
-        Integer aczTicket =
-                reserveParam.getAczManager().accept(reserveParam.getAczPlan());
+        Integer gridTicket = im.getReservationGridManager().accept(reserveParam.getGridPlan());
+        Integer aczTicket = reserveParam.getAczManager().accept(reserveParam.getAczPlan());
         assert gridTicket == vin;
         assert aczTicket == vin;
 
         // send the confirm message
         int reservationId = reservationRecordRegistry.getNewId();
-        Confirm confirmMsg =
-                new Confirm(im.getId(),
-                        vin,
-                        reservationId,
-                        latestRequestId,
-                        reserveParam.getSuccessfulProposal().getArrivalTime(),
-                        EARLY_ERROR, LATE_ERROR,
-                        reserveParam.getSuccessfulProposal().getArrivalVelocity(),
-                        reserveParam.getSuccessfulProposal().getArrivalLaneID(),
-                        reserveParam.getSuccessfulProposal().getDepartureLaneID(),
-                        im.getACZ(reserveParam.getSuccessfulProposal()
-                                .getDepartureLaneID()).getMaxSize(),
-                        reserveParam.getGridPlan().getAccelerationProfile());
+        Confirm confirmMsg = new Confirm(im.getId(),
+                vin,
+                reservationId,
+                latestRequestId,
+                reserveParam.getSuccessfulProposal().getArrivalTime(),
+                EARLY_ERROR, LATE_ERROR,
+                reserveParam.getSuccessfulProposal().getArrivalVelocity(),
+                reserveParam.getSuccessfulProposal().getArrivalLaneID(),
+                reserveParam.getSuccessfulProposal().getDepartureLaneID(),
+                im.getACZ(reserveParam.getSuccessfulProposal().getDepartureLaneID()).getMaxSize(),
+                reserveParam.getGridPlan().getAccelerationProfile());
         im.sendI2VMessage(confirmMsg);
 
-        // bookkeeping
-        ReservationRecord r =
-                new ReservationRecord(
-                        vin,
-                        reserveParam.getSuccessfulProposal().getDepartureLaneID());
+        // book keeping
+        ReservationRecord r = new ReservationRecord(
+                vin,
+                reserveParam.getSuccessfulProposal().getDepartureLaneID());
         reservationRecordRegistry.set(reservationId, r);
         vinToReservationId.put(vin, reservationId);
 
@@ -435,7 +449,11 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
     @Override
     public void processV2IMessage(V2IMessage msg) {
         if (msg instanceof Request) {
-            requestHandler.processRequestMsg((Request) msg);
+            List<Proposal> proposals = ((Request) msg).getProposals();
+            assert !proposals.isEmpty();
+            int laneId = proposals.get(0).getArrivalLaneID();
+            laneIdToVins.get(laneId).add(msg.getVin());
+            vinToMessage.put(msg.getVin(), (Request) msg);
         } else if (msg instanceof Cancel) {
             processCancelMsg((Cancel) msg);
         } else if (msg instanceof Done) {
@@ -447,6 +465,107 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
         }
     }
 
+    public void processV2IMessageDone() {
+        // in case no message yet
+        if (vinToMessage.isEmpty() || laneIdToVins.isEmpty()) {
+            System.out.println("\nvinToMessage.isEmpty() || laneIdToVins.isEmpty()\n");
+            return;
+        }
+
+        // store closest vin in each lane
+        List<Integer> closestVinInLane = new ArrayList<Integer>();
+        // store each lane's priority
+        List<Double> lanePriority = new ArrayList<Double>();
+        for (int i = 0; i < laneIdToVins.size(); ++i) {
+            closestVinInLane.add(-1);
+            lanePriority.add(0.0);
+        }
+
+        // find closest vin in each lane
+        for (Integer laneId : laneIdToVins.keySet()) {
+            if (laneIdToVins.get(laneId).isEmpty()) {
+                // in case no vin in this lane
+                continue;
+            }
+            // closest vin in this lane
+            int closestVin = -1;
+            // and its distance
+            double closestDistance = 1e9;
+
+            for (Integer vin : laneIdToVins.get(laneId)) {
+                Request msg = vinToMessage.get(vin);
+                if (msg == null) {
+                    // in case..should never arrive here
+                    continue;
+                }
+                // get distance from one of its proposal
+                Proposal proposal = msg.getProposals().get(0);
+                double reservationDistance = (proposal.getArrivalTime() - getCurrentTime()) * proposal.getArrivalVelocity();
+                if (reservationDistance < closestDistance) {
+                    closestDistance = reservationDistance;
+                    closestVin = vin;
+                }
+                // accumulate the lane priority
+                lanePriority.set(laneId, lanePriority.get(laneId) + msg.getPriority());
+            }
+            lanePriority.set(laneId, lanePriority.get(laneId) / (closestDistance + 0.1));
+            closestVinInLane.set(laneId, closestVin);
+        }
+
+        if (DEBUG) {
+            System.out.println("lane_priority=" + lanePriority);
+        }
+
+        int theVin = -1;
+        int theLaneId = -1;
+        Request theMessage = null;
+        double highestPriority = -1.0;
+        for (int laneId = 0; laneId < laneIdToVins.size(); ++laneId) {
+            if (lanePriority.get(laneId) > highestPriority) {
+                highestPriority = lanePriority.get(laneId);
+                theLaneId = laneId;
+                theVin = closestVinInLane.get(laneId);
+                theMessage = vinToMessage.get(theVin);
+            }
+        }
+
+        for (Integer vin : closestVinInLane) {
+            if (vin == -1) {
+                continue;
+            }
+            Request msg = vinToMessage.get(vin);
+            if (msg != theMessage) {
+                msg.setPriority(msg.getPriority() << 1);
+                vinToMessage.put(vin, msg);
+            }
+        }
+
+        if (DEBUG) {
+            System.out.println("laneIdToVins=" + laneIdToVins);
+            System.out.println("vinToMessage=" + vinToMessage);
+            System.out.println("theMessage=" + theMessage);
+        }
+
+        if (requestHandler.processRequestMsg(theMessage)) {
+            System.out.println("theMessage success" + theMessage);
+            laneIdToVins.get(theLaneId).remove(theVin);
+            vinToMessage.remove(theVin);
+        }
+        cleanUp();
+    }
+
+    private void cleanUp() {
+        for (int laneId : laneIdToVins.keySet()) {
+            for (int vin : laneIdToVins.get(laneId)) {
+                Request request = vinToMessage.get(vin);
+                Request.Proposal proposal = request.getProposals().get(0);
+                if (proposal.getArrivalTime() >= getCurrentTime()) {
+                    laneIdToVins.get(laneId).remove(vin);
+                    vinToMessage.remove(vin);
+                }
+            }
+        }
+    }
 
     /**
      * Submit a cancel message to the policy.

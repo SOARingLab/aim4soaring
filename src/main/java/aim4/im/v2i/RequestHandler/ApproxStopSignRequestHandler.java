@@ -90,7 +90,7 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(PolicyCallback basePolicy) {
+    public void setPolicyCallback(PolicyCallback basePolicy) {
         if (basePolicy instanceof BasePolicyCallback) {
             this.basePolicy = (BasePolicyCallback) basePolicy;
         } else {
@@ -115,14 +115,14 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
      * @param msg the request message
      */
     @Override
-    public void processRequestMsg(Request msg) {
+    public boolean processRequestMsg(Request msg) {
         int vin = msg.getVin();
 
         // If the vehicle has got a reservation already, reject it.
         if (basePolicy.hasReservation(vin)) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-            return;
+            return false;
         }
 
         // filter the proposals
@@ -133,6 +133,7 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
             basePolicy.sendRejectMsg(vin,
                     msg.getRequestId(),
                     filterResult.getReason());
+            return false;
         }
 
         List<Request.Proposal> proposals = filterResult.getProposals();
@@ -143,21 +144,23 @@ public class ApproxStopSignRequestHandler implements RequestHandler {
         if (proposals.isEmpty()) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
-            return;
+            return false;
         }
         // If cannot enter from lane according to canEnterFromLane(), reject it.
         if (!canEnterFromLane(proposals.get(0).getArrivalLaneID())) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
-            return;
+            return false;
         }
         // try to see if reservation is possible for the remaining proposals.
         ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
         if (reserveParam != null) {
             basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
+            return true;
         } else {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
+            return false;
         }
     }
 

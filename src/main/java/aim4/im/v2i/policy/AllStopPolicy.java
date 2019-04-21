@@ -101,6 +101,13 @@ public class AllStopPolicy implements Policy {
     }
 
 
+    /**
+     * After process V2I messages
+     */
+    public void processV2IMessageDone(){
+
+    }
+
     /////////////////////////////////
     // PUBLIC METHODS
     /////////////////////////////////

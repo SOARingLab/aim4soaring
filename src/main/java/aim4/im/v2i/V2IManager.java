@@ -242,6 +242,7 @@ public class V2IManager extends IntersectionManager
             }
             processV2IMessage(msg);
         }
+        processV2IMessageDone();
         // Done processing, clear the inbox.
         clearInbox();
         // Second, allow the policy to act, and send outgoing messages.
@@ -415,6 +416,13 @@ public class V2IManager extends IntersectionManager
         policy.processV2IMessage(msg);
     }
 
+    /**
+     * Process a V2I Request
+     *
+     */
+    private void processV2IMessageDone() {
+        policy.processV2IMessageDone();
+    }
 
     /////////////////////////////////
     // PUBLIC METHODS

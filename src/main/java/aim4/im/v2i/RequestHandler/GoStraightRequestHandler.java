@@ -82,7 +82,7 @@ public class GoStraightRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(PolicyCallback basePolicy) {
+    public void setPolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
         this.nextSwitchTime = basePolicy.getCurrentTime() + SWITCH_TIME_INTERVAL;
         this.isGoStraight = true;
@@ -111,14 +111,14 @@ public class GoStraightRequestHandler implements RequestHandler {
      * @param msg the request message
      */
     @Override
-    public void processRequestMsg(Request msg) {
+    public boolean processRequestMsg(Request msg) {
         int vin = msg.getVin();
 
         // If the vehicle has got a reservation already, reject it.
         if (basePolicy.hasReservation(vin)) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-            return;
+            return false;
         }
 
         // filter the proposals
@@ -129,6 +129,7 @@ public class GoStraightRequestHandler implements RequestHandler {
             basePolicy.sendRejectMsg(vin,
                     msg.getRequestId(),
                     filterResult.getReason());
+            return false;
         }
 
         List<Request.Proposal> proposals = filterResult.getProposals();
@@ -138,16 +139,18 @@ public class GoStraightRequestHandler implements RequestHandler {
         if (proposals.isEmpty()) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
-            return;
+            return false;
         }
 
         // try to see if reservation is possible for the remaining proposals.
         ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
         if (reserveParam != null) {
             basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
+            return true;
         } else {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
+            return false;
         }
     }
 

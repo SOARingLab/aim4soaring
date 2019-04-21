@@ -60,7 +60,7 @@ public class AllStopRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(PolicyCallback basePolicy) {
+    public void setPolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
     }
 
@@ -80,10 +80,11 @@ public class AllStopRequestHandler implements RequestHandler {
      * @param msg the request message
      */
     @Override
-    public void processRequestMsg(Request msg) {
+    public boolean processRequestMsg(Request msg) {
         basePolicy.sendRejectMsg(msg.getVin(),
                 msg.getRequestId(),
                 Reject.Reason.NO_CLEAR_PATH);
+        return false;
     }
 
     /**

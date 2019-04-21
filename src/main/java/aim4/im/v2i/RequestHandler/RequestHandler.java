@@ -42,9 +42,9 @@ public interface RequestHandler {
     /**
      * Set the base policy call-back.
      *
-     * @param basePolicy the base policy's call-back
+     * @param policyCallback the base policy's call-back
      */
-    void setBasePolicyCallback(PolicyCallback basePolicy);
+    void setPolicyCallback(PolicyCallback policyCallback);
 
     /**
      * Let the request handler to act for a given time period.
@@ -57,8 +57,9 @@ public interface RequestHandler {
      * Process the request message.
      *
      * @param msg the request message
+     * @return confirmed or rejected
      */
-    void processRequestMsg(Request msg);
+    boolean processRequestMsg(Request msg);
 
 
     /**

@@ -408,7 +408,7 @@ public class BatchModeRequestHandler implements RequestHandler {
      * @param basePolicy the base policy's call-back
      */
     @Override
-    public void setBasePolicyCallback(PolicyCallback basePolicy) {
+    public void setPolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
         reorderingStrategy.setInitialTime(basePolicy.getCurrentTime());
         nextProcessingTime = reorderingStrategy.getNextProcessingTime();
@@ -451,7 +451,7 @@ public class BatchModeRequestHandler implements RequestHandler {
      * @param msg the request message
      */
     @Override
-    public void processRequestMsg(Request msg) {
+    public boolean processRequestMsg(Request msg) {
         int vin = msg.getVin();
 
         if (requestSC != null) requestSC.incrTotalNumOfRequest();
@@ -463,7 +463,7 @@ public class BatchModeRequestHandler implements RequestHandler {
                     msg.getRequestId(),
                     Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
             if (requestSC != null) requestSC.incrNumOfConfirmedAnotherRequest();
-            return;
+            return false;
         }
 
         // First, remove the proposals of the vehicle (if any) in the queue.
@@ -482,27 +482,29 @@ public class BatchModeRequestHandler implements RequestHandler {
             basePolicy.sendRejectMsg(vin,
                     msg.getRequestId(),
                     filterResult.getReason());
-            return;
+            return false;
         }
 
         // If all proposals are late (i.e., their arrival times are less than the
         // last processing time.)
+        if (requestSC != null) requestSC.incrNumOfLateRequest();
         if (isAllProposalsLate(msg)) {
             // Immediately confirm/reject the remaining proposals.
             ReserveParam reserveParam =
                     basePolicy.findReserveParam(msg, filterResult.getProposals());
             if (reserveParam != null) {
                 basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
+                return true;
             } else {
                 basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                         Reject.Reason.NO_CLEAR_PATH);
+                return false;
             }
-            if (requestSC != null) requestSC.incrNumOfLateRequest();
         } else {
             // Put the proposals in the queue and postpone the processing of
             // these proposals.  Late proposal would not be put in the queue.
             putProposalsIntoQueue(msg, currentTime);
-            if (requestSC != null) requestSC.incrNumOfQueuedRequest();
+            return true;
         }
     }
 
@@ -597,7 +599,6 @@ public class BatchModeRequestHandler implements RequestHandler {
      * before a given time.  If the reservation of an indexed proposals is
      * successful, send the confirm message; send the reject message.
      *
-     * @param iProposal the indexed proposal
      */
     private void tryReserveForProposalsBeforeTime(double time) {
         Iterator<IndexedProposal> iter = queue.iterator();

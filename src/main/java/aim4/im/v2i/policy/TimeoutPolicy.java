@@ -284,6 +284,13 @@ public class TimeoutPolicy implements Policy, V2IManagerCallback {
     }
 
 
+    /**
+     * After process V2I messages
+     */
+    public void processV2IMessageDone(){
+
+    }
+
     /////////////////////////////////
     // PRIVATE FIELDS
     /////////////////////////////////

@@ -256,7 +256,7 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
      */
     public void setRequestHandler(RequestHandler RequestHandler) {
         this.requestHandler = RequestHandler;
-        requestHandler.setBasePolicyCallback(this);
+        requestHandler.setPolicyCallback(this);
     }
 
 
@@ -452,6 +452,12 @@ public final class BasePolicy implements Policy, BasePolicyCallback {
         }
     }
 
+    /**
+     * After process V2I messages
+     */
+    public void processV2IMessageDone(){
+
+    }
 
     /**
      * Submit a cancel message to the policy.

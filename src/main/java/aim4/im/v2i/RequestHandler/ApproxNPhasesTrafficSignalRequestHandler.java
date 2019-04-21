@@ -176,7 +176,7 @@ public class ApproxNPhasesTrafficSignalRequestHandler implements
      * {@inheritDoc}
      */
     @Override
-    public void setBasePolicyCallback(PolicyCallback basePolicy) {
+    public void setPolicyCallback(PolicyCallback basePolicy) {
         this.basePolicy = basePolicy;
     }
 
@@ -195,14 +195,14 @@ public class ApproxNPhasesTrafficSignalRequestHandler implements
      * {@inheritDoc}
      */
     @Override
-    public void processRequestMsg(Request msg) {
+    public boolean processRequestMsg(Request msg) {
         int vin = msg.getVin();
 
         // If the vehicle has got a reservation already, reject it.
         if (basePolicy.hasReservation(vin)) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.CONFIRMED_ANOTHER_REQUEST);
-            return;
+            return false;
         }
 
         // filter the proposals
@@ -213,6 +213,7 @@ public class ApproxNPhasesTrafficSignalRequestHandler implements
             basePolicy.sendRejectMsg(vin,
                     msg.getRequestId(),
                     filterResult.getReason());
+            return false;
         }
 
         List<Request.Proposal> proposals = filterResult.getProposals();
@@ -222,15 +223,17 @@ public class ApproxNPhasesTrafficSignalRequestHandler implements
                 proposals.get(0).getDepartureLaneID())) {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
-            return;
+            return false;
         }
         // try to see if reservation is possible for the remaining proposals.
         ReserveParam reserveParam = basePolicy.findReserveParam(msg, proposals);
         if (reserveParam != null) {
             basePolicy.sendConfirmMsg(msg.getRequestId(), reserveParam);
+            return true;
         } else {
             basePolicy.sendRejectMsg(vin, msg.getRequestId(),
                     Reject.Reason.NO_CLEAR_PATH);
+            return false;
         }
     }
 

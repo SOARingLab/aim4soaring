@@ -63,6 +63,10 @@ public interface Policy {
     void processV2IMessage(V2IMessage msg);
 
     /**
+     * After process V2I messages
+     */
+    void processV2IMessageDone();
+    /**
      * Get the statistic collector.
      *
      * @return the statistic collector
