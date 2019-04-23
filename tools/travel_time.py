@@ -2,59 +2,52 @@
 
 import sys
 import getopt
+from collections import defaultdict
 
 
-#===============================================================================
+# ===============================================================================
 # Core functions
-#===============================================================================
+# ===============================================================================
 
 def read_time_diff(infilename):
-    vins = [];
-    max_time = dict()
-    min_time = dict()
-    diff_time = dict()
+    vins = set()
+    max_time = defaultdict(float)
+    min_time = defaultdict(float)
+    diff_time = defaultdict(float)
     with open(infilename) as infile:
-        isFirstLine = True
+        if_first_line = True
         for s in infile:
-            if isFirstLine:
-                isFirstLine = False
+            if if_first_line:
+                if_first_line = False
             else:
                 d = s.strip().split(',')
                 vin = d[0]
                 t = float(d[1])
-                if not vin in vins:
-                    vins.append(vin)
-                if vin in max_time:
-                    if t > max_time[vin]:
-                        max_time[vin] = t
-                else:
-                    max_time[vin] = t
+                vins.add(vin)
+                max_time[vin] = max(t, max_time[vin])
                 if vin in min_time:
-                    if t < min_time[vin]:
-                        min_time[vin] = t
+                    min_time[vin] = min(t, min_time[vin])
                 else:
                     min_time[vin] = t
     for vin in vins:
         diff_time[vin] = max_time[vin] - min_time[vin]
+
     return diff_time
 
 
 def avg_time_diff(diff_time):
-    count = 0.0
-    total = 0.0
-    for vin,time in diff_time.items():
-        total += time
-        count += 1
-    return total / count
+    return sum(diff_time.values()) / len(diff_time)
 
-#===============================================================================
+
+# ===============================================================================
 # Main
-#===============================================================================
+# ===============================================================================
 
 def usage():
     print("Usage:")
     print("   ", sys.argv[0], "datafile.csv")
     print("   ", sys.argv[0], "[-h|--help]")
+
 
 def main():
     global baseline_filename
@@ -76,7 +69,6 @@ def main():
         exit(2)
     print(format(avg_time_diff(read_time_diff(args[0])), '.4f'))
 
+
 if __name__ == "__main__":
     main()
-
-
