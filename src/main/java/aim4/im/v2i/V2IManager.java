@@ -78,7 +78,7 @@ public class V2IManager extends IntersectionManager
      * The default distance the IntersectionManager can transmit messages.
      * {@value} meters.
      */
-    private static final double DEFAULT_TRANSMISSION_POWER = 350.0; // meters
+    private static final double DEFAULT_TRANSMISSION_POWER = 200.0; // meters
     /**
      * The default size (capacity) of an {@link AdmissionControlZone} for Lanes
      * exiting the intersection managed by this V2IManager, in meters. {@value}

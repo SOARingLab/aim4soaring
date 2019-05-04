@@ -67,7 +67,7 @@ fabric.properties
 
 .idea/
 *.jar
-
-result/
+result/*
+!result/benchmark/
 target/
 nb*.xml

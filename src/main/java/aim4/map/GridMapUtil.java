@@ -39,15 +39,9 @@ import aim4.config.SimConfig;
 import aim4.config.TrafficSignalPhase;
 import aim4.im.RoadBasedIntersection;
 import aim4.im.RoadBasedTrackModel;
-import aim4.im.v2i.RequestHandler.ApproxSimpleTrafficSignalRequestHandler;
+import aim4.im.v2i.RequestHandler.*;
 import aim4.im.v2i.V2IManager;
-import aim4.im.v2i.RequestHandler.ApproxStopSignRequestHandler;
-import aim4.im.v2i.RequestHandler.Approx4PhasesTrafficSignalRequestHandler;
-import aim4.im.v2i.RequestHandler.ApproxNPhasesTrafficSignalRequestHandler;
 import aim4.im.v2i.RequestHandler.ApproxNPhasesTrafficSignalRequestHandler.CyclicSignalController;
-import aim4.im.v2i.RequestHandler.BatchModeRequestHandler;
-import aim4.im.v2i.RequestHandler.FCFSRequestHandler;
-import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.batch.RoadBasedReordering;
 import aim4.im.v2i.policy.BasePolicy;
 import aim4.im.v2i.policy.PriorityBasedPolicy;
@@ -383,7 +377,7 @@ public class GridMapUtil {
                                 config, layout.getImRegistry());
                 // use FCFSRequestHandler as well since it's the same to process request
                 // what's different is the order and the amount of messages to process
-                im.setPolicy(new PriorityBasedPolicy(im, new FCFSRequestHandler()));
+                im.setPolicy(new PriorityBasedPolicy(im, new PBRequestHandler()));
                 layout.setManager(column, row, im);
             }
         }

@@ -467,87 +467,86 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
 
     public void processV2IMessageDone() {
         // in case no message yet
-        if (vinToMessage.isEmpty() || laneIdToVins.isEmpty()) {
-            System.out.println("\nvinToMessage.isEmpty() || laneIdToVins.isEmpty()\n");
-            return;
-        }
-
-        // store closest vin in each lane
-        List<Integer> closestVinInLane = new ArrayList<Integer>();
-        // store each lane's priority
-        List<Double> lanePriority = new ArrayList<Double>();
-        for (int i = 0; i < laneIdToVins.size(); ++i) {
-            closestVinInLane.add(-1);
-            lanePriority.add(0.0);
-        }
-
-        // find closest vin in each lane
-        for (Integer laneId : laneIdToVins.keySet()) {
-            if (laneIdToVins.get(laneId).isEmpty()) {
-                // in case no vin in this lane
-                continue;
+//        if (vinToMessage.isEmpty() || laneIdToVins.isEmpty()) {
+//            System.out.println("\nvinToMessage.isEmpty() || laneIdToVins.isEmpty()\n");
+//            return;
+//        }
+        while (!vinToMessage.isEmpty()) {
+            // store closest vin in each lane
+            List<Integer> closestVinInLane = new ArrayList<Integer>();
+            // store each lane's priority
+            List<Double> lanePriority = new ArrayList<Double>();
+            for (int i = 0; i < laneIdToVins.size(); ++i) {
+                closestVinInLane.add(-1);
+                lanePriority.add(0.0);
             }
-            // closest vin in this lane
-            int closestVin = -1;
-            // and its distance
-            double closestDistance = 1e9;
 
-            for (Integer vin : laneIdToVins.get(laneId)) {
-                Request msg = vinToMessage.get(vin);
-                if (msg == null) {
-                    // in case..should never arrive here
+            // find closest vin in each lane
+            for (Integer laneId : laneIdToVins.keySet()) {
+                if (laneIdToVins.get(laneId).isEmpty()) {
+                    // in case no vin in this lane
                     continue;
                 }
-                // get distance from one of its proposal
-                Proposal proposal = msg.getProposals().get(0);
-                double reservationDistance = (proposal.getArrivalTime() - getCurrentTime()) * proposal.getArrivalVelocity();
-                if (reservationDistance < closestDistance) {
-                    closestDistance = reservationDistance;
-                    closestVin = vin;
+                // closest vin in this lane
+                int closestVin = -1;
+                // and its distance
+                double closestDistance = 1e9;
+
+                for (Integer vin : laneIdToVins.get(laneId)) {
+                    Request msg = vinToMessage.get(vin);
+                    if (msg == null) {
+                        // in case..should never arrive here
+                        continue;
+                    }
+                    // get distance from one of its proposal
+                    Proposal proposal = msg.getProposals().get(0);
+                    double reservationDistance = (proposal.getArrivalTime() - getCurrentTime()) * proposal.getArrivalVelocity();
+                    if (reservationDistance < closestDistance) {
+                        closestDistance = reservationDistance;
+                        closestVin = vin;
+                    }
+                    // accumulate the lane priority
+                    lanePriority.set(laneId, lanePriority.get(laneId) + msg.getPriority());
                 }
-                // accumulate the lane priority
-                lanePriority.set(laneId, lanePriority.get(laneId) + msg.getPriority());
+                lanePriority.set(laneId, lanePriority.get(laneId) / (closestDistance + 0.1));
+                closestVinInLane.set(laneId, closestVin);
             }
-            lanePriority.set(laneId, lanePriority.get(laneId) / (closestDistance + 0.1));
-            closestVinInLane.set(laneId, closestVin);
-        }
 
-        if (DEBUG) {
-            System.out.println("lane_priority=" + lanePriority);
-        }
-
-        int theVin = -1;
-        int theLaneId = -1;
-        Request theMessage = null;
-        double highestPriority = -1.0;
-        for (int laneId = 0; laneId < laneIdToVins.size(); ++laneId) {
-            if (lanePriority.get(laneId) > highestPriority) {
-                highestPriority = lanePriority.get(laneId);
-                theLaneId = laneId;
-                theVin = closestVinInLane.get(laneId);
-                theMessage = vinToMessage.get(theVin);
+            if (DEBUG) {
+                System.out.println("lane_priority=" + lanePriority);
             }
-        }
 
-        for (Integer vin : closestVinInLane) {
-            if (vin == -1) {
-                continue;
+            int theVin = -1;
+            int theLaneId = -1;
+            Request theMessage = null;
+            double highestPriority = -1.0;
+            for (int laneId = 0; laneId < laneIdToVins.size(); ++laneId) {
+                if (lanePriority.get(laneId) > highestPriority) {
+                    highestPriority = lanePriority.get(laneId);
+                    theLaneId = laneId;
+                    theVin = closestVinInLane.get(laneId);
+                    theMessage = vinToMessage.get(theVin);
+                }
             }
-            Request msg = vinToMessage.get(vin);
-            if (msg != theMessage) {
-                msg.setPriority(msg.getPriority() << 1);
-                vinToMessage.put(vin, msg);
+
+            for (Integer vin : closestVinInLane) {
+                if (vin == -1) {
+                    continue;
+                }
+                Request msg = vinToMessage.get(vin);
+                if (msg != theMessage) {
+                    msg.setPriority(msg.getPriority() << 1);
+                    vinToMessage.put(vin, msg);
+                }
             }
-        }
 
-        if (DEBUG) {
-            System.out.println("laneIdToVins=" + laneIdToVins);
-            System.out.println("vinToMessage=" + vinToMessage);
-            System.out.println("theMessage=" + theMessage);
-        }
+            if (DEBUG) {
+                System.out.println("laneIdToVins=" + laneIdToVins);
+                System.out.println("vinToMessage=" + vinToMessage);
+                System.out.println("theMessage=" + theMessage);
+            }
 
-        if (requestHandler.processRequestMsg(theMessage)) {
-            System.out.println("theMessage success" + theMessage);
+            requestHandler.processRequestMsg(theMessage);
             laneIdToVins.get(theLaneId).remove(theVin);
             vinToMessage.remove(theVin);
         }
@@ -555,15 +554,11 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
     }
 
     private void cleanUp() {
-        for (int laneId : laneIdToVins.keySet()) {
-            for (int vin : laneIdToVins.get(laneId)) {
-                Request request = vinToMessage.get(vin);
-                Request.Proposal proposal = request.getProposals().get(0);
-                if (proposal.getArrivalTime() >= getCurrentTime()) {
-                    laneIdToVins.get(laneId).remove(vin);
-                    vinToMessage.remove(vin);
-                }
-            }
+        laneIdToVins = new HashMap<Integer, HashSet<Integer>>();
+        vinToMessage = new HashMap<Integer, Request>();
+
+        for (Lane lane : this.im.getIntersection().getLanes()) {
+            this.laneIdToVins.put(lane.getId(), new HashSet<Integer>());
         }
     }
 
