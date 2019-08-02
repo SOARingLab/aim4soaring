@@ -71,3 +71,6 @@ result/*
 !result/benchmark/
 target/
 nb*.xml
+.settings
+.classpath
+.project

@@ -32,39 +32,33 @@ package aim4;
 
 import aim4.gui.Viewer;
 import aim4.sim.setup.BasicSimSetup;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * The default main class to show the GUI.
- */
-public class Main {
+import javax.swing.*;
+
+@SpringBootApplication
+public class Application {
 
     /////////////////////////////////
     // THE MAIN FUNCTION
     /////////////////////////////////
 
-    /**
-     * The main function of the simulator.
-     * It starts the GUI.
-     *
-     * @param args the command-line arguments; it should be empty since the GUI
-     *             does not take any command-line arguments
-     */
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            BasicSimSetup simSetup = new BasicSimSetup(1, // columns
+                    1, // rows
+                    4, // lane width
+                    25.0, // speed limit
+                    3, // lanes per road
+                    1, // median size
+                    150, // distance between
+                    0.28, // traffic level
+                    1.0 // stop distance before intersection
+            );
+            new Viewer(simSetup);
+        });
 
-        // create the basic setup
-
-        BasicSimSetup simSetup
-                = new BasicSimSetup(1, // columns
-                1, // rows
-                4, // lane width
-                25.0, // speed limit
-                3, // lanes per road
-                1, // median size
-                150, // distance between
-                0.28, // traffic level
-                1.0 // stop distance before intersection
-        );
-
-        new Viewer(simSetup);
+        SpringApplication.run(Application.class, args);
     }
 }

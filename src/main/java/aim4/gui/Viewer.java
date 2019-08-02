@@ -59,6 +59,7 @@ import javax.swing.JPanel;
 
 import aim4.config.Constants;
 import aim4.config.Debug;
+import aim4.config.Prop;
 import aim4.config.SimConfig;
 import aim4.gui.frame.VehicleInfoFrame;
 import aim4.im.IntersectionManager;
@@ -73,6 +74,10 @@ import aim4.sim.setup.SimFactory;
 import aim4.sim.setup.SimSetup;
 import aim4.util.Util;
 import aim4.vehicle.VehicleSimView;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 /**
  * The viewer is a Graphical User Interface (GUI) that allows a user to run the
@@ -524,6 +529,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     // CLASS CONSTRUCTORS
     // ///////////////////////////////
 
+    @Value("${app.version}")
+    private String appVersion;
     /**
      * Create a new viewer object.
      *
@@ -531,6 +538,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
      */
     public Viewer(BasicSimSetup initSimSetup) {
         this(initSimSetup, false);
+        Prop prop = new Prop();
+        System.out.println("appVersion: " + prop.getProperty("app.version"));
     }
 
     /**
