@@ -45,20 +45,7 @@ public class Application {
     /////////////////////////////////
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            BasicSimSetup simSetup = new BasicSimSetup(1, // columns
-                    1, // rows
-                    4, // lane width
-                    25.0, // speed limit
-                    3, // lanes per road
-                    1, // median size
-                    150, // distance between
-                    0.28, // traffic level
-                    1.0 // stop distance before intersection
-            );
-            new Viewer(simSetup);
-        });
-
+        SwingUtilities.invokeLater(Viewer::new);
         SpringApplication.run(Application.class, args);
     }
 }

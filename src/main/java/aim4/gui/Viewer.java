@@ -529,27 +529,27 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     // CLASS CONSTRUCTORS
     // ///////////////////////////////
 
-    @Value("${app.version}")
-    private String appVersion;
     /**
      * Create a new viewer object.
      *
-     * @param initSimSetup the initial simulation setup
      */
-    public Viewer(BasicSimSetup initSimSetup) {
-        this(initSimSetup, false);
-        Prop prop = new Prop();
-        System.out.println("appVersion: " + prop.getProperty("app.version"));
-    }
-
-    /**
-     * Create a new viewer object.
-     *
-     * @param initSimSetup the initial simulation setup
-     * @param isRunNow     whether or not the simulation is run immediately
-     */
-    public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow) {
+    public Viewer() {
         super(TITLEBAR_STRING);
+
+        Prop prop = new Prop();
+        boolean isRunNow = Boolean.parseBoolean(prop.getProperty("sim.isRunNow"));
+        BasicSimSetup initSimSetup = new BasicSimSetup(
+                Integer.parseInt(prop.getProperty("sim.columns")),
+                Integer.parseInt(prop.getProperty("sim.rows")),
+                Double.parseDouble(prop.getProperty("sim.lane_width")),
+                Double.parseDouble(prop.getProperty("sim.speed_limit")),
+                Integer.parseInt(prop.getProperty("sim.lanes_per_road")),
+                Double.parseDouble(prop.getProperty("sim.median_size")),
+                Double.parseDouble(prop.getProperty("sim.distance_between")),
+                Double.parseDouble(prop.getProperty("sim.traffic_level")),
+                Double.parseDouble(prop.getProperty("sim.stop_distance_before_intersection"))
+        );
+
         this.initSimSetup = initSimSetup;
         this.sim = null;
         this.udpListener = null;
@@ -570,16 +570,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
         // Lastly, schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void run() {
+        javax.swing.SwingUtilities.invokeLater(() -> {
                 createAndShowGUI(initSimSetup, isRunNow);
-            }
-
         });
     }
 
@@ -592,8 +584,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     private void createAndShowGUI(BasicSimSetup initSimSetup, boolean isRunNow) {
         // Apple specific property.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-                "AIM Viewer");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "AIM Viewer");
         // Make sure that the program quits when we close the window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
