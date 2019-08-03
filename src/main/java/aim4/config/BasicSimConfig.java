@@ -19,7 +19,7 @@ public class BasicSimConfig {
 
     @Bean
     public Viewer viewer() {
-        boolean isRunNow = Boolean.parseBoolean(environment.getRequiredProperty("sim.isRunNow"));
+        boolean isRunNow = Boolean.parseBoolean(environment.getProperty("sim.isRunNow"));
         logger.info("isRunNow: {}", isRunNow);
 
         BasicSimSetup initSimSetup = new BasicSimSetup(

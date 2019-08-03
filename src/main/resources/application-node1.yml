@@ -9,3 +9,16 @@ sim:
     distance_between: 150
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
+
+mq:
+    send:
+        url: tcp://localhost:61616
+    receive:
+        SOUTH:
+            url: tcp://localhost:61616
+        EAST:
+            url: tcp://localhost:61616
+        NORTH:
+            url: tcp://localhost:61616
+#        WEST:
+#            url: tcp://localhost:61616

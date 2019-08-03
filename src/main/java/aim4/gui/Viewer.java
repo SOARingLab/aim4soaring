@@ -30,59 +30,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui;
 
-import java.awt.CardLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
-import java.io.IOException;
-
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-
-import aim4.config.Constants;
-import aim4.config.Debug;
-import aim4.config.Prop;
-import aim4.config.SimConfig;
+import aim4.config.*;
 import aim4.gui.frame.VehicleInfoFrame;
 import aim4.im.IntersectionManager;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
-import aim4.sim.Simulator;
-import aim4.sim.UdpListener;
+import aim4.msg.i2i.Leave;
 import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
+import aim4.sim.Simulator;
 import aim4.sim.Simulator.SimStepResult;
+import aim4.sim.UdpListener;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.sim.setup.SimFactory;
 import aim4.sim.setup.SimSetup;
 import aim4.util.Util;
 import aim4.vehicle.VehicleSimView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.io.IOException;
 
 /**
  * The viewer is a Graphical User Interface (GUI) that allows a user to run the
  * AIM Simulator while watching the vehicles in real time.
  */
+
 public class Viewer extends JFrame implements ActionListener, KeyListener,
         MouseListener, ItemListener,
         ViewerDebugView {
@@ -530,6 +505,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     // ///////////////////////////////
 
     private boolean isRunNow;
+
     /**
      * Create a new viewer object.
      */
@@ -544,8 +520,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
         targetSimSpeed = DEFAULT_SIM_SPEED;
         // the frame rate cannot be not larger than the simulation cycle
-        targetFrameRate =
-                Math.min(DEFAULT_TARGET_FRAME_RATE, SimConfig.CYCLES_PER_SECOND);
+        targetFrameRate = Math.min(DEFAULT_TARGET_FRAME_RATE, SimConfig.CYCLES_PER_SECOND);
         this.nextFrameTime = 0; // undefined yet.
 
         this.recording = false;
@@ -554,21 +529,27 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
         // for debugging
         Debug.viewer = this;
-
-        // Lastly, schedule a job for the event-dispatching thread:
-        // creating and showing this application's GUI.
-//        javax.swing.SwingUtilities.invokeLater(() -> {
-//            createAndShowGUI();
-//        });
     }
 
     /**
      * Create a new GUI and show it.
-     *
-     * @param initSimSetup the initial simulation setup
-     * @param isRunNow     whether or not the simulation is run immediately
      */
+
+    @Autowired
+    Sender sender;
+    @Autowired
+    Receiver receiver;
+
+    private void testMQ() {
+        sender.send("NORTH", new Leave(1, 2));
+//        sender.send("EAST", new Leave(3, 4));
+//        sender.send("SOUTH", new Leave(5, 6));
+//        sender.send("WEST", new Leave(7, 8));
+    }
+
+
     public void createAndShowGUI() {
+        testMQ();
         // Apple specific property.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "AIM Viewer");
