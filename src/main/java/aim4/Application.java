@@ -31,9 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4;
 
 import aim4.gui.Viewer;
-import aim4.sim.setup.BasicSimSetup;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
 
@@ -45,7 +45,8 @@ public class Application {
     /////////////////////////////////
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Viewer::new);
-        SpringApplication.run(Application.class, args);
+        ApplicationContext context =  new SpringApplicationBuilder(Application.class).headless(false).run(args);
+        Viewer viewer = context.getBean(Viewer.class);
+        SwingUtilities.invokeLater(viewer::createAndShowGUI);
     }
 }

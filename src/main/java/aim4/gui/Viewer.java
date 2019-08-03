@@ -529,28 +529,15 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     // CLASS CONSTRUCTORS
     // ///////////////////////////////
 
+    private boolean isRunNow;
     /**
      * Create a new viewer object.
-     *
      */
-    public Viewer() {
+    public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow) {
         super(TITLEBAR_STRING);
 
-        Prop prop = new Prop();
-        boolean isRunNow = Boolean.parseBoolean(prop.getProperty("sim.isRunNow"));
-        BasicSimSetup initSimSetup = new BasicSimSetup(
-                Integer.parseInt(prop.getProperty("sim.columns")),
-                Integer.parseInt(prop.getProperty("sim.rows")),
-                Double.parseDouble(prop.getProperty("sim.lane_width")),
-                Double.parseDouble(prop.getProperty("sim.speed_limit")),
-                Integer.parseInt(prop.getProperty("sim.lanes_per_road")),
-                Double.parseDouble(prop.getProperty("sim.median_size")),
-                Double.parseDouble(prop.getProperty("sim.distance_between")),
-                Double.parseDouble(prop.getProperty("sim.traffic_level")),
-                Double.parseDouble(prop.getProperty("sim.stop_distance_before_intersection"))
-        );
-
         this.initSimSetup = initSimSetup;
+        this.isRunNow = isRunNow;
         this.sim = null;
         this.udpListener = null;
         this.simThread = null;
@@ -570,9 +557,9 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
         // Lastly, schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(() -> {
-                createAndShowGUI(initSimSetup, isRunNow);
-        });
+//        javax.swing.SwingUtilities.invokeLater(() -> {
+//            createAndShowGUI();
+//        });
     }
 
     /**
@@ -581,7 +568,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
      * @param initSimSetup the initial simulation setup
      * @param isRunNow     whether or not the simulation is run immediately
      */
-    private void createAndShowGUI(BasicSimSetup initSimSetup, boolean isRunNow) {
+    public void createAndShowGUI() {
         // Apple specific property.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "AIM Viewer");
@@ -601,8 +588,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
         requestFocusInWindow();
         addKeyListener(this);
 
-        if (isRunNow) {
-            startButtonHandler(initSimSetup);
+        if (this.isRunNow) {
+            startButtonHandler(this.initSimSetup);
             canvas.requestFocusInWindow();
         }
     }

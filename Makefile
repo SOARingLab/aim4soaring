@@ -9,7 +9,7 @@ all: jar
 jar:
 	mvn -Dmaven.test.skip=true assembly:assembly
 
-run: $(target)
+run_target: $(target)
 	java $(JAVA_OPTIONS) -jar $(target)
 
 javadoc:
@@ -20,3 +20,7 @@ style:
 
 clean:
 	mvn clean
+
+run:
+	mvn spring-boot:run -Dspring-boot.run.profiles=node2
+

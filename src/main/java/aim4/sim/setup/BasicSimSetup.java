@@ -44,6 +44,22 @@ public class BasicSimSetup implements SimSetup {
      * The number of rows
      */
     protected int numOfRows;
+
+    @Override
+    public String toString() {
+        return "BasicSimSetup{" +
+                "numOfColumns=" + numOfColumns +
+                ", numOfRows=" + numOfRows +
+                ", laneWidth=" + laneWidth +
+                ", speedLimit=" + speedLimit +
+                ", lanesPerRoad=" + lanesPerRoad +
+                ", medianSize=" + medianSize +
+                ", distanceBetween=" + distanceBetween +
+                ", trafficLevel=" + trafficLevel +
+                ", stopDistBeforeIntersection=" + stopDistBeforeIntersection +
+                '}';
+    }
+
     /**
      * The width of lanes
      */
