@@ -30,16 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import aim4.config.Constants;
 import aim4.config.Debug;
 import aim4.im.IntersectionManager;
 import aim4.map.lane.Lane;
@@ -48,6 +39,12 @@ import aim4.util.ArrayListRegistry;
 import aim4.util.GeomMath;
 import aim4.util.Registry;
 import aim4.vehicle.VinRegistry;
+
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.*;
 
 
 /**
@@ -188,18 +185,20 @@ public class GridMap implements BasicMap {
                             + distanceBetween + lanesPerRoad * laneWidth + medianSize / 2;
 
             // First create the right road (northbound)
-            Road right =
-                    new Road(GeomMath.ordinalize(column + 1) + " Avenue N", this);
+            Road right = new Road(GeomMath.ordinalize(column + 1) + " Avenue N", this);
             for (int i = 0; i < lanesPerRoad; i++) {
                 double x = roadMiddleX + // Start in the middle
                         (i * laneWidth) + // Move down for each lane we've done
                         (laneWidth + medianSize) / 2; // Get to the lane center
-                Lane l = new LineSegmentLane(x, // x1
+                Lane l = new LineSegmentLane(
+                        x, // x1
                         height, // y1
                         x, // x2
                         0, // y2
                         laneWidth, // width
-                        speedLimit);
+                        speedLimit,
+                        Constants.Direction.SOUTH
+                );
                 int laneId = laneRegistry.register(l);
                 l.setId(laneId);
                 right.addTheRightMostLane(l);
@@ -210,7 +209,7 @@ public class GridMap implements BasicMap {
             // generate the data collection lines
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "NorthBound" + column + "Entrance",
+                            "South" + column + "Entrance",
                             dataCollectionLines.size(),
                             new Point2D.Double(roadMiddleX,
                                     height - DATA_COLLECTION_LINE_POSITION),
@@ -219,7 +218,7 @@ public class GridMap implements BasicMap {
                             true));
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "NorthBound" + column + "Exit",
+                            "North" + column + "Exit",
                             dataCollectionLines.size(),
                             new Point2D.Double(roadMiddleX,
                                     DATA_COLLECTION_LINE_POSITION),
@@ -233,12 +232,15 @@ public class GridMap implements BasicMap {
                 double x = roadMiddleX - // Start in the middle
                         (i * laneWidth) - // Move up for each lane we've done
                         (laneWidth + medianSize) / 2; // Get to the lane center
-                Lane l = new LineSegmentLane(x, // x1
+                Lane l = new LineSegmentLane(
+                        x, // x1
                         0, // y1
                         x, // x2
                         height, // y2
                         laneWidth, // width
-                        speedLimit);
+                        speedLimit,
+                        Constants.Direction.NORTH
+                );
                 int laneId = laneRegistry.register(l);
                 l.setId(laneId);
                 left.addTheRightMostLane(l);
@@ -249,7 +251,7 @@ public class GridMap implements BasicMap {
             // generate the data collection lines
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "SouthBound" + column + "Entrance",
+                            "North" + column + "Entrance",
                             dataCollectionLines.size(),
                             new Point2D.Double(roadMiddleX,
                                     DATA_COLLECTION_LINE_POSITION),
@@ -258,7 +260,7 @@ public class GridMap implements BasicMap {
                             true));
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "SouthBound" + column + "Exit",
+                            "South" + column + "Exit",
                             dataCollectionLines.size(),
                             new Point2D.Double(roadMiddleX,
                                     height - DATA_COLLECTION_LINE_POSITION),
@@ -286,7 +288,9 @@ public class GridMap implements BasicMap {
                         width, // x2
                         y, // y2
                         laneWidth, // width
-                        speedLimit);
+                        speedLimit,
+                        Constants.Direction.EAST
+                );
                 int laneId = laneRegistry.register(l);
                 l.setId(laneId);
                 lower.addTheRightMostLane(l);
@@ -297,7 +301,7 @@ public class GridMap implements BasicMap {
             // generate the data collection lines
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "EastBound" + row + "Entrance",
+                            "East" + row + "Entrance",
                             dataCollectionLines.size(),
                             new Point2D.Double(DATA_COLLECTION_LINE_POSITION,
                                     roadMiddleY),
@@ -306,7 +310,7 @@ public class GridMap implements BasicMap {
                             true));
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "EastBound" + row + "Exit",
+                            "West" + row + "Exit",
                             dataCollectionLines.size(),
                             new Point2D.Double(width - DATA_COLLECTION_LINE_POSITION,
                                     roadMiddleY),
@@ -321,12 +325,15 @@ public class GridMap implements BasicMap {
                 double y = roadMiddleY - // Start in the middle
                         (i * laneWidth) - // Move down for each lane we've done
                         (laneWidth + medianSize) / 2; // Get to the lane center
-                Lane l = new LineSegmentLane(width, // x1
+                Lane l = new LineSegmentLane(
+                        width, // x1
                         y, // y1
                         0, // x2
                         y, // y2
                         laneWidth, // width
-                        speedLimit);
+                        speedLimit,
+                        Constants.Direction.WEST
+                );
                 int laneId = laneRegistry.register(l);
                 l.setId(laneId);
                 upper.addTheRightMostLane(l);
@@ -337,7 +344,7 @@ public class GridMap implements BasicMap {
             // generate the data collection lines
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "WestBound" + row + "Entrance",
+                            "West" + row + "Entrance",
                             dataCollectionLines.size(),
                             new Point2D.Double(width - DATA_COLLECTION_LINE_POSITION,
                                     roadMiddleY),
@@ -346,7 +353,7 @@ public class GridMap implements BasicMap {
                             true));
             dataCollectionLines.add(
                     new DataCollectionLine(
-                            "WestBound" + row + "Exit",
+                            "East" + row + "Exit",
                             dataCollectionLines.size(),
                             new Point2D.Double(DATA_COLLECTION_LINE_POSITION,
                                     roadMiddleY),
@@ -358,12 +365,13 @@ public class GridMap implements BasicMap {
             lower.setDual(upper);
         }
 
-        roads = new ArrayList<Road>(horizontalRoads);
+        roads = new ArrayList<>();
+        roads.addAll(horizontalRoads);
         roads.addAll(verticalRoads);
         roads = Collections.unmodifiableList(roads);
 
         // We should have columns * rows intersections, so make space for 'em
-        intersectionManagers = new ArrayList<IntersectionManager>(columns * rows);
+        intersectionManagers = new ArrayList<>(columns * rows);
         intersectionManagerGrid = new IntersectionManager[columns][rows];
 
         initializeSpawnPoints(initTime);
@@ -375,9 +383,9 @@ public class GridMap implements BasicMap {
      * @param initTime the initial time
      */
     private void initializeSpawnPoints(double initTime) {
-        spawnPoints = new ArrayList<SpawnPoint>(columns + rows);
-        horizontalSpawnPoints = new ArrayList<SpawnPoint>(rows);
-        verticalSpawnPoints = new ArrayList<SpawnPoint>(columns);
+        spawnPoints = new ArrayList<>(columns + rows);
+        horizontalSpawnPoints = new ArrayList<>(rows);
+        verticalSpawnPoints = new ArrayList<>(columns);
 
         for (Road road : horizontalRoads) {
             for (Lane lane : road.getLanes()) {
@@ -412,11 +420,11 @@ public class GridMap implements BasicMap {
         double steeringAngle = 0.0;
         double acceleration = 0.0;
         double d = lane.normalizedDistance(startDistance + NO_VEHICLE_ZONE_LENGTH);
-        Rectangle2D noVehicleZone =
-                lane.getShape(normalizedStartDistance, d).getBounds2D();
+        Constants.Direction direction = lane.getDirection();
+        Rectangle2D noVehicleZone = lane.getShape(normalizedStartDistance, d).getBounds2D();
 
         return new SpawnPoint(initTime, pos, heading, steeringAngle, acceleration,
-                lane, noVehicleZone);
+                lane, noVehicleZone, direction);
     }
 
     /////////////////////////////////
@@ -660,7 +668,9 @@ public class GridMap implements BasicMap {
             for (int vin : line.getAllVIN()) {
                 for (double time : line.getTimes(vin)) {
                     outfile.printf("%d,%.4f,%s,%s,%d,%s\n",
-                            vin, time, line.getName(),
+                            vin,
+                            time,
+                            line.getName(),
                             VinRegistry.getVehicleSpecFromVIN(vin).getName(),
                             VinRegistry.getSpawnPointFromVIN(vin).getLane().getId(),
                             VinRegistry.getDestRoadFromVIN(vin).getName());

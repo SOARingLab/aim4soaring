@@ -30,13 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui;
 
-import aim4.config.*;
+import aim4.config.Constants;
+import aim4.config.Debug;
+import aim4.config.SimConfig;
 import aim4.gui.frame.VehicleInfoFrame;
 import aim4.im.IntersectionManager;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
 import aim4.msg.i2i.Leave;
-import aim4.msg.i2i.Receiver;
 import aim4.msg.i2i.Sender;
 import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
 import aim4.sim.Simulator;
@@ -60,9 +61,7 @@ import java.io.IOException;
  * AIM Simulator while watching the vehicles in real time.
  */
 
-public class Viewer extends JFrame implements ActionListener, KeyListener,
-        MouseListener, ItemListener,
-        ViewerDebugView {
+public class Viewer extends JFrame implements ActionListener, KeyListener, MouseListener, ItemListener, ViewerDebugView {
 
     // ///////////////////////////////
     // CONSTANTS
@@ -307,7 +306,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
                 // in any case, give other threads a chance to execute
                 Thread.yield();
             }
-            System.err.printf("The simulation has terminated.\n");
+            System.err.print("The simulation has terminated.\n");
         }
 
         /**
@@ -508,11 +507,12 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
     private boolean isRunNow;
 
+
     /**
      * Create a new viewer object.
      */
-    public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow) {
-        super(TITLEBAR_STRING);
+    public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow, final String titleBarString) {
+        super(titleBarString);
 
         this.initSimSetup = initSimSetup;
         this.isRunNow = isRunNow;
@@ -539,8 +539,6 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
     @Autowired
     Sender sender;
-    @Autowired
-    Receiver receiver;
 
     private void testMQ() {
         sender.send("NORTH", new Leave(1, 2));
@@ -548,7 +546,6 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
         sender.send("SOUTH", new Leave(5, 6));
         sender.send("WEST", new Leave(7, 8));
     }
-
 
     public void createAndShowGUI() {
         testMQ();
@@ -1095,8 +1092,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
         SimStepResult simStepResult = sim.step(SimConfig.TIME_STEP);
 
         if (simStepResult instanceof AutoDriverOnlySimStepResult) {
-            AutoDriverOnlySimStepResult simStepResult2 =
-                    (AutoDriverOnlySimStepResult) simStepResult;
+            AutoDriverOnlySimStepResult simStepResult2 = (AutoDriverOnlySimStepResult) simStepResult;
             for (int vin : simStepResult2.getCompletedVINs()) {
                 Debug.removeVehicleColor(vin);
             }

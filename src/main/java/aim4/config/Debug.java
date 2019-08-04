@@ -30,14 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.config;
 
-import java.awt.Color;
+import aim4.gui.ViewerDebugView;
+import aim4.map.BasicMap;
+
+import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import aim4.gui.ViewerDebugView;
-import aim4.map.BasicMap;
 
 /**
  * The configuration for debugging purposes.
@@ -252,7 +252,6 @@ public class Debug {
      */
     public static final boolean IS_PRINT_RANDOM_SEED = true;
 
-    // TODO: remove the following later.
     /**
      * Whether to show the vehicle according to its messaging state.
      */

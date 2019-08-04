@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.lane;
 
+import aim4.config.Constants;
+
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -46,7 +48,7 @@ public abstract class AbstractLane implements Lane {
     /////////////////////////////////
     // PRIVATE FIELDS
     /////////////////////////////////
-
+    private Constants.Direction direction;
     /**
      * The actual ID of this lane.
      */
@@ -98,6 +100,14 @@ public abstract class AbstractLane implements Lane {
     /////////////////////////////////
     // PUBLIC METHODS
     /////////////////////////////////
+
+    public Constants.Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Constants.Direction direction) {
+        this.direction = direction;
+    }
 
     /**
      * {@inheritDoc}
@@ -333,8 +343,7 @@ public abstract class AbstractLane implements Lane {
      * {@inheritDoc}
      */
     @Override
-    public abstract double getHeadingAtNormalizedDistance(double
-                                                                  normalizedDistance);
+    public abstract double getHeadingAtNormalizedDistance(double normalizedDistance);
 
 
     // intersection point

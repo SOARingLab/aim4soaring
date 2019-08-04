@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.lane;
 
+import aim4.config.Constants;
+
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.Shape;
@@ -45,6 +47,8 @@ public interface Lane {
     /////////////////////////////////
     // PUBLIC METHODS
     /////////////////////////////////
+
+    Constants.Direction getDirection();
 
     /**
      * Get the unique ID number of this Lane.

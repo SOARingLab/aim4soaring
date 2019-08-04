@@ -133,7 +133,7 @@ public final class Constants {
     /**
      * The four cardinal directions: north, east, south, and west.
      */
-    public enum CardinalDirection {
+    public enum Direction {
         /**
          * North
          */

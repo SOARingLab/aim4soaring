@@ -1,6 +1,7 @@
 package aim4.msg.i2i;
 
 public class Leave extends I2IMessage {
+
     public Leave() {
     }
 

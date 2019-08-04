@@ -30,12 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.awt.Shape;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.util.Iterator;
-import java.util.List;
-
 import aim4.config.Constants;
 import aim4.config.Debug;
 import aim4.driver.Driver;
@@ -44,6 +38,12 @@ import aim4.noise.DoubleGauge;
 import aim4.util.GeomMath;
 import aim4.util.GeomUtil;
 import aim4.util.Util;
+
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * The most basic form of a vehicle.

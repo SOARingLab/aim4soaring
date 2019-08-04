@@ -30,51 +30,45 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.sim;
 
-import java.awt.Color;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Queue;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
+import aim4.config.Constants;
 import aim4.config.Debug;
 import aim4.config.DebugPoint;
+import aim4.config.WaitQueue;
 import aim4.driver.AutoDriver;
 import aim4.driver.DriverSimView;
 import aim4.driver.ProxyDriver;
 import aim4.im.IntersectionManager;
 import aim4.im.v2i.V2IManager;
-import aim4.map.DataCollectionLine;
 import aim4.map.BasicMap;
+import aim4.map.DataCollectionLine;
 import aim4.map.Road;
 import aim4.map.SpawnPoint;
 import aim4.map.SpawnPoint.SpawnSpec;
 import aim4.map.lane.Lane;
+import aim4.msg.i2i.Leave;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.v2i.V2IMessage;
-import aim4.vehicle.AutoVehicleSimView;
-import aim4.vehicle.BasicAutoVehicle;
-import aim4.vehicle.HumanDrivenVehicleSimView;
-import aim4.vehicle.ProxyVehicleSimView;
-import aim4.vehicle.VehicleSpec;
-import aim4.vehicle.VinRegistry;
-import aim4.vehicle.VehicleSimView;
+import aim4.vehicle.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
+import java.util.Queue;
+import java.util.*;
+
+import static aim4.Application.getContext;
 
 /**
  * The autonomous drivers only simulator.
  */
 public class AutoDriverOnlySimulator implements Simulator {
 
+    private static Logger logger = LoggerFactory.getLogger(AutoDriverOnlySimulator.class);
     /////////////////////////////////
     // NESTED CLASSES
     /////////////////////////////////
@@ -155,6 +149,7 @@ public class AutoDriverOnlySimulator implements Simulator {
         numOfCompletedVehicles = 0;
         totalBitsTransmittedByCompletedVehicles = 0;
         totalBitsReceivedByCompletedVehicles = 0;
+
     }
 
     /////////////////////////////////
@@ -169,8 +164,8 @@ public class AutoDriverOnlySimulator implements Simulator {
     @Override
     public synchronized AutoDriverOnlySimStepResult step(double timeStep) {
         if (Debug.PRINT_SIMULATOR_STAGE) {
-            System.err.printf("--------------------------------------\n");
-            System.err.printf("------SIM:spawnVehicles---------------\n");
+            System.err.print("--------------------------------------\n");
+            System.err.print("------SIM:spawnVehicles---------------\n");
         }
         spawnVehicles(timeStep);
         if (Debug.PRINT_SIMULATOR_STAGE) {
@@ -196,6 +191,7 @@ public class AutoDriverOnlySimulator implements Simulator {
         if (Debug.PRINT_SIMULATOR_STAGE) {
             System.err.printf("------SIM:cleanUpCompletedVehicles---------------\n");
         }
+        // TODO: send vehicle message to next im
         List<Integer> completedVINs = cleanUpCompletedVehicles();
         currentTime += timeStep;
         // debug
@@ -311,7 +307,6 @@ public class AutoDriverOnlySimulator implements Simulator {
         vinToVehicles.put(vehicle.getVIN(), vehicle);
     }
 
-
     /////////////////////////////////
     // PRIVATE METHODS
     /////////////////////////////////
@@ -320,16 +315,49 @@ public class AutoDriverOnlySimulator implements Simulator {
     // STEP 1
     /////////////////////////////////
 
+    private WaitQueue filterWaitQueue() {
+        ApplicationContext context = getContext();
+        WaitQueue waitQueue = (WaitQueue)context.getBean("waitQueue");
+        return waitQueue;
+    }
+
     /**
      * Spawn vehicles.
      *
      * @param timeStep the time step
      */
     private void spawnVehicles(double timeStep) {
+        ApplicationContext context = getContext();
+        // filter near timestamp vehicles
+        WaitQueue waitQueue = (WaitQueue)context.getBean("waitQueue");
+        WaitQueue comingVehicles = filterWaitQueue();
+        boolean hasNorthNeighbour = (boolean)context.getBean("hasNorthNeighbour");
+        boolean hasWestNeighbour = (boolean)context.getBean("hasWestNeighbour");
+        boolean hasEastNeighbour = (boolean)context.getBean("hasEastNeighbour");
+        boolean hasSouthNeighbour = (boolean)context.getBean("hasSouthNeighbour");
+
         for (SpawnPoint spawnPoint : basicMap.getSpawnPoints()) {
             List<SpawnSpec> spawnSpecs = spawnPoint.act(timeStep);
-            if (!spawnSpecs.isEmpty()) {
-                if (canSpawnVehicle(spawnPoint)) {
+            if (canSpawnVehicle(spawnPoint)) {
+                // NORTH
+                if (hasNorthNeighbour
+                        && spawnPoint.getLane().getDirection() == Constants.Direction.NORTH
+                        && comingVehicles.get(Constants.Direction.NORTH) != null
+                        && !comingVehicles.get(Constants.Direction.NORTH).isEmpty()) {
+                    List<Leave> messages = waitQueue.get(Constants.Direction.NORTH);
+                    for (Leave message : messages) {
+                        // extract vehicleSpec from message
+                        // vehicle = makeVehicle(spawnPoint, vehicleSpec)
+                        // vehicle.setVIN(message.getVIN())
+                        // remove this message from waitQueue and comingVehicles
+                        break;
+                    }
+                }
+                // SOUTH
+                // WEST
+                // EAST
+
+                if (!spawnSpecs.isEmpty()) {
                     for (SpawnSpec spawnSpec : spawnSpecs) {
                         VehicleSimView vehicle = makeVehicle(spawnPoint, spawnSpec);
                         VinRegistry.registerVehicle(vehicle); // Get vehicle a VIN number
@@ -337,7 +365,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                         break; // only handle the first spawn vehicle
                         // TODO: need to fix this
                     }
-                } // else ignore the spawnSpecs and do nothing
+                }
             }
         }
     }
@@ -953,6 +981,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                     totalBitsTransmittedByCompletedVehicles += v2.getBitsTransmitted();
                     totalBitsReceivedByCompletedVehicles += v2.getBitsReceived();
                 }
+                // TODO: send vin message to next
                 removedVINs.add(vin);
             }
         }

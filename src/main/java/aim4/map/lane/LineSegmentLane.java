@@ -30,12 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.lane;
 
+import aim4.config.Constants;
+import aim4.util.GeomMath;
+
+import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.Shape;
-
-import aim4.util.GeomMath;
 
 /**
  * A lane class that can be represented by a directed line segment.
@@ -97,7 +98,7 @@ public class LineSegmentLane extends AbstractLane {
      */
     private Line2D rightBorder;
 
-
+    private Constants.Direction direction;
     /////////////////////////////////
     // CONSTRUCTORS
     /////////////////////////////////
@@ -109,7 +110,7 @@ public class LineSegmentLane extends AbstractLane {
      * @param width      the width of the Lane, in meters
      * @param speedLimit the speed limit of the Lane, in meters per second
      */
-    public LineSegmentLane(Line2D line, double width, double speedLimit) {
+    public LineSegmentLane(Line2D line, double width, double speedLimit, Constants.Direction direction) {
         super(speedLimit);
 
         this.line = line;
@@ -132,6 +133,8 @@ public class LineSegmentLane extends AbstractLane {
                 line.getY1() + yDifferential,
                 line.getX2() + xDifferential,
                 line.getY2() + yDifferential);
+
+        this.direction = direction;
     }
 
     /**
@@ -142,10 +145,9 @@ public class LineSegmentLane extends AbstractLane {
      * @param width      the width of the Lane, in meters
      * @param speedLimit the speed limit of the Lane, in meters per second
      */
-    public LineSegmentLane(Point2D p1, Point2D p2,
-                           double width, double speedLimit) {
+    public LineSegmentLane(Point2D p1, Point2D p2, double width, double speedLimit, Constants.Direction direction) {
         // Call the previous version after making a Line...
-        this(new Line2D.Double(p1, p2), width, speedLimit);
+        this(new Line2D.Double(p1, p2), width, speedLimit, direction);
     }
 
     /**
@@ -159,9 +161,9 @@ public class LineSegmentLane extends AbstractLane {
      * @param speedLimit the speed limit of the Lane, in meters per second
      */
     public LineSegmentLane(double x1, double y1, double x2, double y2,
-                           double width, double speedLimit) {
+                           double width, double speedLimit, Constants.Direction direction) {
         // Call the first version after making a Line...
-        this(new Line2D.Double(x1, y1, x2, y2), width, speedLimit);
+        this(new Line2D.Double(x1, y1, x2, y2), width, speedLimit, direction);
     }
 
 
@@ -170,6 +172,14 @@ public class LineSegmentLane extends AbstractLane {
     /////////////////////////////////
 
     // lanes as lines
+
+    public Constants.Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Constants.Direction direction) {
+        this.direction = direction;
+    }
 
     /**
      * {@inheritDoc}

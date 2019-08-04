@@ -30,8 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.sim.setup;
 
+import aim4.Application;
 import aim4.sim.Simulator;
 import aim4.vehicle.VinRegistry;
+import org.springframework.context.ApplicationContext;
 
 // TODO: probably remove this class
 
@@ -47,7 +49,9 @@ public class SimFactory {
      * @return a simulator
      */
     public static Simulator makeSimulator(SimSetup simSetup) {
-        VinRegistry.reset();   // TODO: should make it part of the simulator
+        ApplicationContext context = Application.getContext();
+        int vinStart = (Integer) context.getBean("vinStart");
+        VinRegistry.init(vinStart);   // TODO: should make it part of the simulator
         System.gc();
         return simSetup.getSimulator();
     }

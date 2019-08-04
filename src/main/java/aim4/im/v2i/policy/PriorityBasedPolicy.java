@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.im.v2i.policy;
 
 import aim4.config.Debug;
-import aim4.im.Intersection;
 import aim4.im.TrackModel;
 import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.V2IManager;
@@ -53,16 +52,16 @@ import aim4.sim.StatCollector;
 import aim4.util.HashMapRegistry;
 import aim4.util.Registry;
 import aim4.vehicle.VehicleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.ref.ReferenceQueue;
 import java.util.*;
-
-import static aim4.config.Debug.DEBUG;
 
 /**
  * The base policy.
  */
 public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
+    private static Logger logger = LoggerFactory.getLogger(PriorityBasedPolicy.class);
 
     /////////////////////////////////
     // CONSTANTS
@@ -512,9 +511,7 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
                 closestVinInLane.set(laneId, closestVin);
             }
 
-            if (DEBUG) {
-                System.out.println("lane_priority=" + lanePriority);
-            }
+            logger.debug("lane_priority: {}", lanePriority);
 
             int theVin = -1;
             int theLaneId = -1;
@@ -540,11 +537,9 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
                 }
             }
 
-            if (DEBUG) {
-                System.out.println("laneIdToVins=" + laneIdToVins);
-                System.out.println("vinToMessage=" + vinToMessage);
-                System.out.println("theMessage=" + theMessage);
-            }
+            logger.debug("laneIdToVins: {}", laneIdToVins);
+            logger.debug("vinToMessage: {}", vinToMessage);
+            logger.debug("theMessage: {}", theMessage);
 
             requestHandler.processRequestMsg(theMessage);
             laneIdToVins.get(theLaneId).remove(theVin);
@@ -584,7 +579,7 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
             reservationRecordRegistry.setNull(msg.getReservationID());
             vinToReservationId.remove(vin);
         } else {
-            System.err.printf("BasePolicy::processCancelMsg(): " +
+            System.err.print("BasePolicy::processCancelMsg(): " +
                     "record not found\n");
         }
     }
@@ -600,14 +595,14 @@ public final class PriorityBasedPolicy implements Policy, BasePolicyCallback {
         if (r != null) {
             int vin = r.getVin();   // don't use the VIN in msg.
             if (vin != msg.getVin()) {
-                System.err.printf("BasePolicy::processCancelMsg(): " +
+                System.err.print("BasePolicy::processCancelMsg(): " +
                         "The VIN of the message is different from the VIN " +
                         "on the record.\n");
             }
             // do nothing with the done message since the reservation grid is
             // automatically cleaned.
         } else {
-            System.err.printf("BasePolicy::processDoneMsg(): " +
+            System.err.print("BasePolicy::processDoneMsg(): " +
                     "record not found");
         }
     }

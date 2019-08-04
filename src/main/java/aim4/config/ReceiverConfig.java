@@ -25,7 +25,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory northConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.NORTH + ".url", "");
+        String URL = environment.getProperty("mq.receive." + Constants.Direction.NORTH + ".url", "");
         if ("".equals(URL)) {
             return connectionFactory;
         }
@@ -37,7 +37,7 @@ public class ReceiverConfig {
     public JmsTemplate northJmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setConnectionFactory(northConnectionFactory());
-        jmsTemplate.setDefaultDestinationName(Constants.CardinalDirection.NORTH.toString());
+        jmsTemplate.setDefaultDestinationName(Constants.Direction.NORTH.toString());
         return jmsTemplate;
     }
 
@@ -54,7 +54,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory eastConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.EAST + ".url", "");
+        String URL = environment.getProperty("mq.receive." + Constants.Direction.EAST + ".url", "");
         if ("".equals(URL)) {
             return connectionFactory;
         }
@@ -66,7 +66,7 @@ public class ReceiverConfig {
     public JmsTemplate eastJmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setConnectionFactory(eastConnectionFactory());
-        jmsTemplate.setDefaultDestinationName(Constants.CardinalDirection.EAST.toString());
+        jmsTemplate.setDefaultDestinationName(Constants.Direction.EAST.toString());
         return jmsTemplate;
     }
 
@@ -83,7 +83,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory southConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.SOUTH + ".url", "");
+        String URL = environment.getProperty("mq.receive." + Constants.Direction.SOUTH + ".url", "");
         if ("".equals(URL)) {
             return connectionFactory;
         }
@@ -95,7 +95,7 @@ public class ReceiverConfig {
     public JmsTemplate southJmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setConnectionFactory(southConnectionFactory());
-        jmsTemplate.setDefaultDestinationName(Constants.CardinalDirection.SOUTH.toString());
+        jmsTemplate.setDefaultDestinationName(Constants.Direction.SOUTH.toString());
         return jmsTemplate;
     }
 
@@ -112,7 +112,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory westConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.WEST + ".url", "");
+        String URL = environment.getProperty("mq.receive." + Constants.Direction.WEST + ".url", "");
         if ("".equals(URL)) {
             return connectionFactory;
         }

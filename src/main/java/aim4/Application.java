@@ -43,9 +43,14 @@ public class Application {
     /////////////////////////////////
     // THE MAIN FUNCTION
     /////////////////////////////////
+    private static ApplicationContext context;
+
+    public static ApplicationContext getContext() {
+        return context;
+    }
 
     public static void main(String[] args) {
-        ApplicationContext context =  new SpringApplicationBuilder(Application.class).headless(false).run(args);
+        context = new SpringApplicationBuilder(Application.class).headless(false).run(args);
         Viewer viewer = context.getBean(Viewer.class);
         SwingUtilities.invokeLater(viewer::createAndShowGUI);
     }

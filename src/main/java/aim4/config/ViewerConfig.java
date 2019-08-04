@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 
 
 @Configuration
-public class BasicSimConfig {
+public class ViewerConfig {
     private Logger logger = LoggerFactory.getLogger("aim4.config.BasicSimConfig");
 
     @Autowired
@@ -35,6 +35,9 @@ public class BasicSimConfig {
         );
         logger.info("initSimSetup: {}", initSimSetup);
 
-        return new Viewer(initSimSetup, isRunNow);
+        String titleBarString = environment.getProperty("spring.profiles.active", "node-center");
+        logger.info("titleBarString: {}", titleBarString);
+
+        return new Viewer(initSimSetup, isRunNow, titleBarString);
     }
 }

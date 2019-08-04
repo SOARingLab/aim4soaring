@@ -30,12 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map;
 
+import aim4.config.Constants;
+import aim4.map.lane.Lane;
+import aim4.vehicle.VehicleSpec;
+
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
-
-import aim4.map.lane.Lane;
-import aim4.vehicle.VehicleSpec;
 
 /**
  * A spawn point.
@@ -161,6 +162,7 @@ public class SpawnPoint {
      */
     private SpawnSpecGenerator vehicleSpecChooser;
 
+    private Constants.Direction direction;
     /////////////////////////////////
     // CONSTRUCTORS
     /////////////////////////////////
@@ -212,7 +214,8 @@ public class SpawnPoint {
                       double steeringAngle,
                       double acceleration,
                       Lane lane,
-                      Rectangle2D noVehicleZone) {
+                      Rectangle2D noVehicleZone,
+                      Constants.Direction direction) {
         this.currentTime = currentTime;
         this.pos = pos;
         this.heading = heading;
@@ -221,6 +224,7 @@ public class SpawnPoint {
         this.lane = lane;
         this.noVehicleZone = noVehicleZone;
         this.vehicleSpecChooser = null;
+        this.direction = direction;
     }
 
     /////////////////////////////////

@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
+import aim4.map.Road;
+import aim4.map.SpawnPoint;
+
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-
-import aim4.map.Road;
-import aim4.map.SpawnPoint;
 
 /**
  * The Vehicle Registry, the class that issues VIN to vehicles.
@@ -85,12 +85,12 @@ public class VinRegistry {
     /**
      * Reset the registry.
      */
-    public static void reset() {
-        vinGenerator = 1000;
-        vinToVehicle = new HashMap<Integer, WeakReference<VehicleSimView>>();
-        vinToVehicleSpec = new HashMap<Integer, VehicleSpec>();
-        vinToSpawnPoint = new HashMap<Integer, SpawnPoint>();
-        vinToDestRoad = new HashMap<Integer, Road>();
+    public static void init(int vinStart) {
+        vinGenerator = vinStart;
+        vinToVehicle = new HashMap<>();
+        vinToVehicleSpec = new HashMap<>();
+        vinToSpawnPoint = new HashMap<>();
+        vinToDestRoad = new HashMap<>();
     }
 
     /**
