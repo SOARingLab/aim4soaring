@@ -1,6 +1,5 @@
-package aim4.config;
+package aim4.msg.i2i;
 
-import aim4.msg.i2i.Leave;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

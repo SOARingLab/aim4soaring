@@ -23,13 +23,13 @@ public class ReceiverConfig {
 
     @Bean("northConnectionFactory")
     public QueueConnectionFactory northConnectionFactory() {
-        QueueConnectionFactory connectionFactory = null;
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+        connectionFactory.setTrustAllPackages(true);
         String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.NORTH + ".url", "");
         if ("".equals(URL)) {
             return connectionFactory;
         }
-        connectionFactory = new ActiveMQConnectionFactory(URL);
-        ((ActiveMQConnectionFactory) connectionFactory).setTrustAllPackages(true);
+        connectionFactory.setBrokerURL(URL);
         return connectionFactory;
     }
 
@@ -42,58 +42,98 @@ public class ReceiverConfig {
     }
 
     @Bean("northJmsListenerContainerFactory")
-    public JmsListenerContainerFactory<?> northJmsListenerContainerFactory(@Qualifier("northConnectionFactory") QueueConnectionFactory connectionFactory, ReceiveError error) {
+    public JmsListenerContainerFactory<?> northJmsListenerContainerFactory(
+            @Qualifier("northConnectionFactory") QueueConnectionFactory connectionFactory, ReceiveError error) {
         SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setErrorHandler(error);
         return factory;
     }
 
-//    @Bean("eastConnectionFactory")
-//    public QueueConnectionFactory eastConnectionFactory() {
-//        QueueConnectionFactory connectionFactory = null;
-//        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.EAST + ".url", "");
-//        if ("".equals(URL)) {
-//            return connectionFactory;
-//        }
-//        connectionFactory = new ActiveMQConnectionFactory(URL);
-//        return connectionFactory;
-//    }
-//
-//    @Bean("eastJmsTemplate")
-//    public JmsTemplate eastJmsTemplate(@Qualifier("eastJmsTemplate") QueueConnectionFactory factory) {
-//        return new JmsTemplate(factory);
-//    }
-//
-//    @Bean("southConnectionFactory")
-//    public QueueConnectionFactory southConnectionFactory() {
-//        QueueConnectionFactory connectionFactory = null;
-//        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.SOUTH + ".url", "");
-//        if ("".equals(URL)) {
-//            return connectionFactory;
-//        }
-//        connectionFactory = new ActiveMQConnectionFactory(URL);
-//        return connectionFactory;
-//    }
-//
-//    @Bean("southJmsTemplate")
-//    public JmsTemplate southJmsTemplate(@Qualifier("southJmsTemplate") QueueConnectionFactory factory) {
-//        return new JmsTemplate(factory);
-//    }
-//
-//    @Bean("westConnectionFactory")
-//    public QueueConnectionFactory westConnectionFactory() {
-//        QueueConnectionFactory connectionFactory = null;
-//        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.WEST + ".url", "");
-//        if ("".equals(URL)) {
-//            return connectionFactory;
-//        }
-//        connectionFactory = new ActiveMQConnectionFactory(URL);
-//        return connectionFactory;
-//    }
-//
-//    @Bean("westJmsTemplate")
-//    public JmsTemplate westJmsTemplate(@Qualifier("westJmsTemplate") QueueConnectionFactory factory) {
-//        return new JmsTemplate(factory);
-//    }
+    @Bean("eastConnectionFactory")
+    public QueueConnectionFactory eastConnectionFactory() {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+        connectionFactory.setTrustAllPackages(true);
+        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.EAST + ".url", "");
+        if ("".equals(URL)) {
+            return connectionFactory;
+        }
+        connectionFactory.setBrokerURL(URL);
+        return connectionFactory;
+    }
+
+    @Bean("eastJmsTemplate")
+    public JmsTemplate eastJmsTemplate() {
+        JmsTemplate jmsTemplate = new JmsTemplate();
+        jmsTemplate.setConnectionFactory(eastConnectionFactory());
+        jmsTemplate.setDefaultDestinationName(Constants.CardinalDirection.EAST.toString());
+        return jmsTemplate;
+    }
+
+    @Bean("eastJmsListenerContainerFactory")
+    public JmsListenerContainerFactory<?> eastJmsListenerContainerFactory(
+            @Qualifier("eastConnectionFactory") QueueConnectionFactory connectionFactory, ReceiveError error) {
+        SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setErrorHandler(error);
+        return factory;
+    }
+
+    @Bean("southConnectionFactory")
+    public QueueConnectionFactory southConnectionFactory() {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+        connectionFactory.setTrustAllPackages(true);
+        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.SOUTH + ".url", "");
+        if ("".equals(URL)) {
+            return connectionFactory;
+        }
+        connectionFactory.setBrokerURL(URL);
+        return connectionFactory;
+    }
+
+    @Bean("southJmsTemplate")
+    public JmsTemplate southJmsTemplate() {
+        JmsTemplate jmsTemplate = new JmsTemplate();
+        jmsTemplate.setConnectionFactory(southConnectionFactory());
+        jmsTemplate.setDefaultDestinationName(Constants.CardinalDirection.SOUTH.toString());
+        return jmsTemplate;
+    }
+
+    @Bean("southJmsListenerContainerFactory")
+    public JmsListenerContainerFactory<?> southJmsListenerContainerFactory(
+            @Qualifier("southConnectionFactory") QueueConnectionFactory connectionFactory, ReceiveError error) {
+        SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setErrorHandler(error);
+        return factory;
+    }
+
+    @Bean("westConnectionFactory")
+    public QueueConnectionFactory westConnectionFactory() {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+        connectionFactory.setTrustAllPackages(true);
+        String URL = environment.getProperty("mq.receive." + Constants.CardinalDirection.WEST + ".url", "");
+        if ("".equals(URL)) {
+            return connectionFactory;
+        }
+        connectionFactory.setBrokerURL(URL);
+        return connectionFactory;
+    }
+
+    @Bean("westJmsTemplate")
+    public JmsTemplate westJmsTemplate() {
+        JmsTemplate jmsTemplate = new JmsTemplate();
+        jmsTemplate.setConnectionFactory(westConnectionFactory());
+        return jmsTemplate;
+    }
+
+    @Bean("westJmsListenerContainerFactory")
+    public JmsListenerContainerFactory<?> westJmsListenerContainerFactory(
+            @Qualifier("westConnectionFactory") QueueConnectionFactory connectionFactory, ReceiveError error) {
+        SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setErrorHandler(error);
+        return factory;
+    }
+
 }

@@ -15,10 +15,14 @@ mq:
         url: tcp://localhost:61616
     receive:
         SOUTH:
+            destination: SOUTH
             url: tcp://localhost:61616
         EAST:
+            destination: EAST
             url: tcp://localhost:61616
         NORTH:
+            destination: NORTH
             url: tcp://localhost:61616
-#        WEST:
-#            url: tcp://localhost:61616
+        WEST:
+            destination: WEST
+            url: tcp://localhost:61616

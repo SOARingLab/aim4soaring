@@ -36,6 +36,8 @@ import aim4.im.IntersectionManager;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
 import aim4.msg.i2i.Leave;
+import aim4.msg.i2i.Receiver;
+import aim4.msg.i2i.Sender;
 import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
 import aim4.sim.Simulator;
 import aim4.sim.Simulator.SimStepResult;
@@ -542,9 +544,9 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
     private void testMQ() {
         sender.send("NORTH", new Leave(1, 2));
-//        sender.send("EAST", new Leave(3, 4));
-//        sender.send("SOUTH", new Leave(5, 6));
-//        sender.send("WEST", new Leave(7, 8));
+        sender.send("EAST", new Leave(3, 4));
+        sender.send("SOUTH", new Leave(5, 6));
+        sender.send("WEST", new Leave(7, 8));
     }
 
 

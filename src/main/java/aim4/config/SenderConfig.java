@@ -23,18 +23,13 @@ public class SenderConfig {
     @Primary
     public QueueConnectionFactory connectionFactory() {
         String URL = environment.getProperty("mq.send.url", "");
-        QueueConnectionFactory senderConnectionFactory = new ActiveMQConnectionFactory(URL);
-
-        logger.info("senderConnectionFactory: {}", senderConnectionFactory);
-
-        return senderConnectionFactory;
+        logger.info("senderConnectionFactory: {}", URL);
+        return new ActiveMQConnectionFactory(URL);
     }
 
     @Bean
     @Primary
     public JmsTemplate jmsTemplate() {
-        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
-        jmsTemplate.setReceiveTimeout(5000);
-        return jmsTemplate;
+        return new JmsTemplate(connectionFactory());
     }
 }
