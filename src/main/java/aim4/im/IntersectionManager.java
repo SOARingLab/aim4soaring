@@ -30,17 +30,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im;
 
-import java.awt.Shape;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.Collections;
-import java.util.List;
-
 import aim4.map.Road;
 import aim4.map.lane.Lane;
 import aim4.util.Registry;
 import aim4.util.Util;
 import aim4.vehicle.VehicleSimView;
+
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An agent to manage an intersection. This is an abstract class

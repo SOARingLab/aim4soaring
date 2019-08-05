@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.track;
 
+import java.awt.*;
+import java.awt.geom.GeneralPath;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.awt.Shape;
-import java.awt.geom.GeneralPath;
 
 /**
  * A track created by joining multiple tracks.

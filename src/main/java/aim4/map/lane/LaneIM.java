@@ -30,13 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.lane;
 
+import aim4.im.IntersectionManager;
+
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import aim4.im.IntersectionManager;
 
 /**
  * The lane and intersection manager relationship.

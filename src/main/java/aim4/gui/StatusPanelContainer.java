@@ -30,16 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui;
 
-import javax.swing.JTabbedPane;
+import aim4.gui.statuspanel.*;
+
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import aim4.gui.statuspanel.ConsolePanel;
-import aim4.gui.statuspanel.AdminControlPanel;
-import aim4.gui.statuspanel.SimControlPanel;
-import aim4.gui.statuspanel.StatPanel;
-import aim4.gui.statuspanel.SystemPanel;
-import aim4.gui.statuspanel.VehicleInfoPanel;
 
 /**
  * A tabbed panel for showing statistics and status of the simulator.

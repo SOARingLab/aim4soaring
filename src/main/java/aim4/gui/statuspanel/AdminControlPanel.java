@@ -30,23 +30,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui.statuspanel;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import aim4.config.Debug;
 import aim4.gui.StatusPanelInterface;
 import aim4.gui.Viewer;
 import aim4.im.IntersectionManager;
-import aim4.im.v2i.V2IManager;
 import aim4.im.v2i.RequestHandler.AllStopRequestHandler;
 import aim4.im.v2i.RequestHandler.FCFSRequestHandler;
 import aim4.im.v2i.RequestHandler.GoStraightRequestHandler;
+import aim4.im.v2i.V2IManager;
 import aim4.im.v2i.policy.BasePolicy;
 import aim4.sim.Simulator;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * The Administration Control Panel

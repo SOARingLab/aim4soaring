@@ -30,10 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.policy;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import aim4.im.Intersection;
 import aim4.im.TrackModel;
 import aim4.im.v2i.V2IManager;
@@ -48,6 +44,10 @@ import aim4.msg.i2v.Reject;
 import aim4.msg.v2i.Request;
 import aim4.msg.v2i.V2IMessage;
 import aim4.sim.StatCollector;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**

@@ -30,18 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.reservation;
 
-import java.awt.Shape;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
 import aim4.config.Constants;
 import aim4.config.Debug;
 import aim4.driver.CrashTestDummy;
@@ -57,6 +45,14 @@ import aim4.util.TiledArea.Tile;
 import aim4.vehicle.BasicAutoVehicle;
 import aim4.vehicle.VehicleSpec;
 import aim4.vehicle.VehicleUtil;
+
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
+import java.io.PrintStream;
+import java.util.List;
+import java.util.Queue;
+import java.util.*;
 
 /**
  * The reservation grid manager.

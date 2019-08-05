@@ -30,11 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map;
 
+import aim4.map.lane.Lane;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import aim4.map.lane.Lane;
 
 /**
  * A group of lanes with a name.

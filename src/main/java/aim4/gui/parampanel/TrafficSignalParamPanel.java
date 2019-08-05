@@ -30,10 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui.parampanel;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import aim4.gui.component.LabeledSlider;
+
+import javax.swing.*;
 
 /**
  * The traffic signal parameter panel.

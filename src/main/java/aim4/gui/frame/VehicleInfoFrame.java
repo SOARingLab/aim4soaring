@@ -34,8 +34,8 @@ import aim4.config.Constants;
 import aim4.gui.Viewer;
 import aim4.vehicle.VehicleSimView;
 
-import java.awt.Rectangle;
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The vehicle information frame.

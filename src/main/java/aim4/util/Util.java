@@ -30,20 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.util;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 import aim4.config.Condor;
 import aim4.config.Constants;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.io.*;
+import java.util.*;
 
 /**
  * This class provides helper methods that are used throughout the code.

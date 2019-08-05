@@ -30,18 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import aim4.config.Debug;
 import aim4.config.SimConfig;
 import aim4.config.TrafficSignalPhase;
 import aim4.im.RoadBasedIntersection;
 import aim4.im.RoadBasedTrackModel;
 import aim4.im.v2i.RequestHandler.*;
-import aim4.im.v2i.V2IManager;
 import aim4.im.v2i.RequestHandler.ApproxNPhasesTrafficSignalRequestHandler.CyclicSignalController;
+import aim4.im.v2i.V2IManager;
 import aim4.im.v2i.batch.RoadBasedReordering;
 import aim4.im.v2i.policy.BasePolicy;
 import aim4.im.v2i.policy.PriorityBasedPolicy;
@@ -56,6 +52,10 @@ import aim4.map.lane.Lane;
 import aim4.util.Util;
 import aim4.vehicle.VehicleSpec;
 import aim4.vehicle.VehicleSpecDatabase;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The utility class for GridMap.

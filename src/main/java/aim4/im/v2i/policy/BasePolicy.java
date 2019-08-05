@@ -30,17 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.policy;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import aim4.config.Debug;
 import aim4.im.TrackModel;
+import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.V2IManager;
 import aim4.im.v2i.V2IManagerCallback;
-import aim4.im.v2i.RequestHandler.RequestHandler;
 import aim4.im.v2i.policy.utils.ProposalFilterResult;
 import aim4.im.v2i.policy.utils.ReservationRecord;
 import aim4.im.v2i.policy.utils.ReserveParam;
@@ -49,15 +43,13 @@ import aim4.im.v2i.reservation.ReservationGrid;
 import aim4.im.v2i.reservation.ReservationGridManager;
 import aim4.msg.i2v.Confirm;
 import aim4.msg.i2v.Reject;
-import aim4.msg.v2i.Away;
-import aim4.msg.v2i.Cancel;
-import aim4.msg.v2i.Done;
-import aim4.msg.v2i.Request;
-import aim4.msg.v2i.V2IMessage;
+import aim4.msg.v2i.*;
 import aim4.sim.StatCollector;
 import aim4.util.HashMapRegistry;
 import aim4.util.Registry;
 import aim4.vehicle.VehicleUtil;
+
+import java.util.*;
 
 /**
  * The base policy.

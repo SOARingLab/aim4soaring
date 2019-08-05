@@ -30,14 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.driver.navigator;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-
 import aim4.config.Debug;
 import aim4.im.IntersectionManager;
 import aim4.map.BasicMap;
@@ -45,6 +37,9 @@ import aim4.map.Road;
 import aim4.util.Util;
 import aim4.vehicle.VehicleSpec;
 import aim4.vehicle.VehicleUtil;
+
+import java.awt.geom.Point2D;
+import java.util.*;
 
 /**
  * A base class for an agent that chooses which way a vehicle should go.

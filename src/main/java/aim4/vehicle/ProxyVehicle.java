@@ -30,33 +30,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.awt.geom.Point2D;
-import java.util.LinkedList;
-import java.util.List;
-import java.lang.Math;
-
-import aim4.msg.v2i.Done;
-import aim4.msg.udp.Proxy2RealAdapter;
-import aim4.msg.udp.Real2ProxyCancel;
-import aim4.msg.udp.Real2ProxyMsg;
-import aim4.msg.udp.Real2ProxyRequest;
+import aim4.config.Debug;
+import aim4.driver.ProxyDriver;
+import aim4.im.IntersectionManager;
+import aim4.map.lane.Lane;
 import aim4.msg.i2v.Confirm;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.i2v.Reject;
-import aim4.im.IntersectionManager;
-import aim4.map.lane.Lane;
-import aim4.msg.v2i.Request;
+import aim4.msg.udp.*;
 import aim4.msg.v2i.Cancel;
-import aim4.config.Debug;
-import aim4.driver.ProxyDriver;
-import aim4.msg.udp.Real2ProxyPVUpdate;
-import aim4.msg.v2i.V2IMessage;
+import aim4.msg.v2i.Done;
+import aim4.msg.v2i.Request;
 import aim4.msg.v2i.Request.Proposal;
+import aim4.msg.v2i.V2IMessage;
 
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The proxy vehicle.

@@ -30,9 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.msg.i2v;
 
-import java.util.Queue;
-
 import aim4.config.Constants;
+
+import java.util.Queue;
 
 /**
  * Message sent from an Intersection Manager to a Vehicle to confirm a

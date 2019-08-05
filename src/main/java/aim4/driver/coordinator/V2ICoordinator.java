@@ -30,14 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.driver.coordinator;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Queue;
-
+import aim4.config.Constants.TurnDirection;
 import aim4.config.Debug;
 import aim4.config.SimConfig;
-import aim4.config.Constants.TurnDirection;
 import aim4.driver.AutoDriver;
 import aim4.driver.AutoDriverCoordinatorView;
 import aim4.driver.DriverUtil;
@@ -60,6 +55,11 @@ import aim4.util.Util;
 import aim4.vehicle.AccelSchedule;
 import aim4.vehicle.AutoVehicleDriverView;
 import aim4.vehicle.VehicleUtil;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Queue;
 
 import static aim4.config.SimConfig.TIME_STEP;
 

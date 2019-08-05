@@ -30,15 +30,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.msg.udp;
 
+import aim4.msg.i2v.Confirm;
+import aim4.msg.i2v.Reject;
+import aim4.msg.udp.UdpHeader.UdpMessageType;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.SocketAddress;
-
-import aim4.msg.i2v.Confirm;
-import aim4.msg.i2v.Reject;
-import aim4.msg.udp.UdpHeader.UdpMessageType;
 
 /**
  * The proxy vehicle to real vehicle message adapter.

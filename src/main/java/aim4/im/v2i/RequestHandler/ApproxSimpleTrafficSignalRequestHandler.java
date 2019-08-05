@@ -32,9 +32,6 @@ package aim4.im.v2i.RequestHandler;
 
 import aim4.config.Debug;
 import aim4.config.TrafficSignal;
-
-import java.util.List;
-
 import aim4.im.v2i.policy.BasePolicy;
 import aim4.im.v2i.policy.PolicyCallback;
 import aim4.im.v2i.policy.utils.ProposalFilterResult;
@@ -43,6 +40,8 @@ import aim4.map.Road;
 import aim4.msg.i2v.Reject;
 import aim4.msg.v2i.Request;
 import aim4.sim.StatCollector;
+
+import java.util.List;
 
 /**
  * The approximate traffic signal request handler.

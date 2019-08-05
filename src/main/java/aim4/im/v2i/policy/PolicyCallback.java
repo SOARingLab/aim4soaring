@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.policy;
 
-import java.util.List;
-
 import aim4.im.TrackModel;
 import aim4.im.v2i.policy.utils.ReserveParam;
 import aim4.msg.i2v.Reject;
 import aim4.msg.v2i.Request;
+
+import java.util.List;
 
 /**
  * The base policy's callback interface.

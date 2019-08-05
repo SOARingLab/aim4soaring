@@ -30,8 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map.destination;
 
-import java.util.List;
-
 import aim4.config.Debug;
 import aim4.map.BasicMap;
 import aim4.map.Road;
@@ -41,6 +39,7 @@ import aim4.map.lane.Lane;
 import aim4.util.Util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

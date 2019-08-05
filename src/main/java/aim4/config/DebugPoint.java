@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.config;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**

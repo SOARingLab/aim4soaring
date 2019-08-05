@@ -30,16 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map;
 
-import java.awt.Shape;
+import aim4.vehicle.VehicleSimView;
+
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import aim4.vehicle.VehicleSimView;
+import java.util.*;
 
 /**
  * The data collection line.

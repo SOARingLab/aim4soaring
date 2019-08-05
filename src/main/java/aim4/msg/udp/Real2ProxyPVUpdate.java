@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.msg.udp;
 
+import aim4.config.Constants;
+import aim4.vehicle.AccelSchedule;
+
 import java.awt.geom.Point2D;
 import java.io.DataInputStream;
 import java.io.IOException;
-
-import aim4.config.Constants;
-import aim4.vehicle.AccelSchedule;
 
 
 /**

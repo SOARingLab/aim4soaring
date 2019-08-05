@@ -30,16 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui.statuspanel;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import javax.swing.JPanel;
-
 import aim4.config.Constants;
 import aim4.gui.StatusPanelInterface;
 import aim4.gui.Viewer;
 import aim4.gui.component.FormattedLabel;
 import aim4.sim.Simulator;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The statistics Panel

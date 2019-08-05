@@ -30,18 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.RequestHandler;
 
-import java.awt.Color;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.Set;
-import java.util.TreeSet;
-
 import aim4.config.Debug;
 import aim4.im.v2i.batch.ReorderingStrategy;
 import aim4.im.v2i.policy.BasePolicy;
@@ -54,6 +42,11 @@ import aim4.msg.v2i.Request;
 import aim4.msg.v2i.Request.Proposal;
 import aim4.sim.StatCollector;
 import aim4.util.Util;
+
+import java.awt.*;
+import java.io.PrintStream;
+import java.util.List;
+import java.util.*;
 
 
 /**

@@ -30,10 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.net.SocketAddress;
-
 import aim4.driver.ProxyDriver;
 import aim4.msg.udp.Real2ProxyMsg;
+
+import java.net.SocketAddress;
 
 /**
  * The interface of a proxy vehicle from the viewpoint of a simulator.

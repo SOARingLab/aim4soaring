@@ -30,14 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.driver;
 
-import java.awt.geom.Area;
-
+import aim4.driver.coordinator.Coordinator;
 import aim4.driver.coordinator.NoIntersectionCoordinator;
 import aim4.driver.coordinator.V2ICoordinator;
-import aim4.driver.coordinator.Coordinator;
 import aim4.im.IntersectionManager;
 import aim4.map.BasicMap;
 import aim4.vehicle.AutoVehicleDriverView;
+
+import java.awt.geom.Area;
 
 /**
  * An agent that drives a {@link AutoVehicleDriverView} while coordinating with

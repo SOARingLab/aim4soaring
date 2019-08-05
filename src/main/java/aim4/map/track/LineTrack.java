@@ -32,7 +32,7 @@ package aim4.map.track;
 
 import aim4.config.Constants;
 
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.Line2D;
 
 

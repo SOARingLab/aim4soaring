@@ -30,28 +30,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.sim;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Map;
-
 import aim4.config.Debug;
 import aim4.driver.ProxyDriver;
-import aim4.msg.udp.Real2ProxyCancel;
-import aim4.msg.udp.Real2ProxyDone;
-import aim4.msg.udp.Real2ProxyMsg;
-import aim4.msg.udp.Real2ProxyPVUpdate;
-import aim4.msg.udp.Real2ProxyRequest;
-import aim4.msg.udp.UdpHeader;
+import aim4.msg.udp.*;
 import aim4.vehicle.ProxyVehicle;
 import aim4.vehicle.ProxyVehicleSimView;
 import aim4.vehicle.VinRegistry;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Listens for UDP datagrams from Marvin at a UPD port (default is 46000)

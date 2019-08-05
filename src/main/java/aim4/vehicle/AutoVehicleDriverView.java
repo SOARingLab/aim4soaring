@@ -30,13 +30,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.util.List;
-
 import aim4.driver.AutoDriver;
 import aim4.map.lane.Lane;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.v2i.V2IMessage;
 import aim4.noise.DoubleGauge;
+
+import java.util.List;
 
 /**
  * The interface of an autonomous vehicle from the viewpoint of a driver.

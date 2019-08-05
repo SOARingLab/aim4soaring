@@ -30,11 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.batch;
 
-import java.util.List;
-import java.util.NavigableSet;
-
 import aim4.im.TrackModel;
 import aim4.im.v2i.RequestHandler.BatchModeRequestHandler.IndexedProposal;
+
+import java.util.List;
+import java.util.NavigableSet;
 
 /**
  * The Reordering Strategy Interface.

@@ -30,11 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui.statuspanel;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import javax.swing.JPanel;
-
 import aim4.config.Constants;
 import aim4.config.Debug;
 import aim4.gui.StatusPanelInterface;
@@ -42,6 +37,9 @@ import aim4.gui.component.FormattedLabel;
 import aim4.vehicle.AutoVehicleSimView;
 import aim4.vehicle.VehicleSimView;
 import aim4.vehicle.VinRegistry;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The Vehicle Information Panel

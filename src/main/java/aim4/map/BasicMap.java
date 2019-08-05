@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.map;
 
-import java.awt.geom.Rectangle2D;
-import java.util.List;
-
 import aim4.im.IntersectionManager;
 import aim4.map.lane.Lane;
 import aim4.util.Registry;
+
+import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 /**
  * Essentially a structured grouping of Roads and IntersectionManagers that

@@ -32,7 +32,7 @@ package aim4.map.lane;
 
 import aim4.config.Constants;
 
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 

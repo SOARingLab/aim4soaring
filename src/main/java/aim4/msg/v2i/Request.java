@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.msg.v2i;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.LinkedList;
-
 import aim4.config.Constants;
 import aim4.vehicle.VehicleSpec;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Message sent from a Vehicle to an Intersection Manager to request a

@@ -31,14 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.map.track;
 
 import aim4.config.Constants;
+import aim4.util.GeomMath;
+import aim4.util.Util;
 
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
-import aim4.util.GeomMath;
-import aim4.util.Util;
 
 /**
  * The arc-shape track.

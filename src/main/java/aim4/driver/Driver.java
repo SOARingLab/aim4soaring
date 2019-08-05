@@ -30,11 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.driver;
 
-import java.awt.Color;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import aim4.config.Debug;
 import aim4.config.DebugPoint;
 import aim4.im.IntersectionManager;
@@ -44,6 +39,11 @@ import aim4.map.lane.Lane;
 import aim4.util.GeomMath;
 import aim4.vehicle.AutoVehicleDriverView;
 import aim4.vehicle.VehicleDriverView;
+
+import java.awt.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * An agent that drives a {@link AutoVehicleDriverView}.

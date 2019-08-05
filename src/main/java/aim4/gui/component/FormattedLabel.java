@@ -30,9 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui.component;
 
-import java.awt.Font;
-
-import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * A specialized label that formats an update value according to a format

@@ -30,12 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.driver;
 
-import java.util.Set;
-
 import aim4.map.Road;
 import aim4.map.SpawnPoint;
 import aim4.map.lane.Lane;
 import aim4.vehicle.VehicleDriverView;
+
+import java.util.Set;
 
 /**
  * A driver from simulators' viewpoint.

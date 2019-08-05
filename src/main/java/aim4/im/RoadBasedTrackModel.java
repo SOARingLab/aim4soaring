@@ -30,22 +30,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im;
 
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import aim4.config.Debug;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
 import aim4.util.GeomMath;
+
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.util.*;
 
 
 /**

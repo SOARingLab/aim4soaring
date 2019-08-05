@@ -30,11 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.awt.Shape;
+import aim4.config.SimConfig;
+
+import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-
-import aim4.config.SimConfig;
 
 /**
  * The characteristics of the vehicle

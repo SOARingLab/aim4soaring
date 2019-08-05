@@ -30,10 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im.v2i.reservation;
 
+import aim4.config.Constants;
+
 import java.util.List;
 import java.util.Set;
-
-import aim4.config.Constants;
 
 /**
  * The reservation grid.

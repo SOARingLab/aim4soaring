@@ -31,9 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.im.v2i.RequestHandler;
 
 import aim4.config.TrafficSignal;
-
-import java.util.List;
-
 import aim4.im.v2i.policy.BasePolicy;
 import aim4.im.v2i.policy.PolicyCallback;
 import aim4.im.v2i.policy.utils.ProposalFilterResult;
@@ -43,6 +40,7 @@ import aim4.msg.v2i.Request;
 import aim4.sim.StatCollector;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

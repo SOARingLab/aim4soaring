@@ -30,12 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.awt.geom.Area;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import aim4.config.SimConfig;
 import aim4.driver.CrashTestDummy;
 import aim4.driver.Driver;
@@ -43,6 +37,12 @@ import aim4.im.IntersectionManager;
 import aim4.map.lane.Lane;
 import aim4.util.GeomMath;
 import aim4.util.Util;
+
+import java.awt.geom.Area;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The utility functions for vehicles.

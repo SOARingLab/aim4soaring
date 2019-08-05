@@ -30,14 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui.statuspanel;
 
-import javax.swing.GroupLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-
 import aim4.gui.StatusPanelInterface;
 import aim4.gui.component.FormattedLabel;
+
+import javax.swing.*;
 
 /**
  * The Console Panel

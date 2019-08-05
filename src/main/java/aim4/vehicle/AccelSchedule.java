@@ -30,11 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.vehicle;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import aim4.config.Constants;
 import aim4.util.Util;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The acceleration schedule

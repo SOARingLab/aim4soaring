@@ -30,10 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.im;
 
-import java.util.List;
-
 import aim4.map.Road;
 import aim4.map.lane.Lane;
+
+import java.util.List;
 
 /**
  * The interface of track models

@@ -31,8 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.config;
 
 import aim4.im.v2i.RequestHandler.ApproxNPhasesTrafficSignalRequestHandler;
-import aim4.im.v2i.RequestHandler.ApproxNPhasesTrafficSignalRequestHandler.
-        CyclicSignalController;
+import aim4.im.v2i.RequestHandler.ApproxNPhasesTrafficSignalRequestHandler.CyclicSignalController;
 import aim4.map.GridMap;
 import aim4.map.Road;
 import aim4.util.Util;

@@ -30,25 +30,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.gui;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import aim4.gui.parampanel.AutoDriverOnlyParamPanel;
 import aim4.gui.parampanel.PriorityBasedAutoDriverOnlyParamPanel;
 import aim4.gui.parampanel.TrafficSignalParamPanel;
-import aim4.sim.setup.ApproxStopSignSimSetup;
-import aim4.sim.setup.ApproxNPhasesTrafficSignalSimSetup;
 import aim4.sim.setup.AutoDriverOnlySimSetup;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.sim.setup.SimSetup;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * The simulation setup panel.
