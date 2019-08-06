@@ -227,9 +227,9 @@ public class SpawnPoint {
         this.direction = direction;
     }
 
-    /////////////////////////////////
-    // PUBLIC METHODS
-    /////////////////////////////////
+/////////////////////////////////
+// PUBLIC METHODS
+/////////////////////////////////
 
     /**
      * Advance the time step.
@@ -249,6 +249,14 @@ public class SpawnPoint {
     /////////////////////////////////
 
     // info retrieval
+
+    public Constants.Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Constants.Direction direction) {
+        this.direction = direction;
+    }
 
     /**
      * Get the current time.

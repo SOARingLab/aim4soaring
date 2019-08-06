@@ -46,11 +46,13 @@ import aim4.map.SpawnPoint;
 import aim4.map.SpawnPoint.SpawnSpec;
 import aim4.map.lane.Lane;
 import aim4.msg.i2i.Leave;
+import aim4.msg.i2i.Sender;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.v2i.V2IMessage;
 import aim4.vehicle.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
@@ -955,6 +957,8 @@ public class AutoDriverOnlySimulator implements Simulator {
     }
 
 
+    @Autowired
+    Sender sender;
     /////////////////////////////////
     // STEP 7
     /////////////////////////////////
@@ -980,6 +984,11 @@ public class AutoDriverOnlySimulator implements Simulator {
                     AutoVehicleSimView v2 = (AutoVehicleSimView) v;
                     totalBitsTransmittedByCompletedVehicles += v2.getBitsTransmitted();
                     totalBitsReceivedByCompletedVehicles += v2.getBitsReceived();
+                    int imId = v2.getDriver().getCurrentIM().getId();
+                    Leave leave = new Leave(imId, vin);
+                    leave.properties.put("VehicleSpec", v2.getSpec());
+                    Constants.Direction direction = v2.getDriver().getCurrentLane().getDirection();
+                    sender.send(direction.toString(), leave);
                 }
                 // TODO: send vin message to next
                 removedVINs.add(vin);
