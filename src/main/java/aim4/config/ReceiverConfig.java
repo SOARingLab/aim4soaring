@@ -37,7 +37,6 @@ public class ReceiverConfig {
     public JmsTemplate northJmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setConnectionFactory(northConnectionFactory());
-        jmsTemplate.setDefaultDestinationName(Constants.Direction.NORTH.toString());
         return jmsTemplate;
     }
 
@@ -66,7 +65,6 @@ public class ReceiverConfig {
     public JmsTemplate eastJmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setConnectionFactory(eastConnectionFactory());
-        jmsTemplate.setDefaultDestinationName(Constants.Direction.EAST.toString());
         return jmsTemplate;
     }
 
@@ -95,7 +93,6 @@ public class ReceiverConfig {
     public JmsTemplate southJmsTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setConnectionFactory(southConnectionFactory());
-        jmsTemplate.setDefaultDestinationName(Constants.Direction.SOUTH.toString());
         return jmsTemplate;
     }
 

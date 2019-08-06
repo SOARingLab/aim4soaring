@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4.sim;
 
+import aim4.Application;
 import aim4.config.Constants;
 import aim4.config.Debug;
 import aim4.config.DebugPoint;
@@ -52,7 +53,6 @@ import aim4.msg.v2i.V2IMessage;
 import aim4.vehicle.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
@@ -319,7 +319,7 @@ public class AutoDriverOnlySimulator implements Simulator {
 
     private WaitQueue filterWaitQueue() {
         ApplicationContext context = getContext();
-        WaitQueue waitQueue = (WaitQueue)context.getBean("waitQueue");
+        WaitQueue waitQueue = (WaitQueue) context.getBean("waitQueue");
         return waitQueue;
     }
 
@@ -331,12 +331,12 @@ public class AutoDriverOnlySimulator implements Simulator {
     private void spawnVehicles(double timeStep) {
         ApplicationContext context = getContext();
         // filter near timestamp vehicles
-        WaitQueue waitQueue = (WaitQueue)context.getBean("waitQueue");
+        WaitQueue waitQueue = (WaitQueue) context.getBean("waitQueue");
         WaitQueue comingVehicles = filterWaitQueue();
-        boolean hasNorthNeighbour = (boolean)context.getBean("hasNorthNeighbour");
-        boolean hasWestNeighbour = (boolean)context.getBean("hasWestNeighbour");
-        boolean hasEastNeighbour = (boolean)context.getBean("hasEastNeighbour");
-        boolean hasSouthNeighbour = (boolean)context.getBean("hasSouthNeighbour");
+        boolean hasNorthNeighbour = (boolean) context.getBean("hasNorthNeighbour");
+        boolean hasWestNeighbour = (boolean) context.getBean("hasWestNeighbour");
+        boolean hasEastNeighbour = (boolean) context.getBean("hasEastNeighbour");
+        boolean hasSouthNeighbour = (boolean) context.getBean("hasSouthNeighbour");
 
         for (SpawnPoint spawnPoint : basicMap.getSpawnPoints()) {
             List<SpawnSpec> spawnSpecs = spawnPoint.act(timeStep);
@@ -957,8 +957,6 @@ public class AutoDriverOnlySimulator implements Simulator {
     }
 
 
-    @Autowired
-    Sender sender;
     /////////////////////////////////
     // STEP 7
     /////////////////////////////////
@@ -969,10 +967,12 @@ public class AutoDriverOnlySimulator implements Simulator {
      * @return the VINs of the completed vehicles
      */
     private List<Integer> cleanUpCompletedVehicles() {
+        ApplicationContext context = Application.getContext();
+        Sender sender = context.getBean(Sender.class);
+        int nodeId = (int) context.getBean("nodeId");
+
         List<Integer> completedVINs = new LinkedList<Integer>();
-
         Rectangle2D mapBoundary = basicMap.getDimensions();
-
         List<Integer> removedVINs = new ArrayList<Integer>(vinToVehicles.size());
         for (int vin : vinToVehicles.keySet()) {
             VehicleSimView v = vinToVehicles.get(vin);
@@ -984,11 +984,12 @@ public class AutoDriverOnlySimulator implements Simulator {
                     AutoVehicleSimView v2 = (AutoVehicleSimView) v;
                     totalBitsTransmittedByCompletedVehicles += v2.getBitsTransmitted();
                     totalBitsReceivedByCompletedVehicles += v2.getBitsReceived();
-                    int imId = v2.getDriver().getCurrentIM().getId();
-                    Leave leave = new Leave(imId, vin);
-                    leave.properties.put("VehicleSpec", v2.getSpec());
+                    Leave leave = new Leave(nodeId, vin);
+                    leave.setVehicleSpecName(v2.getSpec().getName());
+                    leave.setVehicleSpec(v2.getSpec());
+                    logger.info("leave: {}", leave);
                     Constants.Direction direction = v2.getDriver().getCurrentLane().getDirection();
-                    sender.send(direction.toString(), leave);
+                    sender.send(direction, leave);
                 }
                 // TODO: send vin message to next
                 removedVINs.add(vin);

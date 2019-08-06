@@ -35,15 +35,41 @@ import aim4.config.SimConfig;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 /**
  * The characteristics of the vehicle
  */
-public class VehicleSpec {
+public class VehicleSpec implements Serializable {
 
     /////////////////////////////////
     // PRIVATE FIELDS
     /////////////////////////////////
+
+    @Override
+    public String toString() {
+        return "VehicleSpec{" +
+                "name='" + name + '\'' +
+                ", maxAcceleration=" + maxAcceleration +
+                ", maxDeceleration=" + maxDeceleration +
+                ", maxVelocity=" + maxVelocity +
+                ", minVelocity=" + minVelocity +
+                ", length=" + length +
+                ", width=" + width +
+                ", frontAxleDisplacement=" + frontAxleDisplacement +
+                ", rearAxleDisplacement=" + rearAxleDisplacement +
+                ", wheelSpan=" + wheelSpan +
+                ", wheelRadius=" + wheelRadius +
+                ", wheelWidth=" + wheelWidth +
+                ", maxSteeringAngle=" + maxSteeringAngle +
+                ", maxTurnPerSecond=" + maxTurnPerSecond +
+                ", maxTurnPerCycle=" + maxTurnPerCycle +
+                ", radius=" + radius +
+                ", halfWidth=" + halfWidth +
+                ", halfLength=" + halfLength +
+                ", wheelbase=" + wheelbase +
+                '}';
+    }
 
     /**
      * The name of the specification

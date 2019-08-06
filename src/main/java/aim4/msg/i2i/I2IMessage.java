@@ -35,9 +35,9 @@ public abstract class I2IMessage implements Serializable {
     public I2IMessage() {
     }
 
-    public I2IMessage(int vin, int imID) {
+    public I2IMessage(int imId, int vin) {
         this.vin = vin;
-        this.imId = imID;
+        this.imId = imId;
     }
 
     @Override

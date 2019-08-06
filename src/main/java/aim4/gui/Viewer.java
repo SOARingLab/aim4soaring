@@ -541,10 +541,12 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
     Sender sender;
 
     private void testMQ() {
-        sender.send("NORTH", new Leave(1, 2));
-        sender.send("EAST", new Leave(3, 4));
-        sender.send("SOUTH", new Leave(5, 6));
-        sender.send("WEST", new Leave(7, 8));
+        Leave leave = new Leave(1,2);
+        leave.setVehicleSpecName("COUPE");
+        sender.send(Constants.Direction.NORTH, leave);
+//        sender.send(Constants.Direction.EAST, new Leave(3, 4));
+//        sender.send(Constants.Direction.SOUTH, new Leave(5, 6));
+//        sender.send(Constants.Direction.WEST, new Leave(7, 8));
     }
 
     public void createAndShowGUI() {

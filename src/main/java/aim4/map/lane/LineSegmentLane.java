@@ -47,6 +47,23 @@ public class LineSegmentLane extends AbstractLane {
     // PRIVATE FIELDS
     /////////////////////////////////
 
+    @Override
+    public String toString() {
+        return "LineSegmentLane{" +
+                "length=" + length +
+                ", squaredLaneLength=" + squaredLaneLength +
+                ", width=" + width +
+                ", halfWidth=" + halfWidth +
+                ", line=" + line +
+                ", laneShape=" + laneShape +
+                ", laneVector=" + laneVector +
+                ", heading=" + heading +
+                ", leftBorder=" + leftBorder +
+                ", rightBorder=" + rightBorder +
+                ", direction=" + direction +
+                "} " + super.toString();
+    }
+
     /**
      * The length of the Lane.  Won't change, so no point in recalculating every
      * time.
