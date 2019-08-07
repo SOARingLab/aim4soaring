@@ -91,7 +91,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
      * equal to <code>TURBO_SIM_SPEED</code>, the simulation will run as fast as
      * possible.
      */
-    public static final double DEFAULT_SIM_SPEED = 15.0;
+    public static final double DEFAULT_SIM_SPEED = 10.0;
     /**
      * The number of screen updates per GUI second. If it is larger than or
      * equal to SimConfig.CYCLES_PER_SECOND, the screen will be updated at
@@ -1004,10 +1004,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
      * Initialize the default Simulator to use.
      */
     private void createSimThread() {
-        if (0 < targetSimSpeed
-                && targetSimSpeed < TURBO_SIM_SPEED) {
-            long timerDelay =
-                    (long) (1000.0 * SimConfig.TIME_STEP / targetSimSpeed);
+        if (0 < targetSimSpeed && targetSimSpeed < TURBO_SIM_SPEED) {
+            long timerDelay = (long) (1000.0 * SimConfig.TIME_STEP / targetSimSpeed);
             simThread = new SimThread(false, timerDelay);
         } else {
             long timerDelay;

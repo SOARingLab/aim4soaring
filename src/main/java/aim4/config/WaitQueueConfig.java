@@ -17,6 +17,26 @@ public class WaitQueueConfig {
     Environment environment;
 
     @Bean
+    public int northDistance() {
+        return Integer.parseInt(environment.getProperty("mq.receive.NORTH.distance", "1000"));
+    }
+
+    @Bean
+    public int southDistance() {
+        return Integer.parseInt(environment.getProperty("mq.receive.SOUTH.distance", "1000"));
+    }
+
+    @Bean
+    public int westDistance() {
+        return Integer.parseInt(environment.getProperty("mq.receive.WEST.distance", "1000"));
+    }
+
+    @Bean
+    public int eastDistance() {
+        return Integer.parseInt(environment.getProperty("mq.receive.EAST.distance", "1000"));
+    }
+
+    @Bean
     public boolean hasNorthNeighbour() {
         return !"".equals(environment.getProperty("mq.receive.NORTH.url", ""));
     }
