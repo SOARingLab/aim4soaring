@@ -31,10 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.sim;
 
 import aim4.Application;
-import aim4.config.Constants;
-import aim4.config.Debug;
-import aim4.config.DebugPoint;
-import aim4.config.WaitQueue;
+import aim4.config.*;
 import aim4.driver.AutoDriver;
 import aim4.driver.DriverSimView;
 import aim4.driver.ProxyDriver;
@@ -317,10 +314,11 @@ public class AutoDriverOnlySimulator implements Simulator {
     // STEP 1
     /////////////////////////////////
 
-    private WaitQueue filterWaitQueue() {
+    private ComingMessageQueue filterLeaveMessageQueue() {
         ApplicationContext context = getContext();
-        WaitQueue waitQueue = (WaitQueue) context.getBean("waitQueue");
-        return waitQueue;
+        ComingMessageQueue comingMessageQueue = (ComingMessageQueue) context.getBean("leaveMessageQueue");
+//        logger.info(comingMessageQueue.toString());
+        return comingMessageQueue;
     }
 
     /**
@@ -330,9 +328,9 @@ public class AutoDriverOnlySimulator implements Simulator {
      */
     private void spawnVehicles(double timeStep) {
         ApplicationContext context = getContext();
-        // filter near timestamp vehicles
-        WaitQueue waitQueue = (WaitQueue) context.getBean("waitQueue");
-        WaitQueue comingVehicles = filterWaitQueue();
+        ComingMessageQueue comingMessageQueue = (ComingMessageQueue) context.getBean("leaveMessageQueue");
+        List<Leave> comingVehicles = comingMessageQueue.getAllNearTimeMessage(getSimulationTime());
+
         boolean hasNorthNeighbour = (boolean) context.getBean("hasNorthNeighbour");
         boolean hasWestNeighbour = (boolean) context.getBean("hasWestNeighbour");
         boolean hasEastNeighbour = (boolean) context.getBean("hasEastNeighbour");
@@ -340,34 +338,43 @@ public class AutoDriverOnlySimulator implements Simulator {
 
         for (SpawnPoint spawnPoint : basicMap.getSpawnPoints()) {
             List<SpawnSpec> spawnSpecs = spawnPoint.act(timeStep);
-            if (canSpawnVehicle(spawnPoint)) {
-                // NORTH
-                if (hasNorthNeighbour
-                        && spawnPoint.getLane().getDirection() == Constants.Direction.NORTH
-                        && comingVehicles.get(Constants.Direction.NORTH) != null
-                        && !comingVehicles.get(Constants.Direction.NORTH).isEmpty()) {
-                    List<Leave> messages = waitQueue.get(Constants.Direction.NORTH);
-                    for (Leave message : messages) {
-                        // extract vehicleSpec from message
-                        // vehicle = makeVehicle(spawnPoint, vehicleSpec)
-                        // vehicle.setVIN(message.getVIN())
-                        // remove this message from waitQueue and comingVehicles
-                        break;
-                    }
+            if (canSpawnVehicle(spawnPoint) && !spawnSpecs.isEmpty()) {
+                if (spawnPoint.getLane().getDirection() == Constants.Direction.NORTH) {
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasNorthNeighbour, spawnPoint, spawnSpecs);
                 }
-                // SOUTH
-                // WEST
-                // EAST
+                if (spawnPoint.getLane().getDirection() == Constants.Direction.EAST) {
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasEastNeighbour, spawnPoint, spawnSpecs);
+                }
+                if (spawnPoint.getLane().getDirection() == Constants.Direction.WEST) {
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasWestNeighbour, spawnPoint, spawnSpecs);
+                }
+                if (spawnPoint.getLane().getDirection() == Constants.Direction.SOUTH) {
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasSouthNeighbour, spawnPoint, spawnSpecs);
+                }
+            }
+        }
+    }
 
-                if (!spawnSpecs.isEmpty()) {
-                    for (SpawnSpec spawnSpec : spawnSpecs) {
-                        VehicleSimView vehicle = makeVehicle(spawnPoint, spawnSpec);
-                        VinRegistry.registerVehicle(vehicle); // Get vehicle a VIN number
-                        vinToVehicles.put(vehicle.getVIN(), vehicle);
-                        break; // only handle the first spawn vehicle
-                        // TODO: need to fix this
+    private void spawnVehicleFromMessageQueue(ComingMessageQueue comingMessageQueue, List<Leave> comingVehicles, boolean hasNeighbour, SpawnPoint spawnPoint, List<SpawnSpec> spawnSpecs) {
+        if (hasNeighbour) {
+            for (SpawnSpec spawnSpec : spawnSpecs) {
+                for (Leave message : comingVehicles) {
+                    VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
+                    boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, vehicle.getVIN());
+                    if (status){
+                        logger.error("vehicle from message: {}", message);
                     }
+                    vinToVehicles.put(vehicle.getVIN(), vehicle);
+                    comingMessageQueue.removeMessage(message);
+                    break;
                 }
+            }
+        } else {
+            for (SpawnSpec spawnSpec : spawnSpecs) {
+                VehicleSimView vehicle = makeVehicle(spawnPoint, spawnSpec);
+                VinRegistry.registerVehicle(vehicle);
+                vinToVehicles.put(vehicle.getVIN(), vehicle);
+                break;
             }
         }
     }
@@ -417,6 +424,27 @@ public class AutoDriverOnlySimulator implements Simulator {
         // Set the driver
         AutoDriver driver = new AutoDriver(vehicle, basicMap);
         driver.setCurrentLane(lane);
+        driver.setSpawnPoint(spawnPoint);
+        driver.setDestination(spawnSpec.getDestinationRoad());
+        vehicle.setDriver(driver);
+
+        return vehicle;
+    }
+
+    private VehicleSimView makeVehicleFromMessage(SpawnPoint spawnPoint, VehicleSpec spec, SpawnSpec spawnSpec) {
+        double initVelocity = Math.min(spec.getMaxVelocity(), spawnPoint.getLane().getSpeedLimit());
+        AutoVehicleSimView vehicle =
+                new BasicAutoVehicle(spec,
+                        spawnPoint.getPosition(),
+                        spawnPoint.getHeading(),
+                        spawnPoint.getSteeringAngle(),
+                        initVelocity, // velocity
+                        initVelocity,  // target velocity
+                        spawnPoint.getAcceleration(),
+                        spawnSpec.getSpawnTime());
+
+        AutoDriver driver = new AutoDriver(vehicle, basicMap);
+        driver.setCurrentLane(spawnPoint.getLane());
         driver.setSpawnPoint(spawnPoint);
         driver.setDestination(spawnSpec.getDestinationRoad());
         vehicle.setDriver(driver);
@@ -827,17 +855,27 @@ public class AutoDriverOnlySimulator implements Simulator {
             for (Iterator<I2VMessage> i2vIter = senderIM.outboxIterator();
                  i2vIter.hasNext(); ) {
                 I2VMessage msg = i2vIter.next();
-                AutoVehicleSimView vehicle =
-                        (AutoVehicleSimView) VinRegistry.getVehicleFromVIN(
-                                msg.getVin());
-                // Calculate the distance the message must travel
-                double txDistance =
-                        senderIM.getIntersection().getCentroid().distance(
-                                vehicle.getPosition());
-                // Find out if the message will make it that far
-                if (transmit(txDistance, senderIM.getTransmissionPower())) {
-                    // Actually deliver the message
-                    vehicle.receive(msg);
+                AutoVehicleSimView vehicle = (AutoVehicleSimView) VinRegistry.getVehicleFromVIN(msg.getVin());
+                try {
+                    // Calculate the distance the message must travel
+                    assert vehicle != null;
+                    assert vehicle.getPosition() != null;
+                    assert senderIM.getIntersection() != null;
+                    assert senderIM.getIntersection().getCentroid() != null;
+                    double txDistance = senderIM.getIntersection().getCentroid().distance(vehicle.getPosition());
+                    // Find out if the message will make it that far
+                    if (transmit(txDistance, senderIM.getTransmissionPower())) {
+                        // Actually deliver the message
+                        vehicle.receive(msg);
+                    }
+                } catch (NullPointerException e) {
+                    logger.warn("msg: {}", msg);
+                    logger.warn("vinToVehicles: {}", vinToVehicles);
+                    logger.warn("vehicle: {}", vehicle);
+                    logger.warn("senderIM: {}", senderIM);
+                    logger.warn("senderIM.getIntersection: {}", senderIM.getIntersection());
+                    logger.warn("senderIM.getIntersection().getCentroid(): {}", senderIM.getIntersection().getCentroid());
+                    throw e;
                 }
             }
             // Done delivering the IntersectionManager's messages, so clear the
@@ -971,6 +1009,16 @@ public class AutoDriverOnlySimulator implements Simulator {
         Sender sender = context.getBean(Sender.class);
         int nodeId = (int) context.getBean("nodeId");
 
+        boolean hasNorthNeighbour = (boolean) context.getBean("hasNorthNeighbour");
+        boolean hasWestNeighbour = (boolean) context.getBean("hasWestNeighbour");
+        boolean hasEastNeighbour = (boolean) context.getBean("hasEastNeighbour");
+        boolean hasSouthNeighbour = (boolean) context.getBean("hasSouthNeighbour");
+
+        double northDistance = (double) context.getBean("northDistance");
+        double westDistance = (double) context.getBean("westDistance");
+        double southDistance = (double) context.getBean("southDistance");
+        double eastDistance = (double) context.getBean("eastDistance");
+
         List<Integer> completedVINs = new LinkedList<Integer>();
         Rectangle2D mapBoundary = basicMap.getDimensions();
         List<Integer> removedVINs = new ArrayList<Integer>(vinToVehicles.size());
@@ -984,11 +1032,23 @@ public class AutoDriverOnlySimulator implements Simulator {
                     AutoVehicleSimView v2 = (AutoVehicleSimView) v;
                     totalBitsTransmittedByCompletedVehicles += v2.getBitsTransmitted();
                     totalBitsReceivedByCompletedVehicles += v2.getBitsReceived();
-                    Leave leave = new Leave(nodeId, vin);
-                    leave.setVehicleSpecName(v2.getSpec().getName());
+                    // TODO need to delete 10000
+                    Leave leave = new Leave(nodeId, vin+10000);
                     leave.setVehicleSpec(v2.getSpec());
-                    logger.info("leave: {}", leave);
                     Constants.Direction direction = v2.getDriver().getCurrentLane().getDirection();
+
+                    double distance = 0.0;
+                    if (direction == Constants.Direction.NORTH) {
+                        distance = southDistance;
+                    } else if (direction == Constants.Direction.SOUTH) {
+                        distance = northDistance;
+                    } else if (direction == Constants.Direction.EAST) {
+                        distance = westDistance;
+                    } else if (direction == Constants.Direction.WEST) {
+                        distance = eastDistance;
+                    }
+                    leave.setDirectionFrom(direction);
+                    leave.setEstimateArriveTime(distance / v2.getVelocity() + v2.gaugeTime());
                     sender.send(direction, leave);
                 }
                 // TODO: send vin message to next

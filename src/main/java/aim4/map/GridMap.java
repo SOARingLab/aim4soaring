@@ -289,7 +289,7 @@ public class GridMap implements BasicMap {
                         y, // y2
                         laneWidth, // width
                         speedLimit,
-                        Constants.Direction.EAST
+                        Constants.Direction.WEST
                 );
                 int laneId = laneRegistry.register(l);
                 l.setId(laneId);
@@ -332,7 +332,7 @@ public class GridMap implements BasicMap {
                         y, // y2
                         laneWidth, // width
                         speedLimit,
-                        Constants.Direction.WEST
+                        Constants.Direction.EAST
                 );
                 int laneId = laneRegistry.register(l);
                 l.setId(laneId);

@@ -32,6 +32,8 @@ package aim4.vehicle;
 
 import aim4.map.Road;
 import aim4.map.SpawnPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -41,7 +43,7 @@ import java.util.Map;
  * The Vehicle Registry, the class that issues VIN to vehicles.
  */
 public class VinRegistry {
-
+    private static Logger logger = LoggerFactory.getLogger(VinRegistry.class);
     /////////////////////////////////
     // PRIVATE FIELDS
     /////////////////////////////////
@@ -125,6 +127,7 @@ public class VinRegistry {
                                                          int vin) {
         assert vin >= 0;
         if (vinToVehicle.containsKey(vin)) {
+            logger.error("vin: {}", vin);
             return false;  // the VIN has been used by some other vehicle
         } else {
             assert vehicle.getVIN() < 0;

@@ -37,8 +37,6 @@ import aim4.gui.frame.VehicleInfoFrame;
 import aim4.im.IntersectionManager;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
-import aim4.msg.i2i.Leave;
-import aim4.msg.i2i.Sender;
 import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
 import aim4.sim.Simulator;
 import aim4.sim.Simulator.SimStepResult;
@@ -48,7 +46,6 @@ import aim4.sim.setup.SimFactory;
 import aim4.sim.setup.SimSetup;
 import aim4.util.Util;
 import aim4.vehicle.VehicleSimView;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
 import java.awt.*;
@@ -536,21 +533,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
     /**
      * Create a new GUI and show it.
      */
-
-    @Autowired
-    Sender sender;
-
-    private void testMQ() {
-        Leave leave = new Leave(1,2);
-        leave.setVehicleSpecName("COUPE");
-        sender.send(Constants.Direction.NORTH, leave);
-//        sender.send(Constants.Direction.EAST, new Leave(3, 4));
-//        sender.send(Constants.Direction.SOUTH, new Leave(5, 6));
-//        sender.send(Constants.Direction.WEST, new Leave(7, 8));
-    }
-
     public void createAndShowGUI() {
-        testMQ();
         // Apple specific property.
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "AIM Viewer");

@@ -4,7 +4,7 @@ sim:
     rows: 1
     lane_width: 4
     speed_limit: 25.0
-    lanes_per_road: 1
+    lanes_per_road: 3
     median_size: 1
     distance_between: 150
     traffic_level: 0.28

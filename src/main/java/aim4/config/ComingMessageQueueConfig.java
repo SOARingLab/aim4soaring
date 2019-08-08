@@ -7,32 +7,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import java.util.ArrayList;
-
 @Configuration
-public class WaitQueueConfig {
-    private static Logger logger = LoggerFactory.getLogger(WaitQueueConfig.class);
+public class ComingMessageQueueConfig {
+    private static Logger logger = LoggerFactory.getLogger(ComingMessageQueueConfig.class);
 
     @Autowired
     Environment environment;
 
     @Bean
-    public int northDistance() {
+    public double northDistance() {
         return Integer.parseInt(environment.getProperty("mq.receive.NORTH.distance", "1000"));
     }
 
     @Bean
-    public int southDistance() {
+    public double southDistance() {
         return Integer.parseInt(environment.getProperty("mq.receive.SOUTH.distance", "1000"));
     }
 
     @Bean
-    public int westDistance() {
+    public double westDistance() {
         return Integer.parseInt(environment.getProperty("mq.receive.WEST.distance", "1000"));
     }
 
     @Bean
-    public int eastDistance() {
+    public double eastDistance() {
         return Integer.parseInt(environment.getProperty("mq.receive.EAST.distance", "1000"));
     }
 
@@ -56,14 +54,8 @@ public class WaitQueueConfig {
         return !"".equals(environment.getProperty("mq.receive.WEST.url", ""));
     }
 
-    @Bean("waitQueue")
-    WaitQueue waitQueue() {
-        WaitQueue waitQueue = new WaitQueue();
-        waitQueue.put(Constants.Direction.NORTH, new ArrayList<>());
-        waitQueue.put(Constants.Direction.EAST, new ArrayList<>());
-        waitQueue.put(Constants.Direction.SOUTH, new ArrayList<>());
-        waitQueue.put(Constants.Direction.WEST, new ArrayList<>());
-        logger.info("waitQueue: {}", waitQueue);
-        return waitQueue;
+    @Bean("leaveMessageQueue")
+    ComingMessageQueue leaveMessageQueue() {
+        return new ComingMessageQueue();
     }
 }
