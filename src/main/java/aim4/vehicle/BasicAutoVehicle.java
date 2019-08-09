@@ -56,6 +56,30 @@ public class BasicAutoVehicle extends BasicVehicle
 
     // These control how the sensor range (side to side) changes during turning
 
+    @Override
+    public String toString() {
+        return "BasicAutoVehicle{" +
+                "driver=" + driver +
+                ", transmissionPower=" + transmissionPower +
+                ", v2iOutbox=" + v2iOutbox +
+                ", i2vInbox=" + i2vInbox +
+                ", bitsReceived=" + bitsReceived +
+                ", bitsTransmitted=" + bitsTransmitted +
+                ", intervalometer=" + intervalometer +
+                ", lrfMode=" + lrfMode +
+                ", lrfSensing=" + lrfSensing +
+                ", lrfAngle=" + lrfAngle +
+                ", lrfDistance=" + lrfDistance +
+                ", vehicleTracking=" + vehicleTracking +
+                ", vehicleTrackingTargetLane=" + vehicleTrackingTargetLane +
+                ", frontVehicleDistanceSensor=" + frontVehicleDistanceSensor +
+                ", rearVehicleDistanceSensor=" + rearVehicleDistanceSensor +
+                ", frontVehicleSpeedSensor=" + frontVehicleSpeedSensor +
+                ", rearVehicleSpeedSensor=" + rearVehicleSpeedSensor +
+                ", lastV2IMessage=" + lastV2IMessage +
+                "} " + super.toString();
+    }
+
     /**
      * Sensor angle multiplier (based on steering angle) for the side of the
      * Vehicle toward which the Vehicle is turning. Currently a factor of

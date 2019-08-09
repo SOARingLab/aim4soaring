@@ -360,9 +360,9 @@ public class AutoDriverOnlySimulator implements Simulator {
             for (SpawnSpec spawnSpec : spawnSpecs) {
                 for (Leave message : comingVehicles) {
                     VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
-                    boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, vehicle.getVIN());
-                    if (status){
-                        logger.error("vehicle from message: {}", message);
+                    boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, message.getVin());
+                    if (status) {
+                        logger.error("vehicle {} from message: {}", vehicle, message);
                     }
                     vinToVehicles.put(vehicle.getVIN(), vehicle);
                     comingMessageQueue.removeMessage(message);
@@ -1009,11 +1009,6 @@ public class AutoDriverOnlySimulator implements Simulator {
         Sender sender = context.getBean(Sender.class);
         int nodeId = (int) context.getBean("nodeId");
 
-        boolean hasNorthNeighbour = (boolean) context.getBean("hasNorthNeighbour");
-        boolean hasWestNeighbour = (boolean) context.getBean("hasWestNeighbour");
-        boolean hasEastNeighbour = (boolean) context.getBean("hasEastNeighbour");
-        boolean hasSouthNeighbour = (boolean) context.getBean("hasSouthNeighbour");
-
         double northDistance = (double) context.getBean("northDistance");
         double westDistance = (double) context.getBean("westDistance");
         double southDistance = (double) context.getBean("southDistance");
@@ -1032,26 +1027,28 @@ public class AutoDriverOnlySimulator implements Simulator {
                     AutoVehicleSimView v2 = (AutoVehicleSimView) v;
                     totalBitsTransmittedByCompletedVehicles += v2.getBitsTransmitted();
                     totalBitsReceivedByCompletedVehicles += v2.getBitsReceived();
-                    // TODO need to delete 10000
-                    Leave leave = new Leave(nodeId, vin+10000);
+                    Leave leave = new Leave(nodeId, vin);
                     leave.setVehicleSpec(v2.getSpec());
                     Constants.Direction direction = v2.getDriver().getCurrentLane().getDirection();
-
+                    Constants.Direction oppoDirection = Constants.Direction.NORTH;
                     double distance = 0.0;
                     if (direction == Constants.Direction.NORTH) {
                         distance = southDistance;
+                        oppoDirection = Constants.Direction.SOUTH;
                     } else if (direction == Constants.Direction.SOUTH) {
                         distance = northDistance;
+                        oppoDirection = Constants.Direction.NORTH;
                     } else if (direction == Constants.Direction.EAST) {
                         distance = westDistance;
+                        oppoDirection = Constants.Direction.WEST;
                     } else if (direction == Constants.Direction.WEST) {
                         distance = eastDistance;
+                        oppoDirection = Constants.Direction.EAST;
                     }
-                    leave.setDirectionFrom(direction);
+                    leave.setDirectionFrom(oppoDirection);
                     leave.setEstimateArriveTime(distance / v2.getVelocity() + v2.gaugeTime());
                     sender.send(direction, leave);
                 }
-                // TODO: send vin message to next
                 removedVINs.add(vin);
             }
         }

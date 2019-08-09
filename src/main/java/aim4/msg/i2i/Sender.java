@@ -14,8 +14,22 @@ public class Sender {
     @Autowired
     private JmsTemplate jmsTemplate;
 
+    @Autowired
+    boolean hasNorthNeighbour;
+    @Autowired
+    boolean hasSouthNeighbour;
+    @Autowired
+    boolean hasWestNeighbour;
+    @Autowired
+    boolean hasEastNeighbour;
+
     public void send(Constants.Direction direction, Leave message) {
         LOGGER.info("sending message='{}' to destination='{}'", message, direction);
-        jmsTemplate.convertAndSend(direction.toString(), message);
+        if ((hasEastNeighbour && direction == Constants.Direction.EAST)
+                || (hasWestNeighbour && direction == Constants.Direction.WEST)
+                || (hasNorthNeighbour && direction == Constants.Direction.NORTH)
+                || (hasSouthNeighbour && direction == Constants.Direction.SOUTH)) {
+            jmsTemplate.convertAndSend(direction.toString(), message);
+        }
     }
 }
