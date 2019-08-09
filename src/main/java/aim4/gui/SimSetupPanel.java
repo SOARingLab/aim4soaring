@@ -98,8 +98,6 @@ public class SimSetupPanel extends JPanel implements ItemListener {
         String[] comboBoxItems = {
                 PB_AUTO_DRIVER_ONLY_SETUP_PANEL,
                 AUTO_DRIVER_ONLY_SETUP_PANEL,
-//                TRAFFIC_SIGNAL_SETUP_PANEL,
-//                STOP_SIGN_SETUP_PANEL
         };
         comboBox = new JComboBox(comboBoxItems);
         comboBox.setEditable(false);
@@ -115,10 +113,6 @@ public class SimSetupPanel extends JPanel implements ItemListener {
         addParamPanel(pbAutoDriverOnlySetupPanel, PB_AUTO_DRIVER_ONLY_SETUP_PANEL);
         autoDriverOnlySetupPanel = new AutoDriverOnlyParamPanel(simSetup);
         addParamPanel(autoDriverOnlySetupPanel, AUTO_DRIVER_ONLY_SETUP_PANEL);
-//        addParamPanel(autoDriverOnlySetupPanel, PB_AUTO_DRIVER_ONLY_SETUP_PANEL);
-//        trafficSignalSetupPanel = new TrafficSignalParamPanel();
-//        cards.add(trafficSignalSetupPanel, TRAFFIC_SIGNAL_SETUP_PANEL);
-//        cards.add(new JPanel(), STOP_SIGN_SETUP_PANEL);
 
         // add the combo box pane and cards pane
         setLayout(new BorderLayout());
@@ -169,26 +163,6 @@ public class SimSetupPanel extends JPanel implements ItemListener {
                     "SimSetupPane::getSimSetup(): not implemented yet");
         }
     }
-//        } else if (comboBox.getSelectedIndex() == 1) {
-//            // ApproxNPhasesTrafficSignalSimSetup simSetup2 =
-//            //  new ApproxNPhasesTrafficSignalSimSetup(simSetup,
-//            //                                         "src/main/resources/SignalPhases/AIM4Phases.csv");
-//            // simSetup2.setTrafficVolume("src/main/resources/SignalPhases/AIM4Volumes.csv");
-//            ApproxNPhasesTrafficSignalSimSetup simSetup2 =
-//                    new ApproxNPhasesTrafficSignalSimSetup(simSetup,
-//                            "/SignalPhases/AIM4Phases.csv");
-//            simSetup2.setTrafficVolume("/SignalPhases/AIM4Volumes.csv");
-//
-//            simSetup2.setLanesPerRoad(trafficSignalSetupPanel.getLanesPerRoad());
-//            simSetup2.setStopDistBeforeIntersection(1.0);
-//            return simSetup2;
-//        } else if (comboBox.getSelectedIndex() == 2) {
-//            ApproxStopSignSimSetup simSetup2 =
-//                    new ApproxStopSignSimSetup(simSetup);
-//            simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
-//            simSetup2.setStopDistBeforeIntersection(
-//                    autoDriverOnlySetupPanel.getStopDistToIntersection());
-//            return simSetup2;
 
     /**
      * {@inheritDoc}

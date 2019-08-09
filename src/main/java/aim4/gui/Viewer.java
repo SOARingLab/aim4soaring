@@ -41,6 +41,7 @@ import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
 import aim4.sim.Simulator;
 import aim4.sim.Simulator.SimStepResult;
 import aim4.sim.UdpListener;
+import aim4.sim.setup.AutoDriverOnlySimSetup;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.sim.setup.SimFactory;
 import aim4.sim.setup.SimSetup;
@@ -554,7 +555,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
         addKeyListener(this);
 
         if (this.isRunNow) {
-            startButtonHandler(this.initSimSetup);
+            AutoDriverOnlySimSetup simSetup = new AutoDriverOnlySimSetup(this.initSimSetup, true);
+            startButtonHandler(simSetup);
             canvas.requestFocusInWindow();
         }
     }
@@ -719,21 +721,6 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
         panel1.add(simSetupPanel, c1);
         // add the panel to the top layer
         mainPanel.add(panel1, "SIM_SETUP_PANEL");
-
-        // create ...
-//    JPanel panel2 = new JPanel();
-//    panel2.setBackground(Color.BLUE);
-//    panel2.setLayout(new GridBagLayout());
-//    GridBagConstraints c2 = new GridBagConstraints();
-//    c2.gridx = 0;
-//    c2.gridy = 0;
-//    c2.fill = GridBagConstraints.BOTH;
-//    c2.weightx = 1.0;
-//    c2.weighty = 1.0;
-//    panel2.add(canvas, c2);
-//    // add the canvas to the second layer
-//    mainPanel.add(panel2, "CANVAS");
-
 
         // add the canvas to the second layer
         mainPanel.add(canvas, "CANVAS");

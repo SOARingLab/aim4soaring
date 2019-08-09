@@ -14,27 +14,27 @@ public class Receiver {
     @Autowired
     ComingMessageQueue comingMessageQueue;
 
-    @JmsListener(destination = "NORTH", containerFactory = "northJmsListenerContainerFactory")
+    @JmsListener(destination = "SOUTH", containerFactory = "northJmsListenerContainerFactory")
     public void receiveNorth(Leave message) {
         comingMessageQueue.insertMessage(message);
-        logger.info("received message='{}' from NORTH", message);
+        logger.warn("received NORTH message={}", message);
     }
 
-    @JmsListener(destination = "EAST", containerFactory = "eastJmsListenerContainerFactory")
+    @JmsListener(destination = "WEST", containerFactory = "eastJmsListenerContainerFactory")
     public void receiveEast(Leave message) {
         comingMessageQueue.insertMessage(message);
-        logger.info("received message='{}' from EAST", message);
+        logger.warn("received EAST message={}", message);
     }
 
-    @JmsListener(destination = "SOUTH", containerFactory = "southJmsListenerContainerFactory")
+    @JmsListener(destination = "NORTH", containerFactory = "southJmsListenerContainerFactory")
     public void receiveSouth(Leave message) {
         comingMessageQueue.insertMessage(message);
-        logger.info("received message='{}' from SOUTH", message);
+        logger.warn("received SOUTH message={}", message);
     }
 
-    @JmsListener(destination = "WEST", containerFactory = "westJmsListenerContainerFactory")
+    @JmsListener(destination = "EAST", containerFactory = "westJmsListenerContainerFactory")
     public void receiveWest(Leave message) {
         comingMessageQueue.insertMessage(message);
-        logger.info("received message='{}' from WEST", message);
+        logger.warn("received WEST message={}", message);
     }
 }

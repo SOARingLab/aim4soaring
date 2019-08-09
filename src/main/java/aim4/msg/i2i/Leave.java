@@ -19,11 +19,11 @@ public class Leave extends I2IMessage {
 
     @Override
     public String toString() {
-        return "Leave{" +
+        return "Leave{" + super.toString() +
                 "vehicleSpec=" + vehicleSpec.getName() +
                 ", estimateArriveTime=" + estimateArriveTime +
                 ", directionFrom=" + directionFrom +
-                "} " + super.toString();
+                "} ";
     }
 
     public Constants.Direction getDirectionFrom() {

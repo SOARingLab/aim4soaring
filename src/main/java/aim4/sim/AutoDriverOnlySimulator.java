@@ -314,13 +314,6 @@ public class AutoDriverOnlySimulator implements Simulator {
     // STEP 1
     /////////////////////////////////
 
-    private ComingMessageQueue filterLeaveMessageQueue() {
-        ApplicationContext context = getContext();
-        ComingMessageQueue comingMessageQueue = (ComingMessageQueue) context.getBean("leaveMessageQueue");
-//        logger.info(comingMessageQueue.toString());
-        return comingMessageQueue;
-    }
-
     /**
      * Spawn vehicles.
      *
@@ -361,11 +354,13 @@ public class AutoDriverOnlySimulator implements Simulator {
                 for (Leave message : comingVehicles) {
                     VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
                     boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, message.getVin());
-                    if (status) {
-                        logger.error("vehicle {} from message: {}", vehicle, message);
+                    if (!status) {
+                        logger.error("vehicle {}", vehicle);
+                        logger.error("message: {}", message);
                     }
-                    vinToVehicles.put(vehicle.getVIN(), vehicle);
+                    vinToVehicles.put(message.getVin(), vehicle);
                     comingMessageQueue.removeMessage(message);
+
                     break;
                 }
             }
@@ -387,7 +382,6 @@ public class AutoDriverOnlySimulator implements Simulator {
      * @return Whether the spawn point can spawn any vehicle
      */
     private boolean canSpawnVehicle(SpawnPoint spawnPoint) {
-        // TODO: can be made much faster.
         Rectangle2D noVehicleZone = spawnPoint.getNoVehicleZone();
         for (VehicleSimView vehicle : vinToVehicles.values()) {
             if (vehicle.getShape().intersects(noVehicleZone)) {
@@ -397,15 +391,7 @@ public class AutoDriverOnlySimulator implements Simulator {
         return true;
     }
 
-    /**
-     * Create a vehicle at a spawn point.
-     *
-     * @param spawnPoint the spawn point
-     * @param spawnSpec  the spawn specification
-     * @return the vehicle
-     */
-    private VehicleSimView makeVehicle(SpawnPoint spawnPoint,
-                                       SpawnSpec spawnSpec) {
+    private VehicleSimView makeVehicle(SpawnPoint spawnPoint, SpawnSpec spawnSpec) {
         VehicleSpec spec = spawnSpec.getVehicleSpec();
         Lane lane = spawnPoint.getLane();
         // Now just take the minimum of the max velocity of the vehicle, and
@@ -421,7 +407,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                         initVelocity,  // target velocity
                         spawnPoint.getAcceleration(),
                         spawnSpec.getSpawnTime());
-        // Set the driver
+
         AutoDriver driver = new AutoDriver(vehicle, basicMap);
         driver.setCurrentLane(lane);
         driver.setSpawnPoint(spawnPoint);
@@ -870,7 +856,6 @@ public class AutoDriverOnlySimulator implements Simulator {
                     }
                 } catch (NullPointerException e) {
                     logger.warn("msg: {}", msg);
-                    logger.warn("vinToVehicles: {}", vinToVehicles);
                     logger.warn("vehicle: {}", vehicle);
                     logger.warn("senderIM: {}", senderIM);
                     logger.warn("senderIM.getIntersection: {}", senderIM.getIntersection());
@@ -1047,7 +1032,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                     }
                     leave.setDirectionFrom(oppoDirection);
                     leave.setEstimateArriveTime(distance / v2.getVelocity() + v2.gaugeTime());
-                    sender.send(direction, leave);
+                    sender.send(oppoDirection, leave);
                 }
                 removedVINs.add(vin);
             }

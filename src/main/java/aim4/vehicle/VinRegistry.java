@@ -123,11 +123,10 @@ public class VinRegistry {
      * @return true if the VIN has not been issued to other vehicle; false if
      * the VIN has been used by other vehicle.
      */
-    public static boolean registerVehicleWithExistingVIN(VehicleSimView vehicle,
-                                                         int vin) {
+    public static boolean registerVehicleWithExistingVIN(VehicleSimView vehicle, int vin) {
         assert vin >= 0;
         if (vinToVehicle.containsKey(vin)) {
-            logger.error("vin: {}", vin);
+            logger.error("vin: {}, vehicle: {}", vin, vehicle);
             return false;  // the VIN has been used by some other vehicle
         } else {
             assert vehicle.getVIN() < 0;
@@ -144,9 +143,6 @@ public class VinRegistry {
             }
 
             vehicle.setVIN(vin);
-            if (vin >= vinGenerator) {
-                vinGenerator = vin + 1;
-            }  // else vin < vinGenerator and it would not affect the next vehicle
             return true;
         }
     }

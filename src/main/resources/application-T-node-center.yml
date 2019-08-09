@@ -1,28 +1,37 @@
 sim:
-    isRunNow: false
+    isRunNow: true
     columns: 1
     rows: 1
     lane_width: 4
     speed_limit: 25.0
-    lanes_per_road: 1
+    lanes_per_road: 3
     median_size: 1
     distance_between: 150
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
+    vin_start: 10000
+
+node:
+    id: 1000
+    name: node-center
 
 mq:
     send:
         url: tcp://center.soaringlab.top:61616
     receive:
-        NORTH:
-            channel: SOUTH
-            url: tcp://up.soaringlab.top:61617
+        # NORTH:
+        #     distance: 400
+        #     channel: SOUTH
+        #     url: tcp://up.soaringlab.top:61617
         EAST:
+            distance: 400
             channel: WEST
             url: tcp://right.soaringlab.top:61618
         SOUTH:
+            distance: 400
             channel: NORTH
             url: tcp://down.soaringlab.top:61619
-        WEST:
-            channel: EAST
-            url: tcp://left.soaringlab.top:61620
+    #    WEST:
+    #        distance: 400
+    #        channel: EAST
+    #        url: tcp://left.soaringlab.top:61620

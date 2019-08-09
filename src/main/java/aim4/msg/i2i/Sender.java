@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Sender {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Sender.class);
+    private static final Logger logger = LoggerFactory.getLogger(Sender.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -24,11 +24,11 @@ public class Sender {
     boolean hasEastNeighbour;
 
     public void send(Constants.Direction direction, Leave message) {
-        LOGGER.info("sending message='{}' to destination='{}'", message, direction);
         if ((hasEastNeighbour && direction == Constants.Direction.EAST)
                 || (hasWestNeighbour && direction == Constants.Direction.WEST)
                 || (hasNorthNeighbour && direction == Constants.Direction.NORTH)
                 || (hasSouthNeighbour && direction == Constants.Direction.SOUTH)) {
+            logger.info("sending destination = {}, message={}", direction, message);
             jmsTemplate.convertAndSend(direction.toString(), message);
         }
     }
