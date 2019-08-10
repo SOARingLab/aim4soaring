@@ -1,36 +1,43 @@
 version: "3.7"
 services:
+    activemq_log:
+        image: webcenter/activemq:latest
+        container_name: activemq_log
+        ports:
+            - "8161:8161"
+            - "61616:61616"
+        
     activemq_center:
         image: webcenter/activemq:latest
         container_name: activemq_center
         ports:
-            - "8161:8161"
-            - "61616:61616"
+            - "8000:8161"
+            - "60000:61616"
     
     activemq_up:
         image: webcenter/activemq:latest
         container_name: activemq_up
         ports:
-            - "8162:8161"
-            - "61617:61616"
+            - "8001:8161"
+            - "60001:61616"
 
     activemq_right:
         image: webcenter/activemq:latest
         container_name: activemq_right
         ports:
-            - "8163:8161"
-            - "61618:61616"
+            - "8002:8161"
+            - "60002:61616"
 
     activemq_down:
         image: webcenter/activemq:latest
         container_name: activemq_down
         ports:
-            - "8164:8161"
-            - "61619:61616"
+            - "8003:8161"
+            - "60003:61616"
 
     activemq_left:
         image: webcenter/activemq:latest
         container_name: activemq_left
         ports:
-            - "8165:8161"
-            - "61620:61616"
+            - "8004:8161"
+            - "60004:61616"

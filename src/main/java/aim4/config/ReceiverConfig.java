@@ -25,7 +25,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory northConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String DEFAULT_URL = environment.getProperty("mq.send.url");
+        String DEFAULT_URL = environment.getProperty("mq.log.url");
         String URL = environment.getProperty("mq.receive." + Constants.Direction.NORTH + ".url", DEFAULT_URL);
         logger.info("BrokerURL:{} {} connected", Constants.Direction.NORTH, URL);
         connectionFactory.setBrokerURL(URL);
@@ -52,7 +52,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory eastConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String DEFAULT_URL = environment.getProperty("mq.send.url");
+        String DEFAULT_URL = environment.getProperty("mq.log.url");
         String URL = environment.getProperty("mq.receive." + Constants.Direction.EAST + ".url", DEFAULT_URL);
         logger.info("BrokerURL:{} {} connected", Constants.Direction.EAST, URL);
         connectionFactory.setBrokerURL(URL);
@@ -79,7 +79,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory southConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String DEFAULT_URL = environment.getProperty("mq.send.url");
+        String DEFAULT_URL = environment.getProperty("mq.log.url");
         String URL = environment.getProperty("mq.receive." + Constants.Direction.SOUTH + ".url", DEFAULT_URL);
         logger.info("BrokerURL:{} {} connected", Constants.Direction.SOUTH, URL);
         connectionFactory.setBrokerURL(URL);
@@ -106,7 +106,7 @@ public class ReceiverConfig {
     public QueueConnectionFactory westConnectionFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setTrustAllPackages(true);
-        String DEFAULT_URL = environment.getProperty("mq.send.url");
+        String DEFAULT_URL = environment.getProperty("mq.log.url");
         String URL = environment.getProperty("mq.receive." + Constants.Direction.WEST + ".url", DEFAULT_URL);
         logger.info("BrokerURL:{} {} connected", Constants.Direction.WEST, URL);
         connectionFactory.setBrokerURL(URL);

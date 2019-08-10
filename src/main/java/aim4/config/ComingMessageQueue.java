@@ -2,8 +2,11 @@ package aim4.config;
 
 import aim4.msg.i2i.Leave;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class ComingMessageQueue {
@@ -22,20 +25,19 @@ public class ComingMessageQueue {
 
     public void insertMessage(Leave leave) {
         messagesByDirection.get(leave.getDirectionFrom()).add(leave);
-
         messageOrderedByTime.add(leave);
     }
 
     public void removeMessage(Leave leave) {
         messagesByDirection.get(leave.getDirectionFrom()).remove(leave);
-
         messageOrderedByTime.remove(leave);
     }
 
     private static double NEAR_TIME = 5.0;
 
     public List<Leave> getAllNearTimeMessage(double time) {
-        return messageOrderedByTime.stream()
+        List<Leave> tmpMessageOrderedByTime = new CopyOnWriteArrayList<>(messageOrderedByTime);
+        return tmpMessageOrderedByTime.stream()
                 .filter(m -> m.getEstimateArriveTime() < time || Math.abs(m.getEstimateArriveTime() - time) < NEAR_TIME)
                 .collect(Collectors.toList());
     }

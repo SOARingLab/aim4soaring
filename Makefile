@@ -19,8 +19,8 @@ run:
 	mvn spring-boot:run
 
 1:
-	screen -S T-node-center -d -m mvn spring-boot:run -Dspring-boot.run.profiles=1-node-center
-	screen -S T-node-right 	-d -m mvn spring-boot:run -Dspring-boot.run.profiles=1-node-right
+	screen -S 1-node-center -d -m mvn spring-boot:run -Dspring-boot.run.profiles=1-node-center
+	screen -S 1-node-right 	-d -m mvn spring-boot:run -Dspring-boot.run.profiles=1-node-right
 
 T:
 	screen -S T-node-center -d -m mvn spring-boot:run -Dspring-boot.run.profiles=T-node-center

@@ -838,9 +838,11 @@ public class AutoDriverOnlySimulator implements Simulator {
         // Now deliver all the I2V messages
         for (IntersectionManager im : basicMap.getIntersectionManagers()) {
             V2IManager senderIM = (V2IManager) im;
-            for (Iterator<I2VMessage> i2vIter = senderIM.outboxIterator();
-                 i2vIter.hasNext(); ) {
+            for (Iterator<I2VMessage> i2vIter = senderIM.outboxIterator(); i2vIter.hasNext(); ) {
                 I2VMessage msg = i2vIter.next();
+//                if (msg.getVin() < 0) {
+//                    continue;
+//                }
                 AutoVehicleSimView vehicle = (AutoVehicleSimView) VinRegistry.getVehicleFromVIN(msg.getVin());
                 try {
                     // Calculate the distance the message must travel
@@ -855,12 +857,9 @@ public class AutoDriverOnlySimulator implements Simulator {
                         vehicle.receive(msg);
                     }
                 } catch (NullPointerException e) {
-                    logger.warn("msg: {}", msg);
-                    logger.warn("vehicle: {}", vehicle);
-                    logger.warn("senderIM: {}", senderIM);
-                    logger.warn("senderIM.getIntersection: {}", senderIM.getIntersection());
-                    logger.warn("senderIM.getIntersection().getCentroid(): {}", senderIM.getIntersection().getCentroid());
-                    throw e;
+                    logger.error("msg: {}", msg);
+                    logger.error("vehicle: {}", vehicle);
+//                    throw e;
                 }
             }
             // Done delivering the IntersectionManager's messages, so clear the

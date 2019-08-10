@@ -16,22 +16,12 @@ node:
     name: node-right
 
 mq:
+    log:
+        url: tcp://log.soaringlab.top:61616
     send:
-        url: tcp://right.soaringlab.top:61618
+        url: tcp://right.soaringlab.top:60002
     receive:
-#        NORTH:
-#            distance: 400
-#            channel: SOUTH
-#            url: tcp://up.soaringlab.top:61617
-#        EAST:
-#            distance: 400
-#            channel: WEST
-#            url: tcp://right.soaringlab.top:61618
-#        SOUTH:
-#            distance: 400
-#            channel: NORTH
-#            url: tcp://down.soaringlab.top:61619
         WEST:
             distance: 400
             channel: EAST
-            url: tcp://center.soaringlab.top:61616
+            url: tcp://center.soaringlab.top:60000
