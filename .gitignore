@@ -67,8 +67,6 @@ fabric.properties
 
 .idea/
 *.jar
-result/*
-!result/benchmark/
 target/
 nb*.xml
 .settings
