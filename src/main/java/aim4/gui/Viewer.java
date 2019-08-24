@@ -71,7 +71,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
     /**
      * Whether or not the current simulation time is shown on screen.
      */
-    public static final boolean IS_SHOW_SIMULATION_TIME = true;
+    public static final boolean IS_SHOW_SIMULATION_TIME = false;
     /**
      * Whether or not the simulator shows the vin of the vehicles on screen.
      */
