@@ -1,42 +1,42 @@
 version: "3.7"
 services:
     activemq_log:
-        image: registry.soaringlab.top/webcenter/activemq:latest
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_log
         ports:
             - "8161:8161"
             - "61616:61616"
         
     activemq_center:
-        image: registry.soaringlab.top/webcenter/activemq:latest
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_center
         ports:
             - "8000:8161"
             - "60000:61616"
     
     activemq_up:
-        image: registry.soaringlab.top/webcenter/activemq:latest
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_up
         ports:
             - "8001:8161"
             - "60001:61616"
 
     activemq_right:
-        image: registry.soaringlab.top/webcenter/activemq:latest
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_right
         ports:
             - "8002:8161"
             - "60002:61616"
 
     activemq_down:
-        image: registry.soaringlab.top/webcenter/activemq:latest
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_down
         ports:
             - "8003:8161"
             - "60003:61616"
 
     activemq_left:
-        image: registry.soaringlab.top/webcenter/activemq:latest
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_left
         ports:
             - "8004:8161"
