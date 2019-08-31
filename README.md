@@ -1,16 +1,20 @@
+# Single intersection demo
 ## Springboot
 ```
 mvn spring-boot:run -Dspring-boot.run.profiles=node2
 ```
+
 ## ActiveMQ
-- run active mq array using docker-compose
+run activemq using docker-compose
+
 ```bash
 cd ./activemq
 docker-compose up -d
 docker ps -a
 ```
-```text
-~/aim4/activemq> docker ps -a                                                                                                                                                                                                                                                     master!
+
+```bash
+~/aim4/activemq> docker ps -a
 CONTAINER ID        IMAGE                       COMMAND             CREATED             STATUS              PORTS                                                                                   NAMES
 17e4bcff5802        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 4 minutes        1883/tcp, 5672/tcp, 61613-61614/tcp, 0.0.0.0:8163->8161/tcp, 0.0.0.0:61618->61616/tcp   activemq_right
 5ceff0cf092f        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 3 minutes        1883/tcp, 5672/tcp, 61613-61614/tcp, 0.0.0.0:8164->8161/tcp, 0.0.0.0:61619->61616/tcp   activemq_down
@@ -34,6 +38,7 @@ d5a7007b0aae        webcenter/activemq:latest   "/app/run.sh"       4 minutes ag
 | node-left | node-center | node-right |
 |  |  node-down |  |
 
+> /etc/hosts
 ```text
 127.0.0.1	north.soaringlab.top south.soaringlab.top west.soaringlab.top east.soaringlab.top
 127.0.0.1	up.soaringlab.top right.soaringlab.top left.soaringlab.top down.soaringlab.top
