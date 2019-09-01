@@ -1,4 +1,6 @@
-# Single intersection demo
+# Single intersection demo 
+> all in one
+
 ## Springboot
 ```
 mvn spring-boot:run -Dspring-boot.run.profiles=node2
@@ -13,16 +15,6 @@ docker-compose up -d
 docker ps -a
 ```
 
-```bash
-~/aim4/activemq> docker ps -a
-CONTAINER ID        IMAGE                       COMMAND             CREATED             STATUS              PORTS                                                                                   NAMES
-17e4bcff5802        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 4 minutes        1883/tcp, 5672/tcp, 61613-61614/tcp, 0.0.0.0:8163->8161/tcp, 0.0.0.0:61618->61616/tcp   activemq_right
-5ceff0cf092f        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 3 minutes        1883/tcp, 5672/tcp, 61613-61614/tcp, 0.0.0.0:8164->8161/tcp, 0.0.0.0:61619->61616/tcp   activemq_down
-d485428fbd11        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 4 minutes        1883/tcp, 5672/tcp, 61613-61614/tcp, 0.0.0.0:8162->8161/tcp, 0.0.0.0:61617->61616/tcp   activemq_up
-db6649752a35        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 4 minutes        1883/tcp, 5672/tcp, 0.0.0.0:8161->8161/tcp, 61613-61614/tcp, 0.0.0.0:61616->61616/tcp   activemq_center
-d5a7007b0aae        webcenter/activemq:latest   "/app/run.sh"       4 minutes ago       Up 4 minutes        1883/tcp, 5672/tcp, 61613-61614/tcp, 0.0.0.0:8165->8161/tcp, 0.0.0.0:61620->61616/tcp   activemq_left
-```
-
 | Node | Host | endpoint | manage ui |
 | ----- | ----- | ----- | ----- |
 | node-center | center.soaringlab.top | tcp://center.soaringlab.top:61616 | http://center.soaringlab.top:8161/admin/queues.jsp | 
@@ -33,7 +25,6 @@ d5a7007b0aae        webcenter/activemq:latest   "/app/run.sh"       4 minutes ag
 
 |  | map |  | 
 | ----- | ----- | ----- | 
-| | | |
 |  |  node-up |  |
 | node-left | node-center | node-right |
 |  |  node-down |  |
