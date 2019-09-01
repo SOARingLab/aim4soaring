@@ -146,9 +146,10 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
                                   double medianSize,
                                   double distanceBetween,
                                   double trafficLevel,
+                                  boolean priority,
                                   double stopDistBeforeIntersection) {
         super(columns, rows, laneWidth, speedLimit, lanesPerRoad,
-                medianSize, distanceBetween, trafficLevel,
+                medianSize, distanceBetween, trafficLevel, priority,
                 stopDistBeforeIntersection);
     }
 
