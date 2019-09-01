@@ -18,9 +18,9 @@ node:
 
 mq:
     log:
-        url: tcp://log.soaringlab.top:61616
+        url: tcp://log.activemq.soaringlab.top:61616
     send:
-        url: tcp://center.soaringlab.top:60000
+        url: tcp://center.activemq.soaringlab.top:60000
     receive:
 #        NORTH:
 #            distance: 400
@@ -29,12 +29,12 @@ mq:
         EAST:
             distance: 400
             channel: WEST
-            url: tcp://right.soaringlab.top:60002
+            url: tcp://right.activemq.soaringlab.top:60002
         SOUTH:
             distance: 400
             channel: NORTH
-            url: tcp://down.soaringlab.top:60003
+            url: tcp://down.activemq.soaringlab.top:60003
         WEST:
             distance: 400
             channel: EAST
-            url: tcp://left.soaringlab.top:60004
+            url: tcp://left.activemq.soaringlab.top:60004

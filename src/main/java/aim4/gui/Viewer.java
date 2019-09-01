@@ -247,7 +247,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
          */
         public synchronized void start() {
             assert blinker == null;
-            this.blinker = new Thread(this, "AIM4 Simulator Thread");
+            this.blinker = new Thread(this, "SimulatorThread");
             blinker.start();
         }
 

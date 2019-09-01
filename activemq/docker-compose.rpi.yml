@@ -3,7 +3,7 @@ version: "3.7"
 services:
     activemq_log:
         restart: always
-        image: registry.soaringlab.top/webcenter/activemq
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_log
         ports:
             - "8161:8161"
@@ -11,7 +11,7 @@ services:
         
     activemq_center:
         restart: always
-        image: registry.soaringlab.top/webcenter/activemq
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_center
         ports:
             - "8000:8161"
@@ -19,7 +19,7 @@ services:
     
     activemq_up:
         restart: always
-        image: registry.soaringlab.top/webcenter/activemq
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_up
         ports:
             - "8001:8161"
@@ -27,7 +27,7 @@ services:
 
     activemq_right:
         restart: always
-        image: registry.soaringlab.top/webcenter/activemq
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_right
         ports:
             - "8002:8161"
@@ -35,7 +35,7 @@ services:
 
     activemq_down:
         restart: always
-        image: registry.soaringlab.top/webcenter/activemq
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_down
         ports:
             - "8003:8161"
@@ -43,7 +43,7 @@ services:
 
     activemq_left:
         restart: always
-        image: registry.soaringlab.top/webcenter/activemq
+        image: registry.soaringlab.top/woahbase/alpine-activemq:armhf
         container_name: activemq_left
         ports:
             - "8004:8161"
