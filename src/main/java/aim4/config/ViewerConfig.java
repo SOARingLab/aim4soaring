@@ -31,6 +31,7 @@ public class ViewerConfig {
                 Double.parseDouble(environment.getRequiredProperty("sim.median_size")),
                 Double.parseDouble(environment.getRequiredProperty("sim.distance_between")),
                 Double.parseDouble(environment.getRequiredProperty("sim.traffic_level")),
+                Boolean.parseBoolean(environment.getProperty("sim.priority")),
                 Double.parseDouble(environment.getRequiredProperty("sim.stop_distance_before_intersection"))
         );
         logger.info("initSimSetup: {}", initSimSetup);

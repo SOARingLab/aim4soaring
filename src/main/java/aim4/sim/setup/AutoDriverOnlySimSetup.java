@@ -112,7 +112,6 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
      */
     private String trafficVolumeFileName = null;
 
-    private boolean usePriorityBasedPolicy = false;
     /////////////////////////////////
     // CONSTRUCTORS
     /////////////////////////////////
@@ -121,11 +120,9 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
      * Create a setup for the simulator in which all vehicles are autonomous.
      *
      * @param basicSimSetup          the basic simulator setup
-     * @param usePriorityBasedPolicy if use PriorityBasedPolicy
      */
-    public AutoDriverOnlySimSetup(BasicSimSetup basicSimSetup, boolean usePriorityBasedPolicy) {
+    public AutoDriverOnlySimSetup(BasicSimSetup basicSimSetup) {
         super(basicSimSetup);
-        this.usePriorityBasedPolicy = usePriorityBasedPolicy;
     }
 
     /**
@@ -305,7 +302,7 @@ public class AutoDriverOnlySimSetup extends BasicSimSetup implements SimSetup {
         if (!isBaseLineMode) {
             if (isBatchMode) {
                 GridMapUtil.setBatchManagers(layout, currentTime, gridConfig, processingInterval);
-            } else if (usePriorityBasedPolicy) {
+            } else if (priority) {
                 GridMapUtil.setPriorityManagers(layout, currentTime, gridConfig);
             } else {
                 GridMapUtil.setFCFSManagers(layout, currentTime, gridConfig);

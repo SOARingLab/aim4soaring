@@ -45,6 +45,8 @@ public class BasicSimSetup implements SimSetup {
      */
     protected int numOfRows;
 
+    protected boolean priority;
+
     @Override
     public String toString() {
         return "BasicSimSetup{" +
@@ -56,6 +58,7 @@ public class BasicSimSetup implements SimSetup {
                 ", medianSize=" + medianSize +
                 ", distanceBetween=" + distanceBetween +
                 ", trafficLevel=" + trafficLevel +
+                ", priority=" + priority +
                 ", stopDistBeforeIntersection=" + stopDistBeforeIntersection +
                 '}';
     }
@@ -103,6 +106,7 @@ public class BasicSimSetup implements SimSetup {
         this.medianSize = basicSimSetup.medianSize;
         this.distanceBetween = basicSimSetup.distanceBetween;
         this.trafficLevel = basicSimSetup.trafficLevel;
+        this.priority = basicSimSetup.priority;
         this.stopDistBeforeIntersection = basicSimSetup.stopDistBeforeIntersection;
     }
 
@@ -126,6 +130,7 @@ public class BasicSimSetup implements SimSetup {
                          int lanesPerRoad,
                          double medianSize, double distanceBetween,
                          double trafficLevel,
+                         boolean priority,
                          double stopDistBeforeIntersection) {
         this.numOfColumns = columns;
         this.numOfRows = rows;
@@ -135,6 +140,7 @@ public class BasicSimSetup implements SimSetup {
         this.medianSize = medianSize;
         this.distanceBetween = distanceBetween;
         this.trafficLevel = trafficLevel;
+        this.priority = priority;
         this.stopDistBeforeIntersection = stopDistBeforeIntersection;
     }
 

@@ -555,7 +555,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener, Mouse
         addKeyListener(this);
 
         if (this.isRunNow) {
-            AutoDriverOnlySimSetup simSetup = new AutoDriverOnlySimSetup(this.initSimSetup, true);
+            AutoDriverOnlySimSetup simSetup = new AutoDriverOnlySimSetup(this.initSimSetup);
             startButtonHandler(simSetup);
             canvas.requestFocusInWindow();
         }
