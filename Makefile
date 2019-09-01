@@ -30,10 +30,9 @@ T:
 	screen -S T-node-left 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=T-node-left
 	screen -S T-node-right 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=T-node-right
 
-
 X:
 	screen -S X-node-center -d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-center
-	screen -S X-node-up 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-up
+	screen -S X-node-up 		-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-up
 	screen -S X-node-down 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-down
 	screen -S X-node-left 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-left
 	screen -S X-node-right 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-right
@@ -42,6 +41,5 @@ kill:
 	echo "begin..."
 	screen -ls
 	screen -ls | grep Detached | cut -d. -f1 | awk '{print $1}' | xargs kill
-	screen -ls
 	echo "done..."
 

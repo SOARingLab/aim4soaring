@@ -9,7 +9,7 @@ sim:
     distance_between: 150
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
-    vin_start: 10000
+    vin_start: 100000
 
 node:
     id: 1000
@@ -25,6 +25,10 @@ mq:
             distance: 400
             channel: WEST
             url: tcp://right.activemq.soaringlab.top:60002
+        WEST:
+            distance: 400
+            channel: EAST
+            url: tcp://left.activemq.soaringlab.top:60004
         SOUTH:
             distance: 400
             channel: NORTH

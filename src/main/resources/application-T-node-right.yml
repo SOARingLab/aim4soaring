@@ -9,10 +9,10 @@ sim:
     distance_between: 150
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
-    vin_start: 30000
+    vin_start: 200000
 
 node:
-    id: 1000
+    id: 1002
     name: node-right
 
 mq:
