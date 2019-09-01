@@ -139,7 +139,7 @@ public class SimSetupPanel extends JPanel implements ItemListener {
      */
     public SimSetup getSimSetup() {
         if (comboBox.getSelectedIndex() == 0) {
-            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup, true);
+            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup);
             simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
             simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
             simSetup2.setStopDistBeforeIntersection(
@@ -149,7 +149,7 @@ public class SimSetupPanel extends JPanel implements ItemListener {
             simSetup2.setLanesPerRoad(autoDriverOnlySetupPanel.getLanesPerRoad());
             return simSetup2;
         } else if (comboBox.getSelectedIndex() == 1) {
-            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup, false);
+            AutoDriverOnlySimSetup simSetup2 = new AutoDriverOnlySimSetup(simSetup);
             simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
             simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
             simSetup2.setStopDistBeforeIntersection(
