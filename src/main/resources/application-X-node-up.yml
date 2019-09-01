@@ -9,34 +9,22 @@ sim:
     distance_between: 150
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
-    vin_start: 10000
+    vin_start: 100000
 
 node:
-    id: 1000
-    name: node-center
+    id: 1001
+    name: node-up
 
 mq:
     log:
-        url: tcp://log.soaringlab.top:61616
+        url: tcp://log.activemq.soaringlab.top:61616
     send:
-        url: tcp://up.soaringlab.top:60000
+        url: tcp://up.activemq.soaringlab.top:60001
     receive:
-#        NORTH:
-#            distance: 400
-#            channel: SOUTH
-#            url: tcp://up.soaringlab.top:60001
-#        EAST:
-#            distance: 400
-#            channel: WEST
-#            url: tcp://right.soaringlab.top:60002
         SOUTH:
             distance: 400
             channel: NORTH
-            url: tcp://center.soaringlab.top:60003
-#        WEST:
-#            distance: 400
-#            channel: EAST
-#            url: tcp://left.soaringlab.top:60004
+            url: tcp://center.activemq.soaringlab.top:60000
 
 
 #               up:60001
