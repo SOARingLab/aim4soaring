@@ -72,3 +72,5 @@ nb*.xml
 .settings
 .classpath
 .project
+
+*.log
