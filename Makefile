@@ -25,12 +25,9 @@ clean:
 run:
 	mvn spring-boot:run
 
-test:
-	$(foreach node, ${LL}, echo ${node}111;)
-
 L:
 	$(foreach node, ${LL}, screen -t ${timestamp}.${node} ${SCREEN_OPTION} mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=${node}; echo ${node};)
-	
+
 T:
 	$(foreach node, ${TT}, screen -t ${timestamp}.${node} ${SCREEN_OPTION} mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=${node}; echo ${node};)
 
