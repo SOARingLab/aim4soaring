@@ -25,3 +25,7 @@ mq:
             distance: 400
             channel: EAST
             url: tcp://center.soaringlab.top:60000
+
+
+#left:60004     center:60000    right:60002
+#               down:60003

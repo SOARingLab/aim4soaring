@@ -1,0 +1,7 @@
+app:
+    name: AIM4SOARING
+    version: 1.0
+    
+spring:
+    profiles:
+        active: all-in-one

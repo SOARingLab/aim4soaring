@@ -1,6 +1,7 @@
 target=target/AIM4-1.0-SNAPSHOT-jar-with-dependencies.jar
 
-JAVA_OPTIONS= -ea -server -Xmx1000M
+JAVA_OPTIONS= -ea -server -Xmx1000m
+MVN_OPTIONS="jvm.options=-Xmx1024 -Xms512"
 
 .PHONY: all, jar, run, clean
 
@@ -18,14 +19,24 @@ clean:
 run:
 	mvn spring-boot:run
 
-1:
-	screen -S 1-node-center -d -m mvn spring-boot:run -Dspring-boot.run.profiles=1-node-center
-	screen -S 1-node-right 	-d -m mvn spring-boot:run -Dspring-boot.run.profiles=1-node-right
+L:
+	screen -S L-node-center -d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=L-node-center
+	screen -S L-node-down 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=L-node-down
+	screen -S L-node-left 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=L-node-left
 
 T:
-	screen -S T-node-center -d -m mvn spring-boot:run -Dspring-boot.run.profiles=T-node-center
-	screen -S T-node-down 	-d -m mvn spring-boot:run -Dspring-boot.run.profiles=T-node-down
-	screen -S T-node-right 	-d -m mvn spring-boot:run -Dspring-boot.run.profiles=T-node-right
+	screen -S T-node-center -d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=T-node-center
+	screen -S T-node-down 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=T-node-down
+	screen -S T-node-left 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=T-node-left
+	screen -S T-node-right 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=T-node-right
+
+
+X:
+	screen -S X-node-center -d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-center
+	screen -S X-node-up 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-up
+	screen -S X-node-down 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-down
+	screen -S X-node-left 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-left
+	screen -S X-node-right 	-d -m mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=X-node-right
 
 kill:
 	echo "begin..."
