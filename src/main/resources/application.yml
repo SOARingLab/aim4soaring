@@ -3,5 +3,8 @@ app:
     version: 1.0
     
 spring:
+    output:
+        ansi:
+            enabled: never
     profiles:
         active: all-in-one

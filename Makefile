@@ -5,6 +5,7 @@ MVN_OPTIONS="jvm.options=-Xmx1024 -Xms512"
 SCREEN_OPTION=-L -dm
 
 timestamp=`date +%Y-%m-%d-%T`
+II = I-node-center I-node-left
 LL = L-node-center L-node-down L-node-left
 TT = L-node-center T-node-down T-node-left T-node-right
 XX = X-node-center X-node-down X-node-left X-node-right X-node-up
@@ -24,6 +25,9 @@ clean:
 
 run:
 	mvn spring-boot:run
+
+I:
+	$(foreach node, ${II}, screen -t ${timestamp}.${node} ${SCREEN_OPTION} mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=${node}; echo ${node};)
 
 L:
 	$(foreach node, ${LL}, screen -t ${timestamp}.${node} ${SCREEN_OPTION} mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=${node}; echo ${node};)

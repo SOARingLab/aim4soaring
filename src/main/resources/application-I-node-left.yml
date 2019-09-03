@@ -10,23 +10,25 @@ sim:
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
     priority: true
-    vin_start: 300000
+    vin_start: 400000
 
 node:
-    id: 1003
-    name: node-down
+    id: 1004
+    name: node-left
+
 
 mq:
     log:
         url: tcp://log.activemq.soaringlab.top:61616
     send:
-        url: tcp://down.activemq.soaringlab.top:60003
+        url: tcp://left.activemq.soaringlab.top:60004
     receive:
-        NORTH:
+        EAST:
             distance: 400
-            channel: SOUTH
+            channel: WEST
             url: tcp://center.activemq.soaringlab.top:60000
 
 
-#left:60004     center:60000    right:60002
+
+#left:60004     center:60000
 #               down:60003
