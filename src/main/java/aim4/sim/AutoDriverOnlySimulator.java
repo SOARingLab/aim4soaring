@@ -351,7 +351,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     private void spawnVehicleFromMessageQueue(ComingMessageQueue comingMessageQueue, List<Leave> comingVehicles, boolean hasNeighbour, SpawnPoint spawnPoint, List<SpawnSpec> spawnSpecs) {
         if (hasNeighbour) {
             for (Leave message : comingVehicles) {
-                if (spawnPoint.getLane().getDirection().ordinal() != message.getDirectionFrom().ordinal() + 2) {
+                if (spawnPoint.getLane().getDirection() != message.getDirectionFrom()) {
                     logger.debug("wrong spawn point direcion: {}, {}", spawnPoint.getLane().getDirection(), message);
                     continue;
                 }
@@ -1023,7 +1023,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                         distance = eastDistance;
                         oppoDirection = Constants.Direction.EAST;
                     }
-                    leave.setDirectionFrom(oppoDirection);
+                    leave.setDirectionFrom(direction);
                     leave.setEstimateArriveTime(distance / v2.getVelocity() * 3.6);
                     sender.send(oppoDirection, leave);
                 }
