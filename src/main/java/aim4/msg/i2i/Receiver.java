@@ -27,7 +27,7 @@ public class Receiver {
     public void receiveNorth(Leave message) {
         if (hasNorthNeighbour) {
             comingMessageQueue.insertMessage(message);
-            logger.warn("received message from NORTH ={}", message);
+            logger.warn("receive message from NORTH ={}", message);
         }
     }
 
@@ -35,7 +35,7 @@ public class Receiver {
     public void receiveEast(Leave message) {
         if (hasEastNeighbour) {
             comingMessageQueue.insertMessage(message);
-            logger.warn("received message from EAST ={}", message);
+            logger.warn("receive message from EAST ={}", message);
         }
     }
 
@@ -43,7 +43,7 @@ public class Receiver {
     public void receiveSouth(Leave message) {
         if (hasSouthNeighbour) {
             comingMessageQueue.insertMessage(message);
-            logger.warn("received message from SOUTH ={}", message);
+            logger.warn("receive message from SOUTH ={}", message);
         }
     }
 
@@ -51,7 +51,7 @@ public class Receiver {
     public void receiveWest(Leave message) {
         if (hasWestNeighbour) {
             comingMessageQueue.insertMessage(message);
-            logger.warn("received message from WEST ={}", message);
+            logger.warn("receive message from WEST ={}", message);
         }
     }
 }

@@ -150,7 +150,7 @@ public final class Constants {
         /**
          * West
          */
-        WEST
+        WEST;
     }
 
     ;

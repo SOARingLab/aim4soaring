@@ -38,10 +38,10 @@ public class ComingMessageQueue {
     private double MillisToSeconds = 1000;
 
     public List<Leave> getAllNearTimeMessage(double time) {
-        double realtime = time + System.currentTimeMillis() / MillisToSeconds;
+        double realtime = System.currentTimeMillis() / MillisToSeconds;
         List<Leave> tmpMessageOrderedByTime = new CopyOnWriteArrayList<>(messageOrderedByTime);
         return tmpMessageOrderedByTime.stream()
-                .filter(m -> Math.abs(m.getEstimateArriveTime() - realtime) < NEAR_TIME)
+                .filter(m -> m.getEstimateArriveTime() < realtime - NEAR_TIME)
                 .collect(Collectors.toList());
     }
 

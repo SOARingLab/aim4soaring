@@ -351,23 +351,26 @@ public class AutoDriverOnlySimulator implements Simulator {
     private void spawnVehicleFromMessageQueue(ComingMessageQueue comingMessageQueue, List<Leave> comingVehicles, boolean hasNeighbour, SpawnPoint spawnPoint, List<SpawnSpec> spawnSpecs) {
         if (hasNeighbour) {
             for (Leave message : comingVehicles) {
-                if (spawnPoint.getLane().getDirection() != message.getDirectionFrom()) continue;
+                if (spawnPoint.getLane().getDirection().ordinal() != message.getDirectionFrom().ordinal() + 2) {
+                    logger.debug("wrong spawn point direcion: {}, {}", spawnPoint.getLane().getDirection(), message);
+                    continue;
+                }
                 SpawnSpec spawnSpec = spawnSpecs.get(0);
                 VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
                 boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, message.getVin());
                 if (!status) {
-                    logger.error("error registerVehicleWithExistingVIN(vehicle={}, vin={})", vehicle, message.getVin());
-                    logger.error("vehicle {}", vehicle);
-                    logger.error("message: {}", message);
+                    logger.error("error registerVehicleWithExistingVIN(vehicle={}, vin={}), message={}", vehicle, message.getVin(), message);
                 }
                 vinToVehicles.put(message.getVin(), vehicle);
                 comingMessageQueue.removeMessage(message);
+                logger.info("spawn vehicle: message={}, vehicle={}", message, vehicle);
             }
         } else {
             for (SpawnSpec spawnSpec : spawnSpecs) {
                 VehicleSimView vehicle = makeVehicle(spawnPoint, spawnSpec);
                 VinRegistry.registerVehicle(vehicle);
                 vinToVehicles.put(vehicle.getVIN(), vehicle);
+                logger.info("spawn vehicle: vin={}, {}", vehicle.getVIN(), vehicle);
                 break;
             }
         }
@@ -1033,7 +1036,9 @@ public class AutoDriverOnlySimulator implements Simulator {
             completedVINs.add(vin);
             numOfCompletedVehicles++;
         }
-
+        if (!completedVINs.isEmpty()) {
+            logger.info("completed vins: {}", completedVINs);
+        }
         return completedVINs;
     }
 
