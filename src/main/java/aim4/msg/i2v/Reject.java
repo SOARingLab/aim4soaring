@@ -187,7 +187,7 @@ public class Reject extends I2VMessage {
      */
     @Override
     public String toString() {
-        return "Reject(im" + getImId() + " -> vin" + getVin()
+        return "Reject(im" + getImId() + " -> vin=" + getVin()
                 + ", requestID=" + requestId
                 + ", nextcomm:" + String.format("%.2f", nextAllowedCommunication)
                 + ", reason:" + reason

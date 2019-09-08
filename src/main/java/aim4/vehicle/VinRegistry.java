@@ -126,25 +126,27 @@ public class VinRegistry {
     public static boolean registerVehicleWithExistingVIN(VehicleSimView vehicle, int vin) {
         assert vin >= 0;
         if (vinToVehicle.containsKey(vin)) {
-            logger.error("vin: {}, vehicle: {}", vin, vehicle);
-            return false;  // the VIN has been used by some other vehicle
-        } else {
-            assert vehicle.getVIN() < 0;
-
-            vinToVehicle.put(vin, new WeakReference<VehicleSimView>(vehicle));
-            vinToVehicleSpec.put(vin, vehicle.getSpec());
-            // TODO: think how to resolve the problem.
-            if (vehicle.getDriver() != null) {
-                vinToSpawnPoint.put(vin, vehicle.getDriver().getSpawnPoint());
-                vinToDestRoad.put(vin, vehicle.getDriver().getDestination());
-            } else {
-                vinToSpawnPoint.put(vin, null);
-                vinToDestRoad.put(vin, null);
-            }
-
             vehicle.setVIN(vin);
-            return true;
+            logger.error("vin: {}, vehicle: {}", vin, vehicle);
         }
+//            return false;  // the VIN has been used by some other vehicle
+//        } else {
+//            assert vehicle.getVIN() < 0;
+
+        vinToVehicle.put(vin, new WeakReference<VehicleSimView>(vehicle));
+        vinToVehicleSpec.put(vin, vehicle.getSpec());
+        // TODO: think how to resolve the problem.
+        if (vehicle.getDriver() != null) {
+            vinToSpawnPoint.put(vin, vehicle.getDriver().getSpawnPoint());
+            vinToDestRoad.put(vin, vehicle.getDriver().getDestination());
+        } else {
+            vinToSpawnPoint.put(vin, null);
+            vinToDestRoad.put(vin, null);
+        }
+
+        vehicle.setVIN(vin);
+        return true;
+//        }
     }
 
     /**

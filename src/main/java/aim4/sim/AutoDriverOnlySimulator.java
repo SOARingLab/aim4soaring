@@ -350,19 +350,18 @@ public class AutoDriverOnlySimulator implements Simulator {
 
     private void spawnVehicleFromMessageQueue(ComingMessageQueue comingMessageQueue, List<Leave> comingVehicles, boolean hasNeighbour, SpawnPoint spawnPoint, List<SpawnSpec> spawnSpecs) {
         if (hasNeighbour) {
-            for (SpawnSpec spawnSpec : spawnSpecs) {
-                for (Leave message : comingVehicles) {
-                    VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
-                    boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, message.getVin());
-                    if (!status) {
-                        logger.error("vehicle {}", vehicle);
-                        logger.error("message: {}", message);
-                    }
-                    vinToVehicles.put(message.getVin(), vehicle);
-                    comingMessageQueue.removeMessage(message);
-
-                    break;
+            for (Leave message : comingVehicles) {
+                if (spawnPoint.getLane().getDirection() != message.getDirectionFrom()) continue;
+                SpawnSpec spawnSpec = spawnSpecs.get(0);
+                VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
+                boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, message.getVin());
+                if (!status) {
+                    logger.error("error registerVehicleWithExistingVIN(vehicle={}, vin={})", vehicle, message.getVin());
+                    logger.error("vehicle {}", vehicle);
+                    logger.error("message: {}", message);
                 }
+                vinToVehicles.put(message.getVin(), vehicle);
+                comingMessageQueue.removeMessage(message);
             }
         } else {
             for (SpawnSpec spawnSpec : spawnSpecs) {
@@ -543,7 +542,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                 computeVehicleLists();
         Map<VehicleSimView, VehicleSimView> nextVehicle =
                 computeNextVehicle(vehicleLists);
-
+        // tell next vehicle which is its front vehicle
         provideIntervalInfo(nextVehicle);
         provideVehicleTrackingInfo(vehicleLists);
         provideTrafficSignal();
@@ -844,22 +843,16 @@ public class AutoDriverOnlySimulator implements Simulator {
 //                    continue;
 //                }
                 AutoVehicleSimView vehicle = (AutoVehicleSimView) VinRegistry.getVehicleFromVIN(msg.getVin());
-                try {
-                    // Calculate the distance the message must travel
-                    assert vehicle != null;
-                    assert vehicle.getPosition() != null;
-                    assert senderIM.getIntersection() != null;
-                    assert senderIM.getIntersection().getCentroid() != null;
-                    double txDistance = senderIM.getIntersection().getCentroid().distance(vehicle.getPosition());
-                    // Find out if the message will make it that far
-                    if (transmit(txDistance, senderIM.getTransmissionPower())) {
-                        // Actually deliver the message
-                        vehicle.receive(msg);
-                    }
-                } catch (NullPointerException e) {
-                    logger.error("msg: {}", msg);
-                    logger.error("vehicle: {}", vehicle);
-//                    throw e;
+                if (vehicle == null) {
+                    logger.error("vin: {} with msg {} should be in vinregistry", msg.getVin(), msg);
+                    continue;
+                }
+                // Calculate the distance the message must travel
+                double txDistance = senderIM.getIntersection().getCentroid().distance(vehicle.getPosition());
+                // Find out if the message will make it that far
+                if (transmit(txDistance, senderIM.getTransmissionPower())) {
+                    // Actually deliver the message
+                    vehicle.receive(msg);
                 }
             }
             // Done delivering the IntersectionManager's messages, so clear the
@@ -1003,8 +996,6 @@ public class AutoDriverOnlySimulator implements Simulator {
         List<Integer> removedVINs = new ArrayList<Integer>(vinToVehicles.size());
         for (int vin : vinToVehicles.keySet()) {
             VehicleSimView v = vinToVehicles.get(vin);
-            // If the vehicle is no longer in the layout
-            // TODO: this should be replaced with destination zone.
             if (!v.getShape().intersects(mapBoundary)) {
                 // Process all the things we need to from this vehicle
                 if (v instanceof AutoVehicleSimView) {
@@ -1030,7 +1021,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                         oppoDirection = Constants.Direction.EAST;
                     }
                     leave.setDirectionFrom(oppoDirection);
-                    leave.setEstimateArriveTime(distance / v2.getVelocity() + v2.gaugeTime());
+                    leave.setEstimateArriveTime(distance / v2.getVelocity() * 3.6);
                     sender.send(oppoDirection, leave);
                 }
                 removedVINs.add(vin);

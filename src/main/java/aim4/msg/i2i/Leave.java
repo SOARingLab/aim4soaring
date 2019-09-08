@@ -20,7 +20,7 @@ public class Leave extends I2IMessage {
     @Override
     public String toString() {
         return "Leave{" + super.toString() +
-                "vehicleSpec=" + vehicleSpec.getName() +
+                ", vehicleSpec=" + vehicleSpec.getName() +
                 ", estimateArriveTime=" + estimateArriveTime +
                 ", directionFrom=" + directionFrom +
                 "} ";

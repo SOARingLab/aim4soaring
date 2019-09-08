@@ -24,6 +24,7 @@ public class ComingMessageQueue {
     }
 
     public void insertMessage(Leave leave) {
+        leave.setEstimateArriveTime(leave.getEstimateArriveTime() + System.currentTimeMillis() / MillisToSeconds);
         messagesByDirection.get(leave.getDirectionFrom()).add(leave);
         messageOrderedByTime.add(leave);
     }
@@ -33,12 +34,14 @@ public class ComingMessageQueue {
         messageOrderedByTime.remove(leave);
     }
 
-    private static double NEAR_TIME = 5.0;
+    private static double NEAR_TIME = 1.0;
+    private double MillisToSeconds = 1000;
 
     public List<Leave> getAllNearTimeMessage(double time) {
+        double realtime = time + System.currentTimeMillis() / MillisToSeconds;
         List<Leave> tmpMessageOrderedByTime = new CopyOnWriteArrayList<>(messageOrderedByTime);
         return tmpMessageOrderedByTime.stream()
-                .filter(m -> m.getEstimateArriveTime() < time || Math.abs(m.getEstimateArriveTime() - time) < NEAR_TIME)
+                .filter(m -> Math.abs(m.getEstimateArriveTime() - realtime) < NEAR_TIME)
                 .collect(Collectors.toList());
     }
 

@@ -23,7 +23,7 @@ mq:
         url: tcp://left.activemq.soaringlab.top:60004
     receive:
         WEST:
-            distance: 400
+            distance: 40
             channel: EAST
             url: tcp://center.activemq.soaringlab.top:60000
 
