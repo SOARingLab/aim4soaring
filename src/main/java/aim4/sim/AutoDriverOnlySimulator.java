@@ -130,7 +130,6 @@ public class AutoDriverOnlySimulator implements Simulator {
      */
     private int totalBitsReceivedByCompletedVehicles;
 
-
     /////////////////////////////////
     // CLASS CONSTRUCTORS
     /////////////////////////////////
@@ -235,8 +234,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     @Override
     public synchronized double getAvgBitsTransmittedByCompletedVehicles() {
         if (numOfCompletedVehicles > 0) {
-            return ((double) totalBitsTransmittedByCompletedVehicles)
-                    / numOfCompletedVehicles;
+            return ((double) totalBitsTransmittedByCompletedVehicles) / numOfCompletedVehicles;
         } else {
             return 0.0;
         }
@@ -248,8 +246,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     @Override
     public synchronized double getAvgBitsReceivedByCompletedVehicles() {
         if (numOfCompletedVehicles > 0) {
-            return ((double) totalBitsReceivedByCompletedVehicles)
-                    / numOfCompletedVehicles;
+            return ((double) totalBitsReceivedByCompletedVehicles) / numOfCompletedVehicles;
         } else {
             return 0.0;
         }
@@ -270,7 +267,6 @@ public class AutoDriverOnlySimulator implements Simulator {
     public VehicleSimView getActiveVehicle(int vin) {
         return vinToVehicles.get(vin);
     }
-
 
     /////////////////////////////////
     // PUBLIC METHODS
@@ -333,22 +329,27 @@ public class AutoDriverOnlySimulator implements Simulator {
             List<SpawnSpec> spawnSpecs = spawnPoint.act(timeStep);
             if (canSpawnVehicle(spawnPoint) && !spawnSpecs.isEmpty()) {
                 if (spawnPoint.getLane().getDirection() == Constants.Direction.NORTH) {
-                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasNorthNeighbour, spawnPoint, spawnSpecs);
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasNorthNeighbour, spawnPoint,
+                            spawnSpecs);
                 }
                 if (spawnPoint.getLane().getDirection() == Constants.Direction.EAST) {
-                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasEastNeighbour, spawnPoint, spawnSpecs);
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasEastNeighbour, spawnPoint,
+                            spawnSpecs);
                 }
                 if (spawnPoint.getLane().getDirection() == Constants.Direction.WEST) {
-                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasWestNeighbour, spawnPoint, spawnSpecs);
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasWestNeighbour, spawnPoint,
+                            spawnSpecs);
                 }
                 if (spawnPoint.getLane().getDirection() == Constants.Direction.SOUTH) {
-                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasSouthNeighbour, spawnPoint, spawnSpecs);
+                    spawnVehicleFromMessageQueue(comingMessageQueue, comingVehicles, hasSouthNeighbour, spawnPoint,
+                            spawnSpecs);
                 }
             }
         }
     }
 
-    private void spawnVehicleFromMessageQueue(ComingMessageQueue comingMessageQueue, List<Leave> comingVehicles, boolean hasNeighbour, SpawnPoint spawnPoint, List<SpawnSpec> spawnSpecs) {
+    private void spawnVehicleFromMessageQueue(ComingMessageQueue comingMessageQueue, List<Leave> comingVehicles,
+            boolean hasNeighbour, SpawnPoint spawnPoint, List<SpawnSpec> spawnSpecs) {
         if (hasNeighbour) {
             for (Leave message : comingVehicles) {
                 if (spawnPoint.getLane().getDirection() != message.getDirectionFrom()) {
@@ -359,11 +360,13 @@ public class AutoDriverOnlySimulator implements Simulator {
                 VehicleSimView vehicle = makeVehicleFromMessage(spawnPoint, message.getVehicleSpec(), spawnSpec);
                 boolean status = VinRegistry.registerVehicleWithExistingVIN(vehicle, message.getVin());
                 if (!status) {
-                    logger.error("error registerVehicleWithExistingVIN(vehicle={}, vin={}), message={}", vehicle, message.getVin(), message);
+                    logger.error("error registerVehicleWithExistingVIN(vehicle={}, vin={}), message={}", vehicle,
+                            message.getVin(), message);
                 }
                 vinToVehicles.put(message.getVin(), vehicle);
                 comingMessageQueue.removeMessage(message);
-                logger.info("spawn vehicle: message={}, vehicle={}", message, vehicle);
+                logger.info("born: {}", message.getVin());
+                logger.info("spawn vehicle from message={}: vin={}, vehicle={}", message, message.getVin(), vehicle);
             }
         } else {
             for (SpawnSpec spawnSpec : spawnSpecs) {
@@ -375,7 +378,6 @@ public class AutoDriverOnlySimulator implements Simulator {
             }
         }
     }
-
 
     /**
      * Whether a spawn point can spawn any vehicle
@@ -400,15 +402,10 @@ public class AutoDriverOnlySimulator implements Simulator {
         // the speed limit in the lane
         double initVelocity = Math.min(spec.getMaxVelocity(), lane.getSpeedLimit());
         // Obtain a Vehicle
-        AutoVehicleSimView vehicle =
-                new BasicAutoVehicle(spec,
-                        spawnPoint.getPosition(),
-                        spawnPoint.getHeading(),
-                        spawnPoint.getSteeringAngle(),
-                        initVelocity, // velocity
-                        initVelocity,  // target velocity
-                        spawnPoint.getAcceleration(),
-                        spawnSpec.getSpawnTime());
+        AutoVehicleSimView vehicle = new BasicAutoVehicle(spec, spawnPoint.getPosition(), spawnPoint.getHeading(),
+                spawnPoint.getSteeringAngle(), initVelocity, // velocity
+                initVelocity, // target velocity
+                spawnPoint.getAcceleration(), spawnSpec.getSpawnTime());
 
         AutoDriver driver = new AutoDriver(vehicle, basicMap);
         driver.setCurrentLane(lane);
@@ -421,15 +418,10 @@ public class AutoDriverOnlySimulator implements Simulator {
 
     private VehicleSimView makeVehicleFromMessage(SpawnPoint spawnPoint, VehicleSpec spec, SpawnSpec spawnSpec) {
         double initVelocity = Math.min(spec.getMaxVelocity(), spawnPoint.getLane().getSpeedLimit());
-        AutoVehicleSimView vehicle =
-                new BasicAutoVehicle(spec,
-                        spawnPoint.getPosition(),
-                        spawnPoint.getHeading(),
-                        spawnPoint.getSteeringAngle(),
-                        initVelocity, // velocity
-                        initVelocity,  // target velocity
-                        spawnPoint.getAcceleration(),
-                        spawnSpec.getSpawnTime());
+        AutoVehicleSimView vehicle = new BasicAutoVehicle(spec, spawnPoint.getPosition(), spawnPoint.getHeading(),
+                spawnPoint.getSteeringAngle(), initVelocity, // velocity
+                initVelocity, // target velocity
+                spawnPoint.getAcceleration(), spawnSpec.getSpawnTime());
 
         AutoDriver driver = new AutoDriver(vehicle, basicMap);
         driver.setCurrentLane(spawnPoint.getLane());
@@ -440,7 +432,6 @@ public class AutoDriverOnlySimulator implements Simulator {
         return vehicle;
     }
 
-
     /////////////////////////////////
     // STEP 2
     /////////////////////////////////
@@ -448,14 +439,13 @@ public class AutoDriverOnlySimulator implements Simulator {
     /**
      * Compute the lists of vehicles of all lanes.
      *
-     * @return a mapping from lanes to lists of vehicles sorted by their
-     * distance on their lanes
+     * @return a mapping from lanes to lists of vehicles sorted by their distance on
+     *         their lanes
      */
     private Map<Lane, SortedMap<Double, VehicleSimView>> computeVehicleLists() {
         // Set up the structure that will hold all the Vehicles as they are
         // currently ordered in the Lanes
-        Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists =
-                new HashMap<Lane, SortedMap<Double, VehicleSimView>>();
+        Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists = new HashMap<Lane, SortedMap<Double, VehicleSimView>>();
         for (Road road : basicMap.getRoads()) {
             for (Lane lane : road.getLanes()) {
                 vehicleLists.put(lane, new TreeMap<Double, VehicleSimView>());
@@ -468,11 +458,10 @@ public class AutoDriverOnlySimulator implements Simulator {
             Set<Lane> lanes = vehicle.getDriver().getCurrentlyOccupiedLanes();
             for (Lane lane : lanes) {
                 // Find out what IntersectionManager is coming up for this vehicle
-                IntersectionManager im =
-                        lane.getLaneIM().nextIntersectionManager(vehicle.getPosition());
+                IntersectionManager im = lane.getLaneIM().nextIntersectionManager(vehicle.getPosition());
                 // Only include this Vehicle if it is not in the intersection.
-                if (lane.getLaneIM().distanceToNextIntersection(vehicle.getPosition()) > 0
-                        || im == null || !im.intersects(vehicle.getShape().getBounds2D())) {
+                if (lane.getLaneIM().distanceToNextIntersection(vehicle.getPosition()) > 0 || im == null
+                        || !im.intersects(vehicle.getShape().getBounds2D())) {
                     // Now find how far along the lane it is.
                     double dst = lane.distanceAlongLane(vehicle.getPosition());
                     // Now add it to the map.
@@ -503,18 +492,17 @@ public class AutoDriverOnlySimulator implements Simulator {
     /**
      * Compute the next vehicles of all vehicles.
      *
-     * @param vehicleLists a mapping from lanes to lists of vehicles sorted by
-     *                     their distance on their lanes
+     * @param vehicleLists a mapping from lanes to lists of vehicles sorted by their
+     *                     distance on their lanes
      * @return a mapping from vehicles to next vehicles
      */
     private Map<VehicleSimView, VehicleSimView> computeNextVehicle(
             Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists) {
         // At this point we should only have mappings for start Lanes, and they
-        // should include all the Lanes they run into.  Now we need to turn this
+        // should include all the Lanes they run into. Now we need to turn this
         // into a hash map that maps Vehicles to the next vehicle in the Lane
         // or any Lane the Lane runs into
-        Map<VehicleSimView, VehicleSimView> nextVehicle =
-                new HashMap<VehicleSimView, VehicleSimView>();
+        Map<VehicleSimView, VehicleSimView> nextVehicle = new HashMap<VehicleSimView, VehicleSimView>();
         // For each of the ordered lists of vehicles
         for (SortedMap<Double, VehicleSimView> vehicleList : vehicleLists.values()) {
             VehicleSimView lastVehicle = null;
@@ -532,19 +520,17 @@ public class AutoDriverOnlySimulator implements Simulator {
     }
 
     /**
-     * Provide each vehicle with sensor information to allow it to make
-     * decisions.  This works first by making an ordered list for each Lane of
-     * all the vehicles in that Lane, in order from the start of the Lane to
-     * the end of the Lane.  We must make sure to leave out all vehicles that
-     * are in the intersection.  We must also concatenate the lists for lanes
-     * that feed into one another.  Then, for each vehicle, depending on the
-     * state of its sensors, we provide it with the appropriate sensor input.
+     * Provide each vehicle with sensor information to allow it to make decisions.
+     * This works first by making an ordered list for each Lane of all the vehicles
+     * in that Lane, in order from the start of the Lane to the end of the Lane. We
+     * must make sure to leave out all vehicles that are in the intersection. We
+     * must also concatenate the lists for lanes that feed into one another. Then,
+     * for each vehicle, depending on the state of its sensors, we provide it with
+     * the appropriate sensor input.
      */
     private void provideSensorInput() {
-        Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists =
-                computeVehicleLists();
-        Map<VehicleSimView, VehicleSimView> nextVehicle =
-                computeNextVehicle(vehicleLists);
+        Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists = computeVehicleLists();
+        Map<VehicleSimView, VehicleSimView> nextVehicle = computeNextVehicle(vehicleLists);
         // tell next vehicle which is its front vehicle
         provideIntervalInfo(nextVehicle);
         provideVehicleTrackingInfo(vehicleLists);
@@ -556,8 +542,7 @@ public class AutoDriverOnlySimulator implements Simulator {
      *
      * @param nextVehicle a mapping from vehicles to next vehicles
      */
-    private void provideIntervalInfo(
-            Map<VehicleSimView, VehicleSimView> nextVehicle) {
+    private void provideIntervalInfo(Map<VehicleSimView, VehicleSimView> nextVehicle) {
 
         // Now that we have this list set up, let's provide input to all the
         // Vehicles.
@@ -567,33 +552,32 @@ public class AutoDriverOnlySimulator implements Simulator {
                 AutoVehicleSimView autoVehicle = (AutoVehicleSimView) vehicle;
 
                 switch (autoVehicle.getLRFMode()) {
-                    case DISABLED:
-                        // Find the interval to the next vehicle
-                        double interval;
-                        // If there is a next vehicle, then calculate it
-                        if (nextVehicle.containsKey(autoVehicle)) {
-                            // It's the distance from the front of this Vehicle to the point
-                            // at the rear of the Vehicle in front of it
-                            interval = calcInterval(autoVehicle, nextVehicle.get(autoVehicle));
-                        } else { // Otherwise, just set it to the maximum possible value
-                            interval = Double.MAX_VALUE;
-                        }
-                        // Now actually record it in the vehicle
-                        autoVehicle.getIntervalometer().record(interval);
-                        autoVehicle.setLRFSensing(false); // Vehicle is not using
-                        // the LRF sensor
-                        break;
-                    case LIMITED:
-                        // FIXME
-                        autoVehicle.setLRFSensing(true); // Vehicle is using the LRF sensor
-                        break;
-                    case ENABLED:
-                        // FIXME
-                        autoVehicle.setLRFSensing(true); // Vehicle is using the LRF sensor
-                        break;
-                    default:
-                        throw new RuntimeException("Unknown LRF Mode: " +
-                                autoVehicle.getLRFMode().toString());
+                case DISABLED:
+                    // Find the interval to the next vehicle
+                    double interval;
+                    // If there is a next vehicle, then calculate it
+                    if (nextVehicle.containsKey(autoVehicle)) {
+                        // It's the distance from the front of this Vehicle to the point
+                        // at the rear of the Vehicle in front of it
+                        interval = calcInterval(autoVehicle, nextVehicle.get(autoVehicle));
+                    } else { // Otherwise, just set it to the maximum possible value
+                        interval = Double.MAX_VALUE;
+                    }
+                    // Now actually record it in the vehicle
+                    autoVehicle.getIntervalometer().record(interval);
+                    autoVehicle.setLRFSensing(false); // Vehicle is not using
+                    // the LRF sensor
+                    break;
+                case LIMITED:
+                    // FIXME
+                    autoVehicle.setLRFSensing(true); // Vehicle is using the LRF sensor
+                    break;
+                case ENABLED:
+                    // FIXME
+                    autoVehicle.setLRFSensing(true); // Vehicle is using the LRF sensor
+                    break;
+                default:
+                    throw new RuntimeException("Unknown LRF Mode: " + autoVehicle.getLRFMode().toString());
                 }
             }
         }
@@ -602,11 +586,10 @@ public class AutoDriverOnlySimulator implements Simulator {
     /**
      * Provide tracking information to vehicles.
      *
-     * @param vehicleLists a mapping from lanes to lists of vehicles sorted by
-     *                     their distance on their lanes
+     * @param vehicleLists a mapping from lanes to lists of vehicles sorted by their
+     *                     distance on their lanes
      */
-    private void provideVehicleTrackingInfo(
-            Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists) {
+    private void provideVehicleTrackingInfo(Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists) {
         // Vehicle Tracking
         for (VehicleSimView vehicle : vinToVehicles.values()) {
             // If the vehicle is autonomous
@@ -626,8 +609,7 @@ public class AutoDriverOnlySimulator implements Simulator {
                     VehicleSimView rearVehicle = null;
 
                     // only consider the vehicles on the target lane
-                    SortedMap<Double, VehicleSimView> vehiclesOnTargetLane =
-                            vehicleLists.get(targetLane);
+                    SortedMap<Double, VehicleSimView> vehiclesOnTargetLane = vehicleLists.get(targetLane);
 
                     // compute the distances and the corresponding vehicles
                     try {
@@ -655,26 +637,23 @@ public class AutoDriverOnlySimulator implements Simulator {
                     // assign the vehicles' velocities
 
                     if (frontVehicle != null) {
-                        autoVehicle.getFrontVehicleSpeedSensor().record(
-                                frontVehicle.getVelocity());
+                        autoVehicle.getFrontVehicleSpeedSensor().record(frontVehicle.getVelocity());
                     } else {
                         autoVehicle.getFrontVehicleSpeedSensor().record(Double.MAX_VALUE);
                     }
                     if (rearVehicle != null) {
-                        autoVehicle.getRearVehicleSpeedSensor().record(
-                                rearVehicle.getVelocity());
+                        autoVehicle.getRearVehicleSpeedSensor().record(rearVehicle.getVelocity());
                     } else {
                         autoVehicle.getRearVehicleSpeedSensor().record(Double.MAX_VALUE);
                     }
 
                     // show the section on the viewer
                     if (Debug.isTargetVIN(driver.getVehicle().getVIN())) {
-                        Point2D p1 = targetLane.getPointAtNormalizedDistance(
-                                Math.max((dst - rearDst) / targetLane.getLength(), 0.0));
-                        Point2D p2 = targetLane.getPointAtNormalizedDistance(
-                                Math.min((frontDst + dst) / targetLane.getLength(), 1.0));
-                        Debug.addLongTermDebugPoint(
-                                new DebugPoint(p2, p1, "cl", Color.RED.brighter()));
+                        Point2D p1 = targetLane
+                                .getPointAtNormalizedDistance(Math.max((dst - rearDst) / targetLane.getLength(), 0.0));
+                        Point2D p2 = targetLane
+                                .getPointAtNormalizedDistance(Math.min((frontDst + dst) / targetLane.getLength(), 1.0));
+                        Debug.addLongTermDebugPoint(new DebugPoint(p2, p1, "cl", Color.RED.brighter()));
                     }
                 }
             }
@@ -688,8 +667,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     private void provideTrafficSignal() {
         for (VehicleSimView vehicle : vinToVehicles.values()) {
             if (vehicle instanceof HumanDrivenVehicleSimView) {
-                HumanDrivenVehicleSimView manualVehicle =
-                        (HumanDrivenVehicleSimView) vehicle;
+                HumanDrivenVehicleSimView manualVehicle = (HumanDrivenVehicleSimView) vehicle;
                 provideTrafficLightSignal(manualVehicle);
             }
         }
@@ -702,8 +680,7 @@ public class AutoDriverOnlySimulator implements Simulator {
      * @param nextVehicle the next vehicle
      * @return the distance between vehicle and the next vehicle on a lane
      */
-    private double calcInterval(VehicleSimView vehicle,
-                                VehicleSimView nextVehicle) {
+    private double calcInterval(VehicleSimView vehicle, VehicleSimView nextVehicle) {
         // From Chiu: Kurt, if you think this function is not okay, probably
         // we should talk to see what to do.
         Point2D pos = vehicle.getPosition();
@@ -723,8 +700,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     }
     // Kurt's code:
     // interval = vehicle.getPosition().
-    //   distance(nextVehicle.get(vehicle).getPointAtRear());
-
+    // distance(nextVehicle.get(vehicle).getPointAtRear());
 
     /**
      * Provide traffic light signals to a vehicle.
@@ -733,33 +709,33 @@ public class AutoDriverOnlySimulator implements Simulator {
      */
     private void provideTrafficLightSignal(HumanDrivenVehicleSimView vehicle) {
         // TODO: implement it later
-//    DriverSimView driver = vehicle.getDriver();
-//    Lane currentLane = driver.getCurrentLane();
-//    Point2D pos = vehicle.getPosition();
-//    IntersectionManager im = currentLane.getLaneIM().
-//                             nextIntersectionManager(pos);
-//    if (im != null) {
-//      if (im instanceof LightOnlyManager) {
-//        LightOnlyManager lightOnlyIM = (LightOnlyManager)im;
-//        if (!im.getIntersection().getArea().contains(pos)) {
-//          LightState s = lightOnlyIM.getLightState(currentLane);
-//          vehicle.setLightState(s);
-//          if (driver instanceof HumanDriver) {
-//            ((HumanDriver)driver).setLightState(s);
-//          }
-//        } else {
-//          vehicle.setLightState(null);
-//          if (driver instanceof HumanDriver) {
-//            ((HumanDriver)driver).setLightState(null);
-//          }
-//        }
-//      }
-//    } else {
-//      vehicle.setLightState(null);
-//      if (driver instanceof HumanDriver) {
-//        ((HumanDriver)driver).setLightState(null);
-//      }
-//    }
+        // DriverSimView driver = vehicle.getDriver();
+        // Lane currentLane = driver.getCurrentLane();
+        // Point2D pos = vehicle.getPosition();
+        // IntersectionManager im = currentLane.getLaneIM().
+        // nextIntersectionManager(pos);
+        // if (im != null) {
+        // if (im instanceof LightOnlyManager) {
+        // LightOnlyManager lightOnlyIM = (LightOnlyManager)im;
+        // if (!im.getIntersection().getArea().contains(pos)) {
+        // LightState s = lightOnlyIM.getLightState(currentLane);
+        // vehicle.setLightState(s);
+        // if (driver instanceof HumanDriver) {
+        // ((HumanDriver)driver).setLightState(s);
+        // }
+        // } else {
+        // vehicle.setLightState(null);
+        // if (driver instanceof HumanDriver) {
+        // ((HumanDriver)driver).setLightState(null);
+        // }
+        // }
+        // }
+        // } else {
+        // vehicle.setLightState(null);
+        // if (driver instanceof HumanDriver) {
+        // ((HumanDriver)driver).setLightState(null);
+        // }
+        // }
     }
 
     /////////////////////////////////
@@ -800,7 +776,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     private void communication() {
         deliverV2IMessages();
         deliverI2VMessages();
-//    deliverV2VMessages();
+        // deliverV2VMessages();
     }
 
     /**
@@ -815,12 +791,9 @@ public class AutoDriverOnlySimulator implements Simulator {
                 Queue<V2IMessage> v2iOutbox = sender.getV2IOutbox();
                 while (!v2iOutbox.isEmpty()) {
                     V2IMessage msg = v2iOutbox.poll();
-                    V2IManager receiver =
-                            (V2IManager) basicMap.getImRegistry().get(msg.getImId());
+                    V2IManager receiver = (V2IManager) basicMap.getImRegistry().get(msg.getImId());
                     // Calculate the distance the message must travel
-                    double txDistance =
-                            sender.getPosition().distance(
-                                    receiver.getIntersection().getCentroid());
+                    double txDistance = sender.getPosition().distance(receiver.getIntersection().getCentroid());
                     // Find out if the message will make it that far
                     if (transmit(txDistance, sender.getTransmissionPower())) {
                         // Actually deliver the message
@@ -840,11 +813,11 @@ public class AutoDriverOnlySimulator implements Simulator {
         // Now deliver all the I2V messages
         for (IntersectionManager im : basicMap.getIntersectionManagers()) {
             V2IManager senderIM = (V2IManager) im;
-            for (Iterator<I2VMessage> i2vIter = senderIM.outboxIterator(); i2vIter.hasNext(); ) {
+            for (Iterator<I2VMessage> i2vIter = senderIM.outboxIterator(); i2vIter.hasNext();) {
                 I2VMessage msg = i2vIter.next();
-//                if (msg.getVin() < 0) {
-//                    continue;
-//                }
+                // if (msg.getVin() < 0) {
+                // continue;
+                // }
                 AutoVehicleSimView vehicle = (AutoVehicleSimView) VinRegistry.getVehicleFromVIN(msg.getVin());
                 if (vehicle == null) {
                     logger.error("vin: {} with msg {} should be in vinregistry", msg.getVin(), msg);
@@ -864,79 +837,78 @@ public class AutoDriverOnlySimulator implements Simulator {
         }
     }
 
-//  private void deliverV2VMessages() {
-//
-//    // Create a place to store broadcast messages until they can be sent so
-//    // that we don't have to run through the list of Vehicles for each one
-//    List<V2VMessage> broadcastMessages = new ArrayList<V2VMessage>();
-//
-//    // Go through each vehicle and deliver each of its messages
-//    for(VehicleSimView vehicle : vinToVehicles.values()) {
-//      // Then do V2V messages.
-//      if (vehicle instanceof AutoVehicleSimView) {
-//        AutoVehicleSimView sender = (AutoVehicleSimView)vehicle;
-//        for(V2VMessage msg : sender.getV2VOutbox()) {
-//          if(msg.isBroadcast()) {
-//            // If it's a broadcast message, we save it and worry about it later
-//            broadcastMessages.add(msg);
-//          } else {
-//            // Otherwise, we just deliver it! Woo!
-//            // TODO: need to check whether the vehicle is AutoVehicleSpec
-//            AutoVehicleSimView receiver =
-//              (AutoVehicleSimView)VinRegistry.getVehicleFromVIN(
-//                msg.getDestinationID());
-//            // Calculate the distance the message must travel
-//            double txDistance =
-//              sender.getPosition().distance(receiver.getPosition());
-//            // Find out if the message will make it that far
-//            if(transmit(txDistance, sender.getTransmissionPower())) {
-//              // Actually deliver the message
-//              receiver.receive(msg);
-//              // Add the delivery to the debugging information
-//            }
-//          }
-//        }
-//        // Done delivering the V2V messages (except broadcast which we will
-//        // handle in a moment), so clear the outbox
-//        sender.getV2VOutbox().clear();
-//      }
-//    }
-//    // Now go through the vehicles and deliver the broadcast messages
-//    for(V2VMessage msg : broadcastMessages) {
-//      // Send a copy to the IM for debugging/statistics purposes
-//      IntersectionManager im =
-//        basicMap.getImRegistry().get(msg.getIntersectionManagerID());
-////      if(im != null) {
-////        switch(im.getIntersectionType()) {
-////        case V2V:
-////          ((V2VManager) im).logBroadcast(msg);
-////        }
-////      }
-//      // Determine who sent this message
-//      // TODO: need to check whether the vehicle is AutoVehicleSpec
-//      AutoVehicleSimView sender =
-//        (AutoVehicleSimView)VinRegistry.getVehicleFromVIN(
-//          msg.getSourceID());
-//      // Deliver to each vehicle
-//      for(VehicleSimView vehicle : vinToVehicles.values()) {
-//        if (vehicle instanceof AutoVehicleSimView) {
-//          AutoVehicleSimView receiver = (AutoVehicleSimView)vehicle;
-//          // Except the one that sent it
-//          if(sender != receiver) {
-//            // Find out how far away they are
-//            double txDistance =
-//              sender.getPosition().distance(receiver.getPosition());
-//            // See if this Vehicle is close enough to receive the message
-//            if(transmit(txDistance, sender.getTransmissionPower())) {
-//              // Actually deliver the message
-//              receiver.receive(msg);
-//            }
-//          }
-//        } // else ignore other non-autonomous vehicle
-//      }
-//    }
-//  }
-
+    // private void deliverV2VMessages() {
+    //
+    // // Create a place to store broadcast messages until they can be sent so
+    // // that we don't have to run through the list of Vehicles for each one
+    // List<V2VMessage> broadcastMessages = new ArrayList<V2VMessage>();
+    //
+    // // Go through each vehicle and deliver each of its messages
+    // for(VehicleSimView vehicle : vinToVehicles.values()) {
+    // // Then do V2V messages.
+    // if (vehicle instanceof AutoVehicleSimView) {
+    // AutoVehicleSimView sender = (AutoVehicleSimView)vehicle;
+    // for(V2VMessage msg : sender.getV2VOutbox()) {
+    // if(msg.isBroadcast()) {
+    // // If it's a broadcast message, we save it and worry about it later
+    // broadcastMessages.add(msg);
+    // } else {
+    // // Otherwise, we just deliver it! Woo!
+    // // TODO: need to check whether the vehicle is AutoVehicleSpec
+    // AutoVehicleSimView receiver =
+    // (AutoVehicleSimView)VinRegistry.getVehicleFromVIN(
+    // msg.getDestinationID());
+    // // Calculate the distance the message must travel
+    // double txDistance =
+    // sender.getPosition().distance(receiver.getPosition());
+    // // Find out if the message will make it that far
+    // if(transmit(txDistance, sender.getTransmissionPower())) {
+    // // Actually deliver the message
+    // receiver.receive(msg);
+    // // Add the delivery to the debugging information
+    // }
+    // }
+    // }
+    // // Done delivering the V2V messages (except broadcast which we will
+    // // handle in a moment), so clear the outbox
+    // sender.getV2VOutbox().clear();
+    // }
+    // }
+    // // Now go through the vehicles and deliver the broadcast messages
+    // for(V2VMessage msg : broadcastMessages) {
+    // // Send a copy to the IM for debugging/statistics purposes
+    // IntersectionManager im =
+    // basicMap.getImRegistry().get(msg.getIntersectionManagerID());
+    //// if(im != null) {
+    //// switch(im.getIntersectionType()) {
+    //// case V2V:
+    //// ((V2VManager) im).logBroadcast(msg);
+    //// }
+    //// }
+    // // Determine who sent this message
+    // // TODO: need to check whether the vehicle is AutoVehicleSpec
+    // AutoVehicleSimView sender =
+    // (AutoVehicleSimView)VinRegistry.getVehicleFromVIN(
+    // msg.getSourceID());
+    // // Deliver to each vehicle
+    // for(VehicleSimView vehicle : vinToVehicles.values()) {
+    // if (vehicle instanceof AutoVehicleSimView) {
+    // AutoVehicleSimView receiver = (AutoVehicleSimView)vehicle;
+    // // Except the one that sent it
+    // if(sender != receiver) {
+    // // Find out how far away they are
+    // double txDistance =
+    // sender.getPosition().distance(receiver.getPosition());
+    // // See if this Vehicle is close enough to receive the message
+    // if(transmit(txDistance, sender.getTransmissionPower())) {
+    // // Actually deliver the message
+    // receiver.receive(msg);
+    // }
+    // }
+    // } // else ignore other non-autonomous vehicle
+    // }
+    // }
+    // }
 
     /**
      * Whether the transmission of a message is successful
@@ -949,7 +921,6 @@ public class AutoDriverOnlySimulator implements Simulator {
         // Simple for now
         return distance <= power;
     }
-
 
     /////////////////////////////////
     // STEP 6
@@ -973,7 +944,6 @@ public class AutoDriverOnlySimulator implements Simulator {
             }
         }
     }
-
 
     /////////////////////////////////
     // STEP 7
@@ -1036,8 +1006,10 @@ public class AutoDriverOnlySimulator implements Simulator {
             completedVINs.add(vin);
             numOfCompletedVehicles++;
         }
-        if (!completedVINs.isEmpty()) {
-            logger.info("completed vins: {}", completedVINs);
+        for (Integer vin : completedVINs) {
+            if (vin >= 100000) {
+                logger.info("end: {}", vin);
+            }
         }
         return completedVINs;
     }
@@ -1059,6 +1031,5 @@ public class AutoDriverOnlySimulator implements Simulator {
             im.checkCurrentTime(currentTime);
         }
     }
-
 
 }
