@@ -62,6 +62,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 
+import org.springframework.cglib.core.CollectionUtils;
+
 import static aim4.config.SimConfig.TIME_STEP;
 
 /**
@@ -1485,7 +1487,7 @@ public class V2ICoordinator implements Coordinator {
             // eliminate proposals that are not valid and then return the result.
             List<Request.Proposal> proposals = new ArrayList<Request.Proposal>(n);
             for (int i = 0; i < n; i++) {
-                if (Objects.nonNull(arrivalTimes.get(i)) && arrivalTimes.get(i) < vehicle.gaugeTime() + MAXIMUM_FUTURE_RESERVATION_TIME) {
+                if (!arrivalTimes.isEmpty() && Objects.nonNull(arrivalTimes.get(i)) && arrivalTimes.get(i) < vehicle.gaugeTime() + MAXIMUM_FUTURE_RESERVATION_TIME) {
                     proposals.add(new Request.Proposal(arrivalLaneIDs.get(i), departureLaneIDs.get(i),
                             arrivalTimes.get(i), arrivalVelocities.get(i), maximumVelocities.get(i)));
                 } // else ignore the proposal because the vehicle is too far away from
@@ -1699,10 +1701,12 @@ public class V2ICoordinator implements Coordinator {
                     System.err.printf("distance to next intersection = %.5f\n",
                             vehicle.getDriver().distanceToNextIntersection());
                     throw new RuntimeException("The arrival time is incorrect.\n");
+                    // return true;
                 } else if (!checkArrivalVelocity()) {
                     System.err.printf("At time %.2f, the arrival velocity of vin %d is " + "incorrect:\n",
                             vehicle.gaugeTime(), vehicle.getVIN());
                     throw new RuntimeException("The arrival velocity is incorrect.\n");
+                    // return true;
                 } else {
                     // the arrival time and velocity are correct.
                     if (isDebugging) {

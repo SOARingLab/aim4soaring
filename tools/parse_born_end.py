@@ -24,9 +24,22 @@ for line in sys.stdin:
   else:
     timestamp_to_passtime[timestamp-init_time] = timestamp - vin_to_born_time[vin]
 
-pprint.pprint(timestamp_to_passtime)
+# pprint.pprint(timestamp_to_passtime)
 
 total = sum(timestamp_to_passtime.values())
 average = total / len(timestamp_to_passtime)
 
 print(total, average)
+
+cnt = 0
+sums = 0
+last_time = -1
+timestep=3
+for ts in timestamp_to_passtime:
+  cnt += 1
+  sums += timestamp_to_passtime[ts]
+  if last_time == -1: 
+    last_time = ts//timestep
+  if last_time != ts//timestep:
+    last_time = ts//timestep
+    print("({}, {:.2f})".format(last_time*timestep, sums/cnt), end=" ")
