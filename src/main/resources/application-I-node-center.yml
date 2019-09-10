@@ -9,7 +9,7 @@ sim:
     distance_between: 150
     traffic_level: 0.28
     stop_distance_before_intersection: 1.0
-    priority: true
+    priority: false
     vin_start: 1
 
 node:

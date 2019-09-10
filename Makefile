@@ -7,7 +7,7 @@ SCREEN_OPTION=-L -dm
 timestamp=`date +%Y-%m-%d-%T`
 II = I-node-center I-node-left
 LL = L-node-center L-node-down L-node-left
-TT = L-node-center T-node-down T-node-left T-node-right
+TT = T-node-center T-node-down T-node-left T-node-right
 XX = X-node-center X-node-down X-node-left X-node-right X-node-up
 
 .PHONY: all, jar, run, clean
@@ -25,6 +25,9 @@ clean:
 
 run:
 	mvn spring-boot:run
+
+mq:
+	docker-compose -f activemq/docker-compose.yml restart
 
 I:
 	$(foreach node, ${II}, screen -t ${timestamp}.${node} ${SCREEN_OPTION} mvn spring-boot:run -D$(MVN_OPTIONS) -Dspring-boot.run.profiles=${node}; echo ${node};)

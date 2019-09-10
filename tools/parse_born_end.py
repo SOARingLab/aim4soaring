@@ -25,3 +25,8 @@ for line in sys.stdin:
     timestamp_to_passtime[timestamp-init_time] = timestamp - vin_to_born_time[vin]
 
 pprint.pprint(timestamp_to_passtime)
+
+total = sum(timestamp_to_passtime.values())
+average = total / len(timestamp_to_passtime)
+
+print(total, average)
