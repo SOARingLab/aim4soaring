@@ -1,1 +1,1 @@
-cat $1| egrep "born:|end:" | awk '{printf "%s-%s %s\n",$1,$2,$10}' | python ./parse_born_end.py
+cat $1| egrep "born:|end:" | awk '{printf "%s-%s %s\n",$1,$2,$10}' | python3 ./parse_born_end.py

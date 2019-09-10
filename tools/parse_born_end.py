@@ -1,13 +1,27 @@
+#!/usr/bin/env python3
+
 import datetime
 import time
 import sys
+import pprint
 
-time_pattern=""
 
-records = []
+vin_to_born_time = {}
+timestamp_to_passtime = {}
+time_pattern='%Y-%m-%d-%H:%M:%S.%f'
+
+init_time = -1
+
 for line in sys.stdin:
   record = line.split()
-  records.append(record)
-  timestamp = record[0]
-  realtime = time.strptime(timestamp[:-4], '%Y-%m-%d-%H:%M:%S')
-  print(realtime)
+  timestamp = datetime.datetime.strptime(record[0], time_pattern).timestamp()
+  if init_time == -1:
+    init_time = timestamp
+
+  vin = record[1]
+  if vin not in vin_to_born_time:
+    vin_to_born_time[vin] = timestamp
+  else:
+    timestamp_to_passtime[timestamp-init_time] = timestamp - vin_to_born_time[vin]
+
+pprint.pprint(timestamp_to_passtime)
