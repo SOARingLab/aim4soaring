@@ -1,0 +1,1 @@
+cat $1 | egrep "spawn:|born:|end:" | awk '{printf "%s-%s %s\n",$1,$2,$10}' | python3 tools/parse_traffic_count.py
